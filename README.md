@@ -1,4 +1,4 @@
-LoLCraft_Android_Studio
+LoLCraft
 =======================
 
 New LoLCraft repository for Android Studio.
