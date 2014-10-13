@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/DataFixer/DataFixer.iml" filepath="$PROJECT_DIR$/DataFixer/DataFixer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LoLCraft.iml" filepath="$PROJECT_DIR$/LoLCraft.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+    </modules>
+  </component>
+</project>
+

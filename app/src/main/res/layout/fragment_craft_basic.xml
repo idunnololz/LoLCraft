@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/lblStats"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/stats"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <View
+                    style="@style/VerticalDivider"
+                    android:layout_height="14sp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="5dp" />
+
+                <Button
+                    android:id="@+id/btnAboutStats"
+                    style="@style/LabelButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="30dp"
+                    android:paddingTop="11dp"
+                    android:text="@string/question_mark"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/lblLevel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="@string/stat_level"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <Spinner
+                android:id="@+id/level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp"
+                android:entries="@array/level_array"
+                android:gravity="bottom"
+                android:padding="3dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/stats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical" >
+
+            <TableRow
+                android:id="@+id/tableRow1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/lblHp"
+                    style="@style/StatTitleStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="@string/stat_hp"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <TextView
+                    android:id="@+id/lblHpRegen"
+                    style="@style/StatTitleStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="@string/stat_hp_regen"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <TextView
+                    android:id="@+id/lblMs"
+                    style="@style/StatTitleStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="@string/stat_ms" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="-6dp" >
+
+                <TextView
+                    android:id="@+id/txtHp"
+                    style="@style/StatValueStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/txtHpRegen"
+                    style="@style/StatValueStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/txtMs"
+                    style="@style/StatValueStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/lblMp"
+                    style="@style/StatTitleStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="@string/stat_mp"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <TextView
+                    android:id="@+id/lblMpRegen"
+                    style="@style/StatTitleStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="@string/stat_mp_regen"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <TextView
+                    android:id="@+id/lblRange"
+                    style="@style/StatTitleStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="@string/stat_range"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="-6dp" >
+
+                <TextView
+                    android:id="@+id/txtMp"
+                    style="@style/StatValueStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/txtMpRegen"
+                    style="@style/StatValueStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/txtRange"
+                    style="@style/StatValueStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/lblAd"
+                    style="@style/StatTitleStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="@string/stat_ad"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <TextView
+                    android:id="@+id/lblAs"
+                    style="@style/StatTitleStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="@string/stat_as"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <TextView
+                    android:id="@+id/lblAp"
+                    style="@style/StatTitleStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="@string/stat_ap"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="-6dp" >
+
+                <TextView
+                    android:id="@+id/txtAd"
+                    style="@style/StatValueStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/txtAs"
+                    style="@style/StatValueStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/txtAp"
+                    style="@style/StatValueStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/lblAr"
+                    style="@style/StatTitleStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="@string/stat_ar"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <TextView
+                    android:id="@+id/lblMr"
+                    style="@style/StatTitleStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="@string/stat_mr"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="2" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="-6dp" >
+
+                <TextView
+                    android:id="@+id/txtAr"
+                    style="@style/StatValueStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/txtMr"
+                    style="@style/StatValueStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2" />
+            </TableRow>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/item_build"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/stats"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/item_build"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <View
+                    style="@style/VerticalDivider"
+                    android:layout_height="14sp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="5dp" />
+
+                <Button
+                    android:id="@+id/addItem"
+                    style="@style/LabelButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:gravity="bottom"
+                    android:minHeight="48dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/add_item"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/clearItemBuild"
+                    style="@style/LabelButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:gravity="bottom"
+                    android:minHeight="48dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/clear"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/scrollViewParent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@color/lightgrey" >
+
+                <ImageButton
+                    android:id="@+id/btnTrash"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/themed_transition_drawable"
+                    android:padding="5dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_trash"
+                    android:visibility="invisible" />
+
+                <com.ggstudios.views.InterceptingHorizontalScrollView
+                    android:id="@+id/scrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="horizontal" >
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <com.ggstudios.views.RearrangeableLinearLayout
+                            android:id="@+id/build"
+                            android:layout_width="wrap_content"
+                            android:layout_height="90dp"
+                            android:orientation="horizontal"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp" >
+                        </com.ggstudios.views.RearrangeableLinearLayout>
+
+                        <SeekBar
+                            android:id="@+id/seekBar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignLeft="@+id/build"
+                            android:layout_alignParentBottom="true"
+                            android:visibility="invisible" />
+                    </RelativeLayout>
+                </com.ggstudios.views.InterceptingHorizontalScrollView>
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_build"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/runes"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <View
+                    style="@style/VerticalDivider"
+                    android:layout_height="14sp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="5dp" />
+
+                <Button
+                    android:id="@+id/addRunes"
+                    style="@style/LabelButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:gravity="bottom"
+                    android:minHeight="48dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/add_runes"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/clearRuneBuild"
+                    style="@style/LabelButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:gravity="bottom"
+                    android:minHeight="48dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/clear"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </LinearLayout>
+
+            <com.ggstudios.views.InterceptingHorizontalScrollView
+                android:id="@+id/runeScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/lightgrey"
+                android:scrollbars="horizontal" >
+
+                <LinearLayout
+                    android:id="@+id/runes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="90dp"
+                    android:orientation="horizontal" >
+                </LinearLayout>
+            </com.ggstudios.views.InterceptingHorizontalScrollView>
+        </LinearLayout>
+    </RelativeLayout>
+
+</ScrollView>

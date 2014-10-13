@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/skill_item_bg"
+        android:paddingBottom="14dp"
+        android:paddingTop="5dp" >
+
+        <TextView
+            android:id="@+id/txtKey"
+            android:layout_width="70dp"
+            android:layout_height="85dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:gravity="bottom|left"
+            android:text="w"
+            android:textColor="@color/lightgrey"
+            android:textSize="120dp" />
+
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp" >
+
+            <TextView
+                android:id="@+id/txtSkillName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="16sp"
+                android:text="Dark Flight" />
+
+            <TextView
+                android:id="@+id/txtSkillDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="fill|bottom"
+                android:maxLines="10"
+                android:paddingTop="4sp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="12sp"
+                android:text="Range:" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_below="@+id/header"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/champion_placeholder" />
+
+        <TextView
+            android:id="@+id/txtSkillDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header"
+            android:layout_toRightOf="@+id/icon"
+            android:paddingRight="14dp"
+            android:text="Small Text"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </RelativeLayout>
+
+</FrameLayout>

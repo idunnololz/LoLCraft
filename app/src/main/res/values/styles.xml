@@ -1,0 +1,170 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="Theme.Sherlock.Light.DarkActionBar">
+        <item name="actionBarStyle">@style/MainActionBarStyle</item>
+        <item name="android:actionBarStyle">@style/MainActionBarStyle</item>
+    </style>
+
+    <style name="MainActionBarStyle" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="displayOptions">useLogo|showHome</item>
+        <item name="android:displayOptions">useLogo|showHome</item>
+    </style>
+
+    <style name="AppThemeNoAb" parent="Theme.Sherlock.Light.NoActionBar"></style>
+
+    <style name="CraftTheme" parent="Theme.Sherlock.Light.DarkActionBar">
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="actionBarStyle">@style/CraftActionBarStyle</item>
+        <item name="android:actionBarStyle">@style/CraftActionBarStyle</item>
+        <item name="android:seekBarStyle">@style/SeekBarLolCraftTheme</item>
+    </style>
+
+    <style name="CraftActionBarStyle" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="displayOptions">useLogo|showHome|homeAsUp</item>
+        <item name="android:displayOptions">useLogo|showHome|homeAsUp</item>
+        <item name="background">#00000000</item>
+        <item name="android:background">#00000000</item>
+    </style>
+
+    <style name="ItemCountStyle">
+        <item name="android:shadowDx">0.0</item>
+        <item name="android:shadowDy">0.0</item>
+        <item name="android:shadowRadius">5.0</item>
+        <item name="android:shadowColor">@color/black</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ChampionNameStyle">
+        <item name="android:shadowDx">3.0</item>
+        <item name="android:shadowDy">3.0</item>
+        <item name="android:shadowRadius">5.0</item>
+        <item name="android:shadowColor">@color/black</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="LolCraftThemeSpinnerItem" parent="android:Widget.TextView.SpinnerItem">
+        <item name="android:textAppearance">@style/LolCraftThemeTextAppearanceSpinnerItem</item>
+    </style>
+
+    <style name="LolCraftThemeTextAppearanceSpinnerItem" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+        <item name="android:textColor">#FFF</item>
+    </style>
+
+    <style name="SeekBarLolCraftTheme" parent="android:Widget.SeekBar">
+        <item name="android:progressDrawable">@drawable/lolcrafttheme_scrubber_progress_horizontal_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/lolcrafttheme_scrubber_progress_horizontal_holo_light</item>
+        <item name="android:minHeight">13dip</item>
+        <item name="android:maxHeight">13dip</item>
+        <item name="android:thumb">@drawable/lolcrafttheme_scrubber_control_selector_holo_light</item>
+        <item name="android:thumbOffset">16dip</item>
+        <item name="android:paddingLeft">16dip</item>
+        <item name="android:paddingRight">16dip</item>
+    </style>
+
+    <style name="TitleStyle">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/grey</item>
+    </style>
+
+    <style name="OverallTitleStyle">
+        <item name="android:textSize">12sp</item>
+        <item name="android:gravity">bottom|center_horizontal</item>
+        <item name="android:layout_marginTop">5dp</item>
+    </style>
+
+    <style name="StatTitleStyle">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="StatValueStyle">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Widget"></style>
+
+    <style name="Widget.ProgressBar">
+        <item name="android:indeterminateOnly">true</item>
+        <item name="android:indeterminateBehavior">repeat</item>
+        <item name="android:indeterminateDuration">3500</item>
+        <item name="android:minWidth">48dip</item>
+        <item name="android:maxWidth">48dip</item>
+        <item name="android:minHeight">48dip</item>
+        <item name="android:maxHeight">48dip</item>
+    </style>
+
+    <style name="ThemedProgessBar">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/themed_progress_bar_drawable</item>
+        <item name="android:indeterminateDrawable">@android:drawable/progress_indeterminate_horizontal</item>
+        <item name="android:minWidth">1dip</item>
+        <item name="android:maxWidth">12dip</item>
+    </style>
+
+    <style name="Widget.ProgressBar.Vertical">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/progress_bar_vertical</item>
+        <item name="android:indeterminateDrawable">@android:drawable/progress_indeterminate_horizontal</item>
+        <item name="android:minWidth">1dip</item>
+        <item name="android:maxWidth">12dip</item>
+    </style>
+
+    <style name="Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/lightgrey</item>
+    </style>
+
+    <style name="VerticalDivider">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">1dp</item>
+        <item name="android:background">@color/lightgrey</item>
+    </style>
+
+    <style name="LabelButton">
+        <item name="android:background">@null</item>
+        <item name="android:textColor">@drawable/label_button_text_color</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
+
+    <style name="Theme.Transparent" parent="android:Theme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="ItemPickerCheckboxStyle">
+        <item name="android:minHeight">26dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/white97</item>
+        <item name="android:button">@null</item>
+        <item name="android:drawableRight">@drawable/themed_checkbox</item>
+    </style>
+
+    <style name="ItemPickerButtonStyle">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/white97</item>
+        <item name="android:background">@drawable/themed_dark_button</item>
+    </style>
+
+    <style name="ItemPickerTextStyle">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/white97</item>
+    </style>
+
+    <style name="ItemPickerEditTextStyle">
+    </style>
+
+</resources>

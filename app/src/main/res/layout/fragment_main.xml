@@ -1,0 +1,41 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" >
+
+        <GridView
+            android:id="@+id/grid"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnWidth="100dp"
+            android:gravity="center"
+            android:numColumns="auto_fit"
+            android:stretchMode="columnWidth"
+            android:visibility="gone" />
+
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <View
+        android:layout_width="10dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:background="#FF101010" />
+
+    <View
+        android:layout_width="10dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:background="#FF101010" />
+
+</RelativeLayout>

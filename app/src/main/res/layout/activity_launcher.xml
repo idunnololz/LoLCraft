@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/launcher_bg" >
+
+    <RelativeLayout
+        android:id="@+id/content_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/launcher_gradient_bg" >
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_launcher_xl" />
+
+        <FrameLayout
+            android:id="@+id/pbar_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/icon"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="70dp"
+            android:visibility="invisible" >
+
+            <View
+                android:layout_width="141dp"
+                android:layout_height="21dp"
+                android:layout_marginLeft="-1dp"
+                android:layout_marginTop="-1dp"
+                android:background="#20FFFFFF" />
+
+            <View
+                android:id="@+id/pbar"
+                android:layout_width="140dp"
+                android:layout_height="20dp" />
+        </FrameLayout>
+        
+        <Button
+            android:id="@+id/btnEnter"
+            android:layout_centerHorizontal="true"
+            android:layout_alignTop="@+id/pbar_container"
+            android:layout_alignLeft="@+id/pbar_container"
+            android:layout_alignRight="@+id/pbar_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/theme_color"
+            android:background="@drawable/themed_dark_button"
+            android:text="@string/enter"/>
+
+        <View
+            android:id="@+id/cover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black" />
+    </RelativeLayout>
+
+</FrameLayout>
