@@ -347,7 +347,11 @@ public class MainFragment extends SherlockFragment implements OnQueryTextListene
 
 			ChampionInfo info = champInfo.get(position);
 
-			holder.name.setText(info.name);
+            if (isList) {
+                holder.name.setText(info.name + ": " + info.title);
+            } else {
+                holder.name.setText(info.name);
+            }
 
 			if (info.icon != null) {
 				holder.portrait.setImageDrawable(info.icon);
