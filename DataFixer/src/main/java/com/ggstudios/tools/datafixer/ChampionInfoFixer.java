@@ -357,7 +357,7 @@ public class ChampionInfoFixer {
         "Irelia",   1,  METHOD_TANK,        0, 0, 0.4, "CCRed",
                     2,  METHOD_BURST|AP,    1, 20, 50, 80, 110, 140, 1, "attackdamage",
                         METHOD_MOBILITY,    0, MOBI_DASH, 650, 650, 650, 650, 650,
-                    1,  METHOD_DPS,         0, 1, 15, 30, 45, 60, 75, "FlatTrueDamageMod",
+                    1,  METHOD_DPS,         0, 1, 15, 30, 45, 60, 75, "FlatAaTrueDamageMod",
                     2,  METHOD_BURST|AP,    1, 80, 130, 180, 230, 280, 0.5, "spelldamage",
                         METHOD_CC,          0, CC_STUN, 1, 1.25, 1.5, 1.75, 2,
                     1,  METHOD_AOE_BURST|AD,2, 320, 480, 640, 2, "spelldamage", 2.4, "attackdamage",
@@ -384,6 +384,57 @@ public class ChampionInfoFixer {
                         METHOD_AOE_BURST|AP,1, 60, 105, 150, 195, 240, 0.8, "spelldamage",
                     2,  METHOD_BURST|AD,    1, 200, 325, 450, 1.5, "bonusattackdamage",
                         METHOD_CC,          0, CC_WALL, 325, 325, 325,
+
+        "Jax",      1,  METHOD_DPS,         0, 1, 6, 1, 0.24, 4, 0.36, 7, 0.48, 10, 0.6, 13, 0.72, 16, 0.84, "PercentAttackSpeedMod",
+                    2,  METHOD_BURST|AD,    2, 70, 110, 150, 190, 230, 0.6, "spelldamage", 1, "attackdamage",
+                        METHOD_MOBILITY,    0, MOBI_DASH, 700, 700, 700, 700, 700,
+                    1,  METHOD_BURST|AP,    1, 40, 75, 110, 145, 180, 0.6, "spelldamage",
+                    2,  METHOD_CC,          0, CC_AOE_STUN, 1, 1, 1, 1, 1,
+                        METHOD_AOE_BURST|AD,1, 100, 150, 200, 250, 300, 1, "attackdamage",
+                    3,  METHOD_TANK,        1, 25, 35, 45, 0.3, "bonusattackdamage", "FlatArmorMod",
+                        METHOD_TANK,        1, 25, 35, 45, 0.2, "spelldamage", "FlatSpellBlockMod",
+                        METHOD_DPS,         1, 1, 33.33, 53.33, 73.33, 0.2333, "spelldamage", "FlatAaMagicDamageMod",
+
+        "Jinx",     1,  METHOD_MOBILITY,    0, MOBI_MSP, 0, 1.75,
+                    1,  METHOD_DPS,         0, 1, 0.3, 0.55, 0.8, 1.05, 1.3, "PercentAttackSpeedMod",
+                    2,  METHOD_BURST|AD,    1, 10, 60, 110, 160, 210, 1.4, "attackdamage",
+                        METHOD_CC,          0, CC_SLOW, 0.3, 2, 0.4, 2, 0.5, 2, 0.6, 2, 0.7, 2,
+                    2,  METHOD_AOE_BURST|AP,1, 80, 135, 190, 245, 300, 1, "spelldamage",
+                        METHOD_CC,          0, CC_AOE_ROOT, 1.5, 1.5, 1.5, 1.5, 1.5,
+                    1,  METHOD_AOE_BURST|AD,2, 250, 350, 450, 1, "attackdamage", 0.25, 0.3, 0.35, "enemymissinghealth",
+
+        "Karthus",  0,
+                    1,  METHOD_DPS,         1, 1, 40, 60, 80, 100, 120, 0.3, "spelldamage", "magic_aoe_dps",
+                    1,  METHOD_CC,          0, CC_AOE_SLOW, 0.4, 5, 0.5, 5, 0.6, 5, 0.7, 5, 0.8, 5,
+                    1,  METHOD_DPS,         1, 1, 30, 50, 70, 90, 110, 0.2, "spelldamage", "magic_aoe_dps",
+                    1,  METHOD_AOE_BURST|AP,1, 250, 400, 550, 0.6, "spelldamage",
+
+        "Kassadin", 1,  METHOD_TANK,        0, 0, 0.15, "magicaldamagereduction",
+                    2,  METHOD_TANK,        1, 40, 70, 100, 130, 160, 0.3, "spelldamage", "FlatMagicHp",
+                        METHOD_BURST|AP,    1, 80, 105, 130, 155, 180, 0.7, "spelldamage",
+                    2,  METHOD_DPS,         1, 1, 20, 20, 20, 20, 20, 0.1, "spelldamage", "FlatAaMagicDamageMod",
+                        METHOD_BURST|AP,    1, 40, 65, 90, 115, 140, 0.6, "spelldamage",
+                    2,  METHOD_AOE_BURST|AP,1, 80, 105, 130, 155, 180, 0.7, "spelldamage",
+                        METHOD_CC,          0, CC_AOE_SLOW, 0.5, 1, 0.6, 1, 0.7, 1, 0.8, 1, 0.9, 1,
+                    2,  METHOD_AOE_BURST|AP,1, 240, 300, 360, 0.06, "mana",
+                        METHOD_MOBILITY,    0, MOBI_BLINK, 700, 700, 700,
+
+        "Katarina", 0,
+                    1,  METHOD_AOE_BURST|AP,1, 75, 115, 155, 195, 235, 0.6, "spelldamage",
+                    2,  METHOD_AOE_BURST|AP,2, 40, 75, 110, 145, 180, 0.25, "spelldamage", 0.6, "bonusattackdamage",
+                        METHOD_MOBILITY,    0, MOBI_MSP, 0.15, 0.2, 0.25, 0.3, 0.35,
+                    2,  METHOD_BURST|AP,    1, 60, 85, 110, 135, 160, 0.4, "spelldamage",
+                        METHOD_MOBILITY,    0, MOBI_BLINK, 700, 700, 700, 700, 700,
+                    1,  METHOD_AOE_BURST|AP,2, 400, 575, 750, 2.5, "spelldamage", 3.75, "bonusattackdamage",
+
+        "Kayle",    0,
+                    2,  METHOD_BURST|AP,    2, 60, 110, 160, 210, 260, 0.6, "spelldamage", 1, "bonusattackdamage",
+                        METHOD_CC,          0, CC_SLOW, 0.35, 3, 0.4, 3, 0.45, 3, 0.5, 3, 0.55, 3,
+                    2,  METHOD_SUSTAIN,     0, 0, 0, 0, 0, 0,
+                        METHOD_MOBILITY,    1, MOBI_MSP, 0.18, 0.21, 0.24, 0.27, 0.3, 0.0007, "spelldamage",
+                    2,  METHOD_DPS,         1, 1, 20, 30, 40, 50, 60, 0.25, "spelldamage", "FlatAaMagicDamageMod",
+                        METHOD_DPS,         0, 1, 400, 400, 400, 400, 400, "RangeMod",
+                    1,  METHOD_TANK,        0, 2, 2.5, 3, "Invulnerability",
 
 
 
@@ -469,6 +520,8 @@ public class ChampionInfoFixer {
 
 			//DebugLog.d(TAG, "Data: " + champData.toString());
 			//DebugLog.d(TAG, "Data: " + skills.toString());
+
+            info.name = champData.getString("name");
 
 			Skill[] skills = new Skill[5];
 
@@ -575,9 +628,10 @@ public class ChampionInfoFixer {
                 String champKey = (String) a[i++];
 
                 JSONObject o = loadJsonObj("champions/" + champKey + ".json");
-                p(o.toString());
                 JSONObject champData = o.getJSONObject("data");
                 ChampionInfo info = completeChampionInfo(champData);
+
+                p(info.name);
 
                 // this is a passive!
                 JSONArray methods = new JSONArray();

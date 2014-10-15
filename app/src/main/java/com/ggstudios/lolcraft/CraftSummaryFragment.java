@@ -593,8 +593,8 @@ public class CraftSummaryFragment extends SherlockFragment {
             analysis.totalHealth = rawStats[Build.STAT_TOTAL_HP];
             analysis.physEffHealth = rawStats[Build.STAT_TOTAL_HP] * (1.0 + (rawStats[Build.STAT_TOTAL_AR] / 100.0));
             analysis.physEffHealth *= (1 / (1 - rawStats[Build.STAT_DMG_REDUCTION]));
-            analysis.magEffHealth = rawStats[Build.STAT_TOTAL_HP] * (1.0 + (rawStats[Build.STAT_TOTAL_MR] / 100.0));
-            analysis.magEffHealth *= (1 / (1 - rawStats[Build.STAT_DMG_REDUCTION]));
+            analysis.magEffHealth = (rawStats[Build.STAT_TOTAL_HP] + rawStats[Build.STAT_MAGIC_HP]) * (1.0 + (rawStats[Build.STAT_TOTAL_MR] / 100.0));
+            analysis.magEffHealth *= (1 / (1 - rawStats[Build.STAT_DMG_REDUCTION] - rawStats[Build.STAT_MAGIC_DMG_REDUCTION]));
             analysis.effectiveHealth = Math.min(analysis.physEffHealth, analysis.magEffHealth);
 
             analysis.bonuses.clear();

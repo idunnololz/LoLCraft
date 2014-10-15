@@ -82,6 +82,9 @@ public class Build {
     public static final int STAT_CC_RED = 28;
     public static final int STAT_AA_TRUE_DAMAGE = 29;
     public static final int STAT_AA_MAGIC_DAMAGE = 30;
+    public static final int STAT_MAGIC_DMG_REDUCTION = 31;
+    public static final int STAT_MAGIC_HP = 32;
+    public static final int STAT_INVULNERABILITY = 33;
 
 	public static final int STAT_TOTAL_AR = 40;
 	public static final int STAT_TOTAL_AD = 41;
@@ -189,7 +192,7 @@ public class Build {
 		statKeyToIndex.put("PercentSpellBlockMod", 		STAT_NULL);
 		statKeyToIndex.put("PercentSpellVampMod", 		STAT_SV);
         statKeyToIndex.put("CCRed",                     STAT_CC_RED);
-        statKeyToIndex.put("FlatTrueDamageMod",         STAT_AA_TRUE_DAMAGE);
+        statKeyToIndex.put("FlatAaTrueDamageMod",         STAT_AA_TRUE_DAMAGE);
         statKeyToIndex.put("FlatAaMagicDamageMod",      STAT_AA_MAGIC_DAMAGE);
 
 		statKeyToIndex.put("rFlatArmorModPerLevel", 			STAT_AR | FLAG_SCALING);	
@@ -214,6 +217,9 @@ public class Build {
 		statKeyToIndex.put("rPercentMagicPenetrationMod",		STAT_MPENP);
 		statKeyToIndex.put("rPercentArmorPenetrationMod",		STAT_APENP);
         statKeyToIndex.put("damagereduction",                   STAT_DMG_REDUCTION);
+        statKeyToIndex.put("magicaldamagereduction",            STAT_MAGIC_DMG_REDUCTION);
+        statKeyToIndex.put("FlatMagicHp",                       STAT_MAGIC_HP);
+        statKeyToIndex.put("Invulnerability",                   STAT_INVULNERABILITY);
 
 
 		// keys used for skills...
@@ -232,7 +238,7 @@ public class Build {
         statKeyToIndex.put("critdamage",            STAT_CRIT_DMG);
         statKeyToIndex.put("enemymissinghealth",    STAT_ENEMY_MISSING_HP);
         statKeyToIndex.put("enemycurrenthealth",    STAT_ENEMY_CURRENT_HP);
-        statKeyToIndex.put("enemymaxhealth",    STAT_ENEMY_MAX_HP);
+        statKeyToIndex.put("enemymaxhealth",        STAT_ENEMY_MAX_HP);
         statKeyToIndex.put("movementspeed",         STAT_TOTAL_MS);
 
 		// special keys...
