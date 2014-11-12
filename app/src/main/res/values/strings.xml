@@ -91,16 +91,17 @@
     <string name="magical_effective_health">Magical effective health</string>
     <string name="mobility_analysis">Mobility Analysis</string>
     
-    <string name="stat_name_null">null</string>
-    <string name="stat_name_hp">health</string>
-    <string name="stat_name_hpr">health regeneration</string>
-    <string name="stat_name_mp">mana</string>
-    <string name="stat_name_mpr">mana regeneration</string>
-    <string name="stat_name_ad">attack damage</string>
-    <string name="stat_name_asp">percent attack speed</string>
-    <string name="stat_name_ar">armor</string>
-    <string name="stat_name_mr">magic resistance</string>
-    <string name="stat_name_range">range</string>
+    <string name="stat_desc_null">null</string>
+    <string name="stat_desc_hp">health</string>
+    <string name="stat_desc_hpr">health regeneration</string>
+    <string name="stat_desc_mp">mana</string>
+    <string name="stat_desc_mpr">mana regeneration</string>
+    <string name="stat_desc_ad">attack damage</string>
+    <string name="stat_desc_asp">percent attack speed</string>
+    <string name="stat_desc_ar">armor</string>
+    <string name="stat_desc_mr">magic resistance</string>
+    <string name="stat_desc_range">range</string>
+    <string name="skill_stat_level_minus_one">level - 1</string>
     
     <string name="knockup">Knockup</string>
     <string name="slow">Slow (%1$d%%)</string>
@@ -147,7 +148,7 @@
     <string name="clear_item_build_disclaimer">This will clear all items in this build. This operation cannot be undone.</string>
     
     <string name="clear_rune_build_disclaimer">This will clear all runes in this build. This operation cannot be undone.</string>
-    <string name="stat_name_damage_reduction">damage reduction</string>
+    <string name="stat_desc_damage_reduction">damage reduction</string>
     <string name="aoe_knockup">AoE Knockup</string>
     <string name="aoe_slow">AoE Slow (%1$d%%)</string>
     <string name="wall">Wall</string>
@@ -162,6 +163,26 @@
     <string name="cc_analysis">CC Analysis</string>
     <string name="fear">Fear</string>
     <string name="aoe_fear">AoE Fear</string>
+    <string name="paranoia">Paranoia</string>
+    <string name="skill_stat_ap">AP</string>
+    <string name="skill_stat_ad">AD</string>
+    <string name="skill_stat_bonus_ad">bonus AD</string>
+    <string name="skill_stat_cd_mod">(affected by cooldown reduction)</string>
+    <string name="skill_stat_stacks">stacks</string>
+    <string name="skill_stat_null">null</string>
+    <string name="skill_stat_one"></string>
+    <string name="taunt">Taunt</string>
+    <string name="aoe_taunt">AoE Taunt</string>
+    <string name="action_invalidate_splash">Invalidate splash</string>
+    <string name="action_save">Save</string>
+    <string name="action_load">Load</string>
+    <string name="action_save_as">Save as...</string>
+    <string name="save">Save</string>
+    <string name="load">Load</string>
+    <string name="save_as">Save as...</string>
+    <string name="name">Name</string>
+    <string name="confirm_build_overwrite">A build with the name &quot;%1$s&quot; already exists. Would you like to overwrite it?\n\nWarning: This operation is not reversable.</string>
+    <string name="invalid_build_name">Invalid build name</string>
 
 
 </resources>

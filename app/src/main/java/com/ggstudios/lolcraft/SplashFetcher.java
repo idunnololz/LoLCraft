@@ -94,6 +94,44 @@ public class SplashFetcher {
 		return bitmap;
 	}
 
+    public void deleteCache(final String key) {
+        if (diskCache != null) {
+            if (diskCache.isInErrorState()) return;
+            final String sanatizedKey = key.toLowerCase(Locale.US);
+
+            if (diskCache.containsKey(sanatizedKey)) {
+                diskCache.remove(sanatizedKey);
+            }
+        }
+
+        AsyncTask<Object, Void, Void> task = new AsyncTask<Object, Void, Void>(){
+
+            @Override
+            protected Void doInBackground(Object... params) {
+                if (diskCache == null) {
+                    synchronized(cacheLock) {
+                        if (diskCache == null) {
+                            initialize();
+                        }
+                    }
+                }
+
+                if (diskCache.isInErrorState()) return null;
+
+                final String sanatizedKey = key.toLowerCase(Locale.US);
+
+                if (diskCache.containsKey(sanatizedKey)) {
+                    diskCache.remove(sanatizedKey);
+                }
+
+                return null;
+            }
+
+        };
+
+        Utils.executeAsyncTask(task, key);
+    }
+
 	public void fetchChampionSplash(final String key, int reqWidth, int reqHeight, final OnDrawableRetrievedListener listener) {
 		if (diskCache != null) {
 			if (diskCache.isInErrorState()) return;

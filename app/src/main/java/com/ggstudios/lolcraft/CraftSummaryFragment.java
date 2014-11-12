@@ -151,6 +151,7 @@ public class CraftSummaryFragment extends SherlockFragment {
             Skill[] skills = info.getRawSkills();
 
             DpsAnalysis analysis = new DpsAnalysis();
+            Scaling scaling = new Scaling();
 
             analysis.bonuses.clear();
 
@@ -214,17 +215,16 @@ public class CraftSummaryFragment extends SherlockFragment {
                         }
 
                         for (int k = 0; k < scalings; k++) {
-                            double scaling = a.getDouble(idx++);
-                            String type = a.getString(idx++);
+                            idx = parseScaling(a, idx, skillRanks, skillRank, scaling);
 
-                            if ((int)scaling == Method.SPECIAL_USE_BASE_AS_SCALING) {
+                            if ((int)scaling.scaling == Method.SPECIAL_USE_BASE_AS_SCALING) {
                                 a1[k] = base;
                                 base = 0;
                             } else {
-                                a1[k] = scaling;
+                                a1[k] = scaling.scaling;
                             }
 
-                            a2[k] = type;
+                            a2[k] = scaling.type;
                         }
 
                         String bonusType = a.getString(idx++);

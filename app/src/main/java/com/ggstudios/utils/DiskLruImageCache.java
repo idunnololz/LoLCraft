@@ -118,8 +118,15 @@ public class DiskLruImageCache {
 		DebugLog.d(TAG, bitmap == null ? "" : "image read from disk " + key);
 
 		return bitmap;
-
 	}
+
+    public void remove(String key) {
+        try {
+            mDiskCache.remove(key);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 	public boolean containsKey( String key ) {
 

@@ -85,6 +85,11 @@ public class Build {
     public static final int STAT_MAGIC_DMG_REDUCTION = 31;
     public static final int STAT_MAGIC_HP = 32;
     public static final int STAT_INVULNERABILITY = 33;
+    public static final int STAT_SPELL_BLOCK = 34;
+    public static final int STAT_CC_IMMUNE = 35;
+    public static final int STAT_INVULNERABILITY_ALL_BUT_ONE = 36;
+    public static final int STAT_AOE_DPS_MAGIC = 37;
+    public static final int STAT_PERCENT_HP_MISSING = 38;
 
 	public static final int STAT_TOTAL_AR = 40;
 	public static final int STAT_TOTAL_AD = 41;
@@ -112,6 +117,7 @@ public class Build {
     public static final int STAT_NAUTILUS_Q_CD = 80;
     public static final int STAT_RENGAR_Q_BASE_DAMAGE = 81;
     public static final int STAT_VI_W     = 82;
+    public static final int STAT_STACKS = 83;   // generic stat... could be used for Ashe/Nasus, etc
 
     public static final int STAT_ENEMY_MISSING_HP = 100;
     public static final int STAT_ENEMY_CURRENT_HP = 101;
@@ -127,12 +133,13 @@ public class Build {
 
 	private static final String JSON_KEY_RUNES = "runes";
 	private static final String JSON_KEY_ITEMS = "items";
+    private static final String JSON_KEY_BUILD_NAME = "build_name";
 
 	private static final Map<String, Integer> statKeyToIndex = new HashMap<String, Integer>();
-    private static final SparseIntArray statKeyToStatType = new SparseIntArray();
 	private static final SparseIntArray statIdToStringId = new SparseIntArray();
+    private static final SparseIntArray statIdToSkillStatDescStringId = new SparseIntArray();
 
-	private static ItemLibrary itemLibrary;
+    private static ItemLibrary itemLibrary;
 	private static RuneLibrary runeLibrary;
 
     private static final double[] RENGAR_Q_BASE = new double[] {
@@ -194,6 +201,8 @@ public class Build {
         statKeyToIndex.put("CCRed",                     STAT_CC_RED);
         statKeyToIndex.put("FlatAaTrueDamageMod",         STAT_AA_TRUE_DAMAGE);
         statKeyToIndex.put("FlatAaMagicDamageMod",      STAT_AA_MAGIC_DAMAGE);
+        statKeyToIndex.put("magic_aoe_dps",             STAT_AOE_DPS_MAGIC);
+        statKeyToIndex.put("perpercenthpmissing",       STAT_PERCENT_HP_MISSING);
 
 		statKeyToIndex.put("rFlatArmorModPerLevel", 			STAT_AR | FLAG_SCALING);	
 		statKeyToIndex.put("rFlatArmorPenetrationMod", 			STAT_ARPEN);	
@@ -220,6 +229,9 @@ public class Build {
         statKeyToIndex.put("magicaldamagereduction",            STAT_MAGIC_DMG_REDUCTION);
         statKeyToIndex.put("FlatMagicHp",                       STAT_MAGIC_HP);
         statKeyToIndex.put("Invulnerability",                   STAT_INVULNERABILITY);
+        statKeyToIndex.put("SpellBlock",                        STAT_SPELL_BLOCK);
+        statKeyToIndex.put("CcImmune",                          STAT_CC_IMMUNE);
+        statKeyToIndex.put("InvulnerabilityButOne",             STAT_INVULNERABILITY_ALL_BUT_ONE);
 
 
 		// keys used for skills...
@@ -246,7 +258,7 @@ public class Build {
 		statKeyToIndex.put("@special.BraumWMR", 	STAT_NULL);
 
 		statKeyToIndex.put("@cooldownchampion", 	STAT_CD_MOD);
-        statKeyToIndex.put("@stacks", 	STAT_NULL);
+        statKeyToIndex.put("@stacks", STAT_STACKS);
 
         // heim
         statKeyToIndex.put("@dynamic.abilitypower", STAT_AP);
@@ -265,17 +277,17 @@ public class Build {
 		statKeyToIndex.put("null", 	STAT_NULL);
 
 		SparseIntArray a = statIdToStringId;
-		a.put(STAT_NULL, R.string.stat_name_null);
-		a.put(STAT_HP, R.string.stat_name_hp);
-		a.put(STAT_HPR, R.string.stat_name_hpr);
-		a.put(STAT_MP, R.string.stat_name_mp);
-		a.put(STAT_MPR, R.string.stat_name_mpr);
-		a.put(STAT_AD, R.string.stat_name_ad);
-		a.put(STAT_ASP, R.string.stat_name_asp);
-		a.put(STAT_AR, R.string.stat_name_ar);
-		a.put(STAT_MR, R.string.stat_name_mr);
+		a.put(STAT_NULL, R.string.stat_desc_null);
+		a.put(STAT_HP, R.string.stat_desc_hp);
+		a.put(STAT_HPR, R.string.stat_desc_hpr);
+		a.put(STAT_MP, R.string.stat_desc_mp);
+		a.put(STAT_MPR, R.string.stat_desc_mpr);
+		a.put(STAT_AD, R.string.stat_desc_ad);
+		a.put(STAT_ASP, R.string.stat_desc_asp);
+		a.put(STAT_AR, R.string.stat_desc_ar);
+		a.put(STAT_MR, R.string.stat_desc_mr);
 		//		public static final int STAT_MS = 9;
-		a.put(STAT_RANGE, R.string.stat_name_range);
+		a.put(STAT_RANGE, R.string.stat_desc_range);
 		//		public static final int STAT_CRIT = 11;
 		//		public static final int STAT_AP = 12;
 		//		public static final int STAT_LS = 13;
@@ -292,7 +304,7 @@ public class Build {
 		//		public static final int STAT_SV = 24;
 		//		public static final int STAT_MPENP = 25;
 		//		public static final int STAT_APENP = 26;
-        a.put(STAT_DMG_REDUCTION, R.string.stat_name_damage_reduction);
+        a.put(STAT_DMG_REDUCTION, R.string.stat_desc_damage_reduction);
 		//		
 		//		public static final int STAT_TOTAL_AR = 40;
 		//		public static final int STAT_TOTAL_AD = 41;
@@ -310,13 +322,40 @@ public class Build {
 		//		public static final int STAT_BONUS_AP = 44;	// note that cause base AP is always 0, bonusAp always = totalAp
 		//		public static final int STAT_BONUS_AR = 53;
 		//		public static final int STAT_BONUS_MR = 54;
-		//		public static final int STAT_LEVEL_MINUS_ONE = 55;
+		//
 		//
 		//		public static final int STAT_AA_DPS = 60;
 
-        SparseIntArray b = statKeyToStatType;
-        b.put(STAT_DMG_REDUCTION, STAT_TYPE_PERCENT);
+        SparseIntArray b = statIdToSkillStatDescStringId;
+        b.put(STAT_NULL,                R.string.skill_stat_null);
+        b.put(STAT_TOTAL_AP,            R.string.skill_stat_ap);
+        b.put(STAT_LEVEL_MINUS_ONE,     R.string.skill_stat_level_minus_one);
+        b.put(STAT_TOTAL_AD,            R.string.skill_stat_ad);
+        b.put(STAT_BONUS_AD,            R.string.skill_stat_bonus_ad);
+        b.put(STAT_CD_MOD,              R.string.skill_stat_cd_mod);
+        b.put(STAT_STACKS,              R.string.skill_stat_stacks);
+        b.put(STAT_ONE,                 R.string.skill_stat_one);
+//        public static final int STAT_TOTAL_AR = 40;
+//        public static final int STAT_TOTAL_AD = 41;
+//        public static final int STAT_TOTAL_HP = 42;
+//        public static final int STAT_CD_MOD = 43;
+//        public static final int STAT_TOTAL_MS = 45;
+//        public static final int STAT_TOTAL_MR = 46;
+//        public static final int STAT_AS = 47;
+//        public static final int STAT_LEVEL = 48;
+//        public static final int STAT_TOTAL_RANGE = 49;
+//        public static final int STAT_TOTAL_MP = 50;
+//
+//        public static final int STAT_BONUS_HP = 61;
+//        public static final int STAT_BONUS_MS = 62;
+//        public static final int STAT_BONUS_AP = 44;	// note that cause base AP is always 0, bonusAp always = totalAp
+//        public static final int STAT_BONUS_AR = 63;
+//        public static final int STAT_BONUS_MR = 64;
+//        public static final int STAT_LEVEL_MINUS_ONE = 65;
+//        public static final int STAT_CRIT_DMG = 66;
 	}
+
+    private String buildName;
 
 	private List<BuildSkill> activeSkills;
 	private List<BuildRune> runeBuild;
@@ -362,6 +401,14 @@ public class Build {
 
 		champLevel = 1;
 	}
+
+    public void setBuildName(String name) {
+        buildName = name;
+    }
+
+    public String getBuildName() {
+        return buildName;
+    }
 
 	private void clearGroups() {
 		for (BuildItem item : itemBuild) {
@@ -984,6 +1031,7 @@ public class Build {
 
 		obj.put(JSON_KEY_RUNES, runes);
 		obj.put(JSON_KEY_ITEMS, items);
+        obj.put(JSON_KEY_BUILD_NAME, buildName);
 
 		return obj;
 	}
@@ -1005,6 +1053,8 @@ public class Build {
 			int c = items.getInt(i + 1);
 			addItem(itemLibrary.getItemInfo(itemId), c, i == count - 2);
 		}
+
+        buildName = o.optString(JSON_KEY_BUILD_NAME, null);
 	}
 
 	public static int getSuggestedColorForGroup(int groupId) {
@@ -1127,9 +1177,33 @@ public class Build {
 		return i;
 	}
 
-    public static int getStatType(int statId) {
-        int i = statKeyToStatType.get(statId, STAT_TYPE_DEFAULT);
+    public static int getSkillStatDesc(int statId) {
+        int i;
+        i = statIdToSkillStatDescStringId.get(statId);
+        if (i == 0) {
+            throw new RuntimeException("Stat id does not have a skill stat description: " + statId);
+        }
 
         return i;
+    }
+
+    public static int getStatType(int statId) {
+        switch (statId) {
+            case STAT_DMG_REDUCTION:
+                return STAT_TYPE_PERCENT;
+            default:
+                return STAT_TYPE_DEFAULT;
+        }
+    }
+
+    public static int getScalingType(int statId) {
+        switch (statId) {
+            case STAT_CD_MOD:
+            case STAT_STACKS:
+            case STAT_ONE:
+                return STAT_TYPE_DEFAULT;
+            default:
+                return STAT_TYPE_PERCENT;
+        }
     }
 }

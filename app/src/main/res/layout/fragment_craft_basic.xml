@@ -74,10 +74,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/title"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
             android:orientation="vertical" >
 
             <TableRow
@@ -443,6 +443,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/runes_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/item_build"
@@ -516,6 +517,36 @@
                     android:orientation="horizontal" >
                 </LinearLayout>
             </com.ggstudios.views.InterceptingHorizontalScrollView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_below="@+id/runes_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+
+            <Button
+                android:id="@+id/btnSave"
+                android:text="@string/save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/btnLoad"
+                android:text="@string/load"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btnSaveAs"
+                android:text="@string/save_as"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
         </LinearLayout>
     </RelativeLayout>
 

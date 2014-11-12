@@ -344,6 +344,77 @@ public class ChampionInfo {
 			return scaledDesc;
 		}
 
+        private static String statToString(Context context, String statName, JSONArray vals, DecimalFormat format) throws JSONException {
+            int statId = Build.getStatIndex(statName);
+            int statType = Build.getScalingType(statId);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(" ");
+            for (int i = 0; i < vals.length(); i++) {
+                switch (statType) {
+                    case Build.STAT_TYPE_DEFAULT:
+                        sb.append(format.format(vals.getDouble(i)));
+                        break;
+                    case Build.STAT_TYPE_PERCENT:
+                        sb.append(format.format(vals.getDouble(i) * 100));
+                        break;
+                }
+                sb.append(" / ");
+            }
+
+            sb.setLength(sb.length() - 3);
+            switch (statType) {
+                case Build.STAT_TYPE_DEFAULT:
+                    sb.append(" ");
+                    break;
+                case Build.STAT_TYPE_PERCENT:
+                    sb.append("% ");
+                    break;
+            }
+            sb.append(context.getString(Build.getSkillStatDesc(statId)));
+            return sb.toString();
+        }
+
+        public String getDescriptionWithScaling(Context context, DecimalFormat format) {
+            Matcher matcher = argPattern.matcher(getCompletedDesc());
+
+            StringBuffer sb = new StringBuffer();
+            while(matcher.find()) {
+                String match = matcher.group(1);
+
+                Scaling sc = varToScaling.get(match);
+
+                if (sc != null) {
+                    if (sc.link.equals("@text")) {
+                            matcher.appendReplacement(sb,
+                                    context.getString(Build.getStatName(Build.STAT_LEVEL_MINUS_ONE)));
+                    } else if (sc.coeff instanceof Double) {
+                        JSONArray arr = new JSONArray();
+                        arr.put((Double) sc.coeff);
+
+                        try {
+                            matcher.appendReplacement(sb, statToString(context, sc.link, arr, format));
+                        } catch (JSONException e) {
+                            DebugLog.e(TAG, e);
+                        }
+                    } else if (sc.coeff instanceof JSONArray) {
+                        JSONArray arr = (JSONArray) sc.coeff;
+
+                        try {
+                            matcher.appendReplacement(sb, statToString(context, sc.link, arr, format));
+                        } catch (JSONException e) {
+                            DebugLog.e(TAG, e);
+                        }
+                    }
+                }
+            }
+            matcher.appendTail(sb);
+
+            scaledDesc = sb.toString();
+
+            return scaledDesc;
+        }
+
 		public String getScaledDesc() {
 			return scaledDesc;
 		}

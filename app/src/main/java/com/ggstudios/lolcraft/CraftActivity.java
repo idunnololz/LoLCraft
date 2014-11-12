@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -25,18 +24,14 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Html;
 import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,24 +39,22 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.ggstudios.animation.ResizeAnimation;
+import com.ggstudios.dialogs.StatSummaryDialogFragment;
 import com.ggstudios.lolcraft.ChampionInfo.OnFullyLoadedListener;
-import com.ggstudios.lolcraft.ItemPickerDialogFragment.ItemPickerDialogListener;
-import com.ggstudios.lolcraft.RunePickerDialogFragment.RunePickerDialogListener;
+import com.ggstudios.dialogs.ItemPickerDialogFragment.ItemPickerDialogListener;
+import com.ggstudios.dialogs.RunePickerDialogFragment.RunePickerDialogListener;
 import com.ggstudios.lolcraft.SplashFetcher.OnDrawableRetrievedListener;
 import com.ggstudios.utils.DebugLog;
-import com.ggstudios.utils.FlowTextHelper;
 import com.ggstudios.utils.Utils;
 import com.ggstudios.views.LockableScrollView;
 import com.ggstudios.views.TabIndicator;
 import com.ggstudios.views.TabIndicator.TabItem;
 
-public class CraftActivity extends SherlockFragmentActivity implements ItemPickerDialogListener, RunePickerDialogListener {
+public class CraftActivity extends SherlockFragmentActivity implements ItemPickerDialogListener,
+        RunePickerDialogListener, CraftBasicFragment.BuildManagerProvider {
 	private static final String TAG = "CraftActivity";
 
 	public static final String EXTRA_CHAMPION_ID = "champId";
-
-	private static final String JSON_KEY_BUILD = "build";
-	private static final String JSON_KEY_LAST_BUILD = "unnamed";
 	
 	private static final int PARALLAX_WIDTH_DP = 10;
 	private static final int RESIZE_DURATION = 200;
@@ -101,10 +94,13 @@ public class CraftActivity extends SherlockFragmentActivity implements ItemPicke
 	private boolean closingPanel = false;
 	
 	private SharedPreferences prefs;
-	
-	private JSONObject savedBuilds;
+
+    private BuildManager buildManager;
+
 	
 	private String buildKey;
+
+    private TabAdapter adapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -137,31 +133,13 @@ public class CraftActivity extends SherlockFragmentActivity implements ItemPicke
 		tabs.add(new TabItem("Basic", CraftBasicFragment.class.getName(), args));
 		tabs.add(new TabItem("Skills", CraftSkillsFragment.class.getName(), args));
 		tabs.add(new TabItem("Summary", CraftSummaryFragment.class.getName(), args));
-		TabAdapter adapter = new TabAdapter(this, getSupportFragmentManager(), tabs);
+		adapter = new TabAdapter(this, getSupportFragmentManager(), tabs);
 		pager.setAdapter(adapter);
 		tabIndicator.setAdapter(pager);
 
 		pager.setPageMargin((int) Utils.convertDpToPixel(20, this));
 		pager.setPageMarginDrawable(new ColorDrawable(Color.LTGRAY));
 		pager.setOffscreenPageLimit(2);
-
-		final int parallaxW = (int) Utils.convertDpToPixel(PARALLAX_WIDTH_DP, this);
-		final int parallaxPer = parallaxW / adapter.getCount();
-
-		tabIndicator.setOnPageChangeListener(new OnPageChangeListener() {
-
-			@Override
-			public void onPageScrollStateChanged(int arg0) {}
-
-			@Override
-			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-				splashScroll.scrollTo((int) (parallaxPer * position + parallaxPer * positionOffset), splashScroll.getScrollY());
-			}
-
-			@Override
-			public void onPageSelected(int arg0) {}
-
-		});
 		
 		portrait.setOnClickListener(new OnClickListener() {
 
@@ -177,41 +155,8 @@ public class CraftActivity extends SherlockFragmentActivity implements ItemPicke
 		}
 		name.setText(info.name);
 		title.setText(info.title);
-		
-		int width, height;
-		
-		Display display = getWindowManager().getDefaultDisplay();
-		Point size = new Point();
-		if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.HONEYCOMB_MR1) {
-			display.getSize(size);
-			width = size.x;
-			height = size.y;
-		} else {
-			width = display.getWidth();
-			height = display.getHeight();
-		}
 
-		SplashFetcher.getInstance().fetchChampionSplash(info.key, width + parallaxW, 0, new OnDrawableRetrievedListener() {
-
-			@Override
-			public void onDrawableRetrieved(Drawable d) {
-				splash.setImageDrawable(d);
-
-				if (splash.getWidth() == 0) {
-					splash.post(new Runnable() {
-
-						@Override
-						public void run() {
-							setUpSplash(parallaxW);
-						}
-
-					});
-				} else {
-					setUpSplash(parallaxW);
-				}
-			}
-
-		});
+        loadSplash();
 
 		new AsyncTask<ChampionInfo, Void, ChampionInfo>() {
 
@@ -227,35 +172,73 @@ public class CraftActivity extends SherlockFragmentActivity implements ItemPicke
 		buildKey = champId + "_build";
 		
 		prefs = StateManager.getInstance().getPreferences();
-		
-		if (savedInstanceState == null) {
-			// new instance!
-			// check if we got a saved build...
-			if (prefs.contains(buildKey)) {
-				// looks like there was a build saved!
-				try {
-					savedBuilds = new JSONObject(prefs.getString(buildKey, ""));
-					
-					if (savedBuilds.has(JSON_KEY_LAST_BUILD)) {
-						loadBuild(JSON_KEY_LAST_BUILD);
-					}
-				} catch (JSONException e) {
-					DebugLog.e(TAG, e);
-				}
-			}
-		} else {
-		}
-		
-		if (savedBuilds == null) {
-			savedBuilds = new JSONObject();
-		}
+
+        buildManager = new BuildManager(prefs, buildKey);
+        if (buildManager.hasBuild(BuildManager.BUILD_DEFAULT)) {
+            loadBuild(BuildManager.BUILD_DEFAULT);
+        }
 	}
+
+    private void loadSplash() {
+        int width, height;
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.HONEYCOMB_MR1) {
+            display.getSize(size);
+            width = size.x;
+            height = size.y;
+        } else {
+            width = display.getWidth();
+            height = display.getHeight();
+        }
+
+        final int parallaxW = (int) Utils.convertDpToPixel(PARALLAX_WIDTH_DP, this);
+        final int parallaxPer = parallaxW / adapter.getCount();
+
+        tabIndicator.setOnPageChangeListener(new OnPageChangeListener() {
+
+            @Override
+            public void onPageScrollStateChanged(int arg0) {}
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                splashScroll.scrollTo((int) (parallaxPer * position + parallaxPer * positionOffset), splashScroll.getScrollY());
+            }
+
+            @Override
+            public void onPageSelected(int arg0) {}
+
+        });
+
+        SplashFetcher.getInstance().fetchChampionSplash(info.key, width + parallaxW, 0, new OnDrawableRetrievedListener() {
+
+            @Override
+            public void onDrawableRetrieved(Drawable d) {
+                splash.setImageDrawable(d);
+
+                if (splash.getWidth() == 0) {
+                    splash.post(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            setUpSplash(parallaxW);
+                        }
+
+                    });
+                } else {
+                    setUpSplash(parallaxW);
+                }
+            }
+
+        });
+    }
 	
 	@Override
 	protected void onPause() {
 		super.onPause();
-		
-		saveBuild(JSON_KEY_LAST_BUILD);
+
+        buildManager.saveBuild(build, BuildManager.BUILD_DEFAULT, true);
 		Toast.makeText(this, R.string.build_saved, Toast.LENGTH_LONG).show();
 	}
 	
@@ -267,29 +250,7 @@ public class CraftActivity extends SherlockFragmentActivity implements ItemPicke
 		MemoryManager.getMemoryUsage();
 	}
 	
-	private void saveBuild(String buildName) {
-		try {
-			JSONObject saveDat = new JSONObject();
-			saveDat.put(JSON_KEY_BUILD, build.toJson());
-			savedBuilds.put(buildName, saveDat);
-			
-			final SharedPreferences.Editor editor = prefs.edit(); 
-			editor.putString(buildKey, savedBuilds.toString());
-			
-			Utils.executeInBackground(new Runnable() {
-
-				@Override
-				public void run() {
-					editor.commit();
-				}
-				
-			});
-		} catch (JSONException e) {
-			DebugLog.e(TAG, e);
-		}
-	}
-	
-	private void loadBuild(final String buildName) {
+	public void loadBuild(final String buildName) {
 		new AsyncTask<Void, Void, Void>() {
 
 			@Override
@@ -297,7 +258,6 @@ public class CraftActivity extends SherlockFragmentActivity implements ItemPicke
 				try {
 					LibraryUtils.initItemLibrary(getApplicationContext());
 					LibraryUtils.initRuneLibrary(getApplicationContext());
-					
 				} catch (JSONException e) {
 					DebugLog.e(TAG, e);
 				} catch (IOException e) {
@@ -309,8 +269,7 @@ public class CraftActivity extends SherlockFragmentActivity implements ItemPicke
 			@Override
 			protected void onPostExecute(Void result) {
 				try {
-					JSONObject savedDat = savedBuilds.getJSONObject(buildName);
-					build.fromJson(savedDat.getJSONObject(JSON_KEY_BUILD));
+                    buildManager.loadBuild(build, buildName);
 				} catch (JSONException e) {
 					DebugLog.e(TAG, e);
 				}
@@ -512,22 +471,31 @@ public class CraftActivity extends SherlockFragmentActivity implements ItemPicke
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		// Respond to the action bar's Up/Home button
-		case android.R.id.home:
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
-		case R.id.action_feedback:
-			Utils.startFeedbackIntent(this);
-			return true;
-		case R.id.action_stat_summary:
-		    DialogFragment newFragment = StatSummaryDialogFragment.newInstance();
-		    newFragment.show(getSupportFragmentManager(), "dialog");
-			return true;
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+            case R.id.action_feedback:
+                Utils.startFeedbackIntent(this);
+                return true;
+            case R.id.action_stat_summary:
+                DialogFragment newFragment = StatSummaryDialogFragment.newInstance();
+                newFragment.show(getSupportFragmentManager(), "dialog");
+                return true;
+            case R.id.action_invalidate_splash:
+                SplashFetcher.getInstance().deleteCache(info.key);
+                loadSplash();
+                return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	public static class TabAdapter extends FragmentPagerAdapter implements TabIndicator.TabAdapter {
+    @Override
+    public BuildManager getBuildManager() {
+        return buildManager;
+    }
+
+    public static class TabAdapter extends FragmentPagerAdapter implements TabIndicator.TabAdapter {
 		private List<TabItem> items;
 		private Context context;
 

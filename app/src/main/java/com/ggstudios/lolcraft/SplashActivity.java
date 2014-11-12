@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.ggstudios.dialogs.AlertDialogFragment;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -173,7 +173,7 @@ public class SplashActivity extends SherlockFragmentActivity implements AlertDia
 	}
 
 	@Override
-	public void onPositiveClick(DialogInterface dialog, String tag) {
+	public void onPositiveClick(AlertDialogFragment dialog, String tag) {
 		dialog.dismiss();
 		
 		showProgressBar();
@@ -191,7 +191,7 @@ public class SplashActivity extends SherlockFragmentActivity implements AlertDia
 	}
 
 	@Override
-	public void onNegativeClick(DialogInterface dialog, String tag) {}
+	public void onNegativeClick(AlertDialogFragment dialog, String tag) {}
 	
 	private void gotoMain() {
 		Intent i = new Intent(this, MainActivity.class);

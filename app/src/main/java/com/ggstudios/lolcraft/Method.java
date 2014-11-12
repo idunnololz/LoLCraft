@@ -19,6 +19,7 @@ public class Method {
 			METHOD_TANK = 5,
 			METHOD_MOBILITY = 6,
 
+            METHOD_AOE_DOT_BURST = METHOD_BURST | METHOD_AOE | METHOD_DOT,
 			METHOD_AOE_BURST = METHOD_BURST | METHOD_AOE,
 			METHOD_BURST_AMP = METHOD_BURST | METHOD_AMP,
 			METHOD_DOT_BURST = METHOD_BURST | METHOD_DOT;
@@ -32,14 +33,17 @@ public class Method {
             CC_ROOT = 7, CC_AOE_ROOT = CC_ROOT | METHOD_AOE,
             CC_PULL = 8, CC_AOE_PULL = CC_PULL | METHOD_AOE,
             CC_DISPLACE = 9, CC_AOE_DISPLACE = CC_DISPLACE | METHOD_AOE,
-            CC_FEAR = 10, CC_AOE_FEAR = CC_FEAR | METHOD_AOE;
+            CC_FEAR = 10, CC_AOE_FEAR = CC_FEAR | METHOD_AOE,
+            CC_PARANOIA = 11,
+            CC_TAUNT = 12, CC_AOE_TAUNT = CC_TAUNT | METHOD_AOE;
 
     public static final int SPECIAL_USE_BASE_AS_SCALING = 0xFFFFFFFF;
 
 
 	public static final int AMP_MAGIC = 1;
 
-	public static final int MOBI_BLINK = 1, MOBI_DASH = 2, MOBI_FLAT_MS = 3, MOBI_MSP = 4;
+	public static final int MOBI_BLINK = 1, MOBI_DASH = 2, MOBI_FLAT_MS = 3, MOBI_MSP = 4,
+        MOBI_GAP_CLOSE = 5;
 	
 	private static final SparseIntArray ccDic = new SparseIntArray();
 	private static final SparseIntArray mobiDic = new SparseIntArray();
@@ -63,6 +67,9 @@ public class Method {
         ccDic.put(CC_AOE_DISPLACE, R.string.aoe_displace);
         ccDic.put(CC_FEAR, R.string.fear);
         ccDic.put(CC_AOE_FEAR, R.string.aoe_fear);
+        ccDic.put(CC_PARANOIA, R.string.paranoia);
+        ccDic.put(CC_TAUNT, R.string.taunt);
+        ccDic.put(CC_AOE_TAUNT, R.string.aoe_taunt);
 		
 		mobiDic.put(MOBI_BLINK, R.string.blink);
 		mobiDic.put(MOBI_DASH, R.string.dash);

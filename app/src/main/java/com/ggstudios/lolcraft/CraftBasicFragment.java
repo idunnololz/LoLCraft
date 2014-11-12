@@ -3,8 +3,9 @@ package com.ggstudios.lolcraft;
 import java.text.DecimalFormat;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
+import android.graphics.Camera;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -19,9 +20,11 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
+import android.view.animation.Transformation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
@@ -33,9 +36,15 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.ggstudios.lolcraft.AlertDialogFragment.Builder;
+import com.ggstudios.dialogs.AlertDialogFragment;
+import com.ggstudios.dialogs.AlertDialogFragment.Builder;
+import com.ggstudios.dialogs.ItemPickerDialogFragment;
+import com.ggstudios.dialogs.RunePickerDialogFragment;
+import com.ggstudios.dialogs.SaveAsDialogFragment;
+import com.ggstudios.dialogs.StatHelpDialogFragment;
 import com.ggstudios.lolcraft.Build.BuildItem;
 import com.ggstudios.lolcraft.Build.BuildObserver;
 import com.ggstudios.lolcraft.Build.BuildRune;
@@ -47,7 +56,8 @@ import com.ggstudios.views.RearrangeableLinearLayout.OnEdgeDragListener;
 import com.ggstudios.views.RearrangeableLinearLayout.OnItemDragListener;
 import com.ggstudios.views.RearrangeableLinearLayout.OnReorderListener;
 
-public class CraftBasicFragment extends SherlockFragment implements BuildObserver, AlertDialogFragment.AlertDialogFragmentListener {
+public class CraftBasicFragment extends SherlockFragment implements BuildObserver,
+        AlertDialogFragment.AlertDialogFragmentListener, SaveAsDialogFragment.SaveAsDialogListener {
 	private static final String TAG = "CraftBasicFragment";
 
 	public static final String EXTRA_CHAMPION_ID = "champId";
@@ -64,6 +74,7 @@ public class CraftBasicFragment extends SherlockFragment implements BuildObserve
 
 	private static final String CLEAR_ITEM_DIALOG_TAG = "clear_item_dialog_tag";
 	private static final String CLEAR_RUNE_DIALOG_TAG = "clear_rune_dialog_tag";
+    private static final String OVERWRITE_BUILD_DIALOG_TAG = "overwrite_build_dialog_tag";
 
 	private TextView lblPartype;
 	private TextView lblPartypeRegen;
@@ -88,6 +99,11 @@ public class CraftBasicFragment extends SherlockFragment implements BuildObserve
 	private ImageButton btnTrash;
 	private LinearLayout runeContainer;
 	private HorizontalScrollView runeScrollView;
+    private Button btnSave;
+    private Button btnSaveAs;
+    private Button btnLoad;
+
+    private View rootView;
 
 	private int scrollSpeed;
 
@@ -102,6 +118,7 @@ public class CraftBasicFragment extends SherlockFragment implements BuildObserve
 	private int seekBarPadding;
 
 	private static final DecimalFormat statFormat = new DecimalFormat("###.##");
+    private static final DecimalFormat gainFormat = new DecimalFormat("###.###");
 	private static final DecimalFormat intStatFormat = new DecimalFormat("###");
 
 	private static int ITEM_VIEW_SIZE;
@@ -114,29 +131,35 @@ public class CraftBasicFragment extends SherlockFragment implements BuildObserve
 		double levelBonus = gain * (level - 1);
 		double total = base + levelBonus + itemBonus;
 
-		printStat(tv, total, itemBonus, levelBonus, true, df);
+		printStat(tv, total, itemBonus, levelBonus, gain, true, df);
 	}
 
 	private void setStatAs(TextView tv, double base, double gain, int level, double itemBonus) {
 		double levelBonus = gain * (level - 1);
 		double total = base * (1 + levelBonus + itemBonus);
 
-		printStat(tv, total, itemBonus, levelBonus, true, statFormat);
+		printStat(tv, total, itemBonus, levelBonus, gain, true, statFormat);
 	}
 
 	private void setLevelessStat(TextView tv, double base, double gain, int level, double itemBonus) {
 		double total = base + itemBonus;
 
-		printStat(tv, total, itemBonus, 0, false, statFormat);
+		printStat(tv, total, itemBonus, 0, 0, false, statFormat);
 	}
 
 	private void setLevelessStat(TextView tv, double base, double gain, int level, double itemBonus, DecimalFormat df) {
 		double total = base + itemBonus;
 
-		printStat(tv, total, itemBonus, 0, false, df);
+		printStat(tv, total, itemBonus, 0, 0, false, df);
 	}
 
-	private void printStat(TextView tv, double total, double itemBonus, double levelBonus, boolean printLevelStat, DecimalFormat df) {
+    private static class StatViewHolder {
+        boolean forward;
+        SpannableStringBuilder stats;
+        SpannableStringBuilder levelBonus;
+    }
+
+	private void printStat(final TextView tv, double total, double itemBonus, double levelBonus, final double gainPerLevel, boolean printLevelStat, DecimalFormat df) {
 		SpannableStringBuilder span = new SpannableStringBuilder();
 		span.append("" + df.format(total));
 		int start = span.length();
@@ -150,7 +173,47 @@ public class CraftBasicFragment extends SherlockFragment implements BuildObserve
 		}
 		span.setSpan(new RelativeSizeSpan(0.7f), start, span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-		tv.setText(span);
+        StatViewHolder holder;
+        if (tv.getTag() == null) {
+            holder = new StatViewHolder();
+            holder.forward = true;
+            tv.setTag(holder);
+
+            SpannableStringBuilder gain = new SpannableStringBuilder();
+            gain.append("+");
+            gain.append(gainFormat.format(gainPerLevel));
+            int s = gain.length();
+            gain.append(" per level");
+            gain.setSpan(new RelativeSizeSpan(0.7f), s, gain.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.levelBonus = gain;
+
+            final FlipAnimation flipAnimation = new FlipAnimation(tv, tv);
+            flipAnimation.setOnFlipAnimationHalfDoneListener(new OnFlipAnimationHalfDoneListener() {
+                @Override
+                public void onFlipAnimationHalfDone(boolean forward) {
+                    StatViewHolder holder = ((StatViewHolder) tv.getTag());
+                    if (forward) {
+                        tv.setText(holder.stats);
+                    } else {
+                        tv.setText(holder.levelBonus);
+                    }
+                }
+            });
+            tv.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    flipAnimation.reverse();
+                    tv.startAnimation(flipAnimation);
+                }
+            });
+        } else {
+            holder = (StatViewHolder) tv.getTag();
+        }
+
+        holder.stats = span;
+        if (holder.forward) {
+            tv.setText(span);
+        }
 	}
 
 	boolean edgeDrag = false;
@@ -168,7 +231,7 @@ public class CraftBasicFragment extends SherlockFragment implements BuildObserve
 
 		DebugLog.d(TAG, "onCreateView");
 
-		final View rootView = inflater.inflate(R.layout.fragment_craft_basic, container, false);
+		rootView = inflater.inflate(R.layout.fragment_craft_basic, container, false);
 
 		final int champId = getArguments().getInt(EXTRA_CHAMPION_ID);
 		champInfo = LibraryManager.getInstance().getChampionLibrary().getChampionInfo(champId);
@@ -193,6 +256,13 @@ public class CraftBasicFragment extends SherlockFragment implements BuildObserve
 		btnTrash = (ImageButton) rootView.findViewById(R.id.btnTrash);
 		runeContainer = (LinearLayout) rootView.findViewById(R.id.runes);
 		runeScrollView = (HorizontalScrollView) rootView.findViewById(R.id.runeScrollView);
+        btnSave = (Button) rootView.findViewById(R.id.btnSave);
+        btnLoad = (Button) rootView.findViewById(R.id.btnLoad);
+        btnSaveAs = (Button) rootView.findViewById(R.id.btnSaveAs);
+
+        Button btnStatHelp = (Button) rootView.findViewById(R.id.btnAboutStats);
+        Button btnClearItemBuild = (Button) rootView.findViewById(R.id.clearItemBuild);
+        Button btnClearRuneBuild = (Button) rootView.findViewById(R.id.clearRuneBuild);
 
 		champInfo.onFullyLoaded(new OnFullyLoadedListener() {
 
@@ -462,7 +532,6 @@ public class CraftBasicFragment extends SherlockFragment implements BuildObserve
 			}
 		});
 
-		Button btnStatHelp = (Button) rootView.findViewById(R.id.btnAboutStats);
 		btnStatHelp.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -472,9 +541,6 @@ public class CraftBasicFragment extends SherlockFragment implements BuildObserve
 			}
 
 		});
-
-		Button btnClearItemBuild = (Button) rootView.findViewById(R.id.clearItemBuild);
-		Button btnClearRuneBuild = (Button) rootView.findViewById(R.id.clearRuneBuild);
 
 		btnClearItemBuild.setOnClickListener(new OnClickListener() {
 
@@ -514,8 +580,46 @@ public class CraftBasicFragment extends SherlockFragment implements BuildObserve
 
 		});
 
+        btnSave.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SaveAsDialogFragment.newInstance(CraftBasicFragment.this)
+                    .show(getFragmentManager(), "dialog");
+            }
+        });
+
 		return rootView;
 	}
+
+    @Override
+    public void onSaveAsDialogOkClick(String text) {
+        trySaveBuild(text, false);
+    }
+
+    @Override
+    public void onSaveAsDialogCancelClick() {}
+
+    private void trySaveBuild(String buildName, boolean force) {
+        int result = getBuildManager().saveBuild(build, buildName, force);
+        switch (result) {
+            case BuildManager.RETURN_CODE_SUCCESS:
+                break;
+            case BuildManager.RETURN_CODE_BUILD_NAME_EXIST:
+                AlertDialogFragment dialog = new Builder()
+                        .setMessage(getString(R.string.confirm_build_overwrite, buildName))
+                        .setPositiveButton(android.R.string.ok)
+                        .setNegativeButton(android.R.string.cancel)
+                        .create(this);
+
+                dialog.getArguments().putString("buildName", buildName);
+
+                dialog.show(getFragmentManager(), OVERWRITE_BUILD_DIALOG_TAG);
+                break;
+            case BuildManager.RETURN_CODE_BUILD_INVALID_NAME:
+                Toast.makeText(getActivity(), R.string.invalid_build_name, Toast.LENGTH_LONG).show();
+                break;
+        }
+    }
 
 	@Override 
 	public void onDestroyView() {
@@ -809,20 +913,117 @@ public class CraftBasicFragment extends SherlockFragment implements BuildObserve
 	}
 
 	@Override
-	public void onPositiveClick(DialogInterface dialog, String tag) {
+	public void onPositiveClick(AlertDialogFragment dialog, String tag) {
 		if (tag.equals(CLEAR_ITEM_DIALOG_TAG)) {
 			build.clearItems();
-		} else if (tag.endsWith(CLEAR_RUNE_DIALOG_TAG)) {
+		} else if (tag.equals(CLEAR_RUNE_DIALOG_TAG)) {
 			build.clearRunes();
-		}
+		} else if (tag.equals(OVERWRITE_BUILD_DIALOG_TAG)) {
+            String buildName = dialog.getArguments().getString("buildName");
+            trySaveBuild(buildName, true);
+        }
 	}
 
 	@Override
-	public void onNegativeClick(DialogInterface dialog, String tag) {
-		if (tag.equals(CLEAR_ITEM_DIALOG_TAG)) {
+	public void onNegativeClick(AlertDialogFragment dialog, String tag) {}
 
-		} else if (tag.endsWith(CLEAR_RUNE_DIALOG_TAG)) {
+    private static class FlipAnimation extends Animation {
+        private Camera camera;
 
-		}
-	}
+        private View fromView;
+        private View toView;
+
+        private float centerX;
+        private float centerY;
+
+        private boolean forward = true;
+
+        private OnFlipAnimationHalfDoneListener listener;
+        private boolean callHalfway = false;
+
+        /**
+         * Creates a 3D flip animation between two views.
+         *
+         * @param fromView First view in the transition.
+         * @param toView   Second view in the transition.
+         */
+        public FlipAnimation(View fromView, View toView) {
+            this.fromView = fromView;
+            this.toView = toView;
+
+            setDuration(700);
+            setFillAfter(false);
+            setInterpolator(new AccelerateDecelerateInterpolator());
+        }
+
+        public void reverse() {
+            forward = !forward;
+            View switchView = toView;
+            toView = fromView;
+            fromView = switchView;
+
+            callHalfway = false;
+        }
+
+        @Override
+        public void initialize(int width, int height, int parentWidth, int parentHeight) {
+            super.initialize(width, height, parentWidth, parentHeight);
+            centerX = width / 2;
+            centerY = height / 2;
+            camera = new Camera();
+        }
+
+        public void setOnFlipAnimationHalfDoneListener(OnFlipAnimationHalfDoneListener l) {
+            listener = l;
+        }
+
+        @Override
+        protected void applyTransformation(float interpolatedTime, Transformation t) {
+            // Angle around the y-axis of the rotation at the given time
+            // calculated both in radians and degrees.
+            final double radians = Math.PI * interpolatedTime;
+            float degrees = (float) (180.0 * radians / Math.PI);
+
+            // Once we reach the midpoint in the animation, we need to hide the
+            // source view and show the destination view. We also need to change
+            // the angle by 180 degrees so that the destination does not come in
+            // flipped around
+            if (interpolatedTime >= 0.5f) {
+                degrees -= 180.f;
+                fromView.setVisibility(View.GONE);
+                toView.setVisibility(View.VISIBLE);
+
+                if (!callHalfway) {
+                    callHalfway = true;
+
+                    if (listener != null) {
+                        listener.onFlipAnimationHalfDone(forward);
+                    }
+                }
+            }
+
+            if (forward)
+                degrees = -degrees; //determines direction of rotation when flip begins
+
+            final Matrix matrix = t.getMatrix();
+            camera.save();
+            camera.rotateY(degrees);
+            camera.getMatrix(matrix);
+            camera.restore();
+            matrix.preTranslate(-centerX, -centerY);
+            matrix.postTranslate(centerX, centerY);
+        }
+    }
+
+    private BuildManager getBuildManager() {
+        return ((BuildManagerProvider) getActivity()).getBuildManager();
+    }
+
+    private static interface OnFlipAnimationHalfDoneListener {
+        public void onFlipAnimationHalfDone(boolean forward);
+    }
+
+    public static interface BuildManagerProvider {
+        public BuildManager getBuildManager();
+    }
 }

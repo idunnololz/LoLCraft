@@ -10,6 +10,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -31,6 +32,7 @@ public class CraftSkillsFragment extends SherlockFragment {
 	public static final String EXTRA_CHAMPION_ID = "champId";
 
 	private static final DecimalFormat statFormat = new DecimalFormat("###");
+    private static final DecimalFormat scalingFormat = new DecimalFormat("###.#");
 	private Build build;
 
 	@Override
@@ -78,6 +80,13 @@ public class CraftSkillsFragment extends SherlockFragment {
 							}
 
 						});
+
+                        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                adapter.toggleView(i);
+                            }
+                        });
 					}
 
 				});
@@ -97,17 +106,34 @@ public class CraftSkillsFragment extends SherlockFragment {
 	}
 
 	private static class SkillAdapter extends BaseAdapter {
+        private static final int VIEW_TYPE_PASSIVE = 0;
+        private static final int VIEW_TYPE_SKILL = 1;
+
 		private ChampionInfo.Skill[] skills;
+        private boolean[] showScaling;
 		private LayoutInflater inflater;
 		private Context context;
 		private Build build;
 
 		public SkillAdapter(Context context, ChampionInfo.Skill[] skills, Build build) {
 			this.skills = skills;
+            showScaling = new boolean[skills.length];
+            for (int i = 0; i < showScaling.length; i++) {
+                showScaling[i] = false;
+            }
 			inflater =  LayoutInflater.from(context);;
 			this.context = context;
 			this.build = build;
 		}
+
+        public void toggleView(int position) {
+            if (getItemViewType(position) != VIEW_TYPE_SKILL) {
+                return;
+            }
+
+            showScaling[position] = !showScaling[position];
+            notifyDataSetChanged();
+        }
 
 		@Override
 		public int getCount() {
@@ -127,9 +153,9 @@ public class CraftSkillsFragment extends SherlockFragment {
 		@Override
 		public int getItemViewType(int position) {
 			if (skills[position] instanceof Passive) {
-				return 1;
+				return VIEW_TYPE_PASSIVE;
 			} else {
-				return 0;
+				return VIEW_TYPE_SKILL;
 			}
 		}
 		
@@ -142,7 +168,7 @@ public class CraftSkillsFragment extends SherlockFragment {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ViewHolder holder;
 
-			if (getItemViewType(position) == 0) {
+			if (getItemViewType(position) == VIEW_TYPE_SKILL) {
 				if (convertView == null) {
 					holder = new ViewHolder();
 					convertView = inflater.inflate(R.layout.item_skill_info, parent, false);
@@ -166,10 +192,13 @@ public class CraftSkillsFragment extends SherlockFragment {
 					}
 				}
 
-
 				holder.icon.setImageDrawable(skill.icon);
 				holder.txtName.setText(skill.name);
-				holder.txtDesc.setText(Html.fromHtml(skill.calculateScaling(build, statFormat)));
+                if (showScaling[position]) {
+                    holder.txtDesc.setText(Html.fromHtml(skill.getDescriptionWithScaling(context, scalingFormat)));
+                } else {
+                    holder.txtDesc.setText(Html.fromHtml(skill.calculateScaling(build, statFormat)));
+                }
 				holder.txtDetails.setText(skill.details);
 				holder.txtKey.setText(skill.defaultKey);
 			} else {
@@ -195,7 +224,6 @@ public class CraftSkillsFragment extends SherlockFragment {
 						DebugLog.e(TAG, e);
 					}
 				}
-
 
 				holder.icon.setImageDrawable(skill.icon);
 				holder.txtName.setText(skill.name);
