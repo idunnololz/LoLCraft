@@ -1,4 +1,4 @@
-package com.ggstudios.lolcraft;
+package com.ggstudios.dialogs;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,6 +7,11 @@ import java.util.Locale;
 
 import org.json.JSONException;
 
+import com.ggstudios.lolcraft.ItemInfo;
+import com.ggstudios.lolcraft.LibraryManager;
+import com.ggstudios.lolcraft.LibraryUtils;
+import com.ggstudios.lolcraft.R;
+import com.ggstudios.lolcraft.RuneInfo;
 import com.ggstudios.utils.DebugLog;
 
 import android.app.Activity;

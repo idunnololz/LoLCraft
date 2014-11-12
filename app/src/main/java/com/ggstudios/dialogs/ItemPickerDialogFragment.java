@@ -1,4 +1,4 @@
-package com.ggstudios.lolcraft;
+package com.ggstudios.dialogs;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +12,14 @@ import java.util.Set;
 
 import org.json.JSONException;
 
+import com.ggstudios.lolcraft.ChampionInfo;
+import com.ggstudios.lolcraft.ChampionLibrary;
+import com.ggstudios.lolcraft.ItemInfo;
+import com.ggstudios.lolcraft.ItemLibrary;
+import com.ggstudios.lolcraft.LibraryManager;
+import com.ggstudios.lolcraft.LibraryUtils;
 import com.ggstudios.lolcraft.LibraryUtils.OnItemLoadListener;
+import com.ggstudios.lolcraft.R;
 import com.ggstudios.utils.DebugLog;
 
 import android.app.Activity;
@@ -307,33 +314,34 @@ public class ItemPickerDialogFragment extends DialogFragment {
 			protected Void doInBackground(Void... params) {
 				try {
 					LibraryUtils.getAllItemInfo(getActivity(),
-							new OnItemLoadListener(){
+                            new OnItemLoadListener() {
 
-						@Override
-						public void onStartLoadPortrait(final List<ItemInfo> items) {
-							final ItemLibrary itemLib = LibraryManager.getInstance().getItemLibrary();
-							itemLib.initialize(items);
-							
-							content.post(new Runnable(){
+                                @Override
+                                public void onStartLoadPortrait(final List<ItemInfo> items) {
+                                    final ItemLibrary itemLib = LibraryManager.getInstance().getItemLibrary();
+                                    itemLib.initialize(items);
 
-								@Override
-								public void run() {
-									filterAndShowItems();
-								}
-								
-							});
-						}
+                                    content.post(new Runnable() {
 
-						@Override
-						public void onPortraitLoad(int position,
-								ItemInfo info) {
-							publishProgress(info);
-						}
+                                        @Override
+                                        public void run() {
+                                            filterAndShowItems();
+                                        }
 
-						@Override
-						public void onCompleteLoadPortrait(List<ItemInfo> items) {}
+                                    });
+                                }
 
-					});
+                                @Override
+                                public void onPortraitLoad(int position,
+                                                           ItemInfo info) {
+                                    publishProgress(info);
+                                }
+
+                                @Override
+                                public void onCompleteLoadPortrait(List<ItemInfo> items) {
+                                }
+
+                            });
 				} catch (IOException e) {
 					DebugLog.e(TAG, e);
 				} catch (JSONException e) {

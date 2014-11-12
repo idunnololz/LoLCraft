@@ -1,4 +1,4 @@
-package com.ggstudios.lolcraft;
+package com.ggstudios.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
+
+import com.ggstudios.lolcraft.R;
 
 public class StatHelpDialogFragment extends DialogFragment {
 	@Override

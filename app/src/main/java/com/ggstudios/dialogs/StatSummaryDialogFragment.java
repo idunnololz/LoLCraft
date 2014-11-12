@@ -1,4 +1,4 @@
-package com.ggstudios.lolcraft;
+package com.ggstudios.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -10,6 +10,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.ggstudios.lolcraft.Build;
+import com.ggstudios.lolcraft.R;
+import com.ggstudios.lolcraft.StateManager;
 
 public class StatSummaryDialogFragment extends DialogFragment {
 	private ListView statList;
@@ -165,7 +169,7 @@ public class StatSummaryDialogFragment extends DialogFragment {
 		
 	}
 	
-    static StatSummaryDialogFragment newInstance() {
+    public static StatSummaryDialogFragment newInstance() {
         return new StatSummaryDialogFragment();
     }
 }

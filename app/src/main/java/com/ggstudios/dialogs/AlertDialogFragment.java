@@ -1,6 +1,4 @@
-package com.ggstudios.lolcraft;
-
-import com.ggstudios.utils.Utils;
+package com.ggstudios.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,10 +6,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 public class AlertDialogFragment extends DialogFragment {
 
@@ -38,6 +32,11 @@ public class AlertDialogFragment extends DialogFragment {
 			args.putInt(EXTRA_MESSAGE, messageId);
 			return this;
 		}
+
+        public Builder setMessage(String message) {
+            args.putString(EXTRA_MESSAGE, message);
+            return this;
+        }
 		
 		public Builder setPositiveButton(int textId) {
 			args.putInt(EXTRA_POSITIVE_TEXT, textId);
@@ -67,16 +66,24 @@ public class AlertDialogFragment extends DialogFragment {
 		Bundle args = getArguments();
 		int title = args.getInt(EXTRA_TITLE);
 		int icon = args.getInt(EXTRA_ICON);
-		int message = args.getInt(EXTRA_MESSAGE);
+		Object message = args.get(EXTRA_MESSAGE);
 
 		int positiveTextId = args.getInt(EXTRA_POSITIVE_TEXT, 0);
 		int negativeTextId = args.getInt(EXTRA_NEGATIVE_TEXT, 0);
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-			.setIcon(icon)
-			.setTitle(title)
-			.setMessage(message);
-		
+			.setIcon(icon);
+
+        if (title != 0) {
+            builder.setTitle(title);
+        }
+
+        if (message instanceof Integer) {
+            builder.setMessage((Integer)message);
+        } else {
+            builder.setMessage((String) message);
+        }
+
 		if (positiveTextId == 0) {
 			positiveTextId = android.R.string.ok;
 		}
@@ -92,7 +99,7 @@ public class AlertDialogFragment extends DialogFragment {
 		builder.setPositiveButton(android.R.string.ok,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						parent.onPositiveClick(dialog, getTag());
+						parent.onPositiveClick(AlertDialogFragment.this, getTag());
 					}
 				}
 			);
@@ -101,7 +108,7 @@ public class AlertDialogFragment extends DialogFragment {
 			builder.setNegativeButton(negativeTextId,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						parent.onNegativeClick(dialog, getTag());
+						parent.onNegativeClick(AlertDialogFragment.this, getTag());
 					}
 				}
 			);
@@ -112,7 +119,7 @@ public class AlertDialogFragment extends DialogFragment {
 	}
 	
 	public static interface AlertDialogFragmentListener {
-		public void onPositiveClick(DialogInterface dialog, String tag);
-		public void onNegativeClick(DialogInterface dialog, String tag);
+		public void onPositiveClick(AlertDialogFragment dialog, String tag);
+		public void onNegativeClick(AlertDialogFragment dialog, String tag);
 	}
 }
