@@ -142,6 +142,7 @@ public class Main {
 	public static void main(String[] args) {
 		try {
             // Updates champion data... outputs to out/ and res/
+            //DataFetcher.fetchAllChampionThumb();
             DataFetcher.fetchAllChampionJson();
             ChampionInfoFixer.fixChampionInfo();
 

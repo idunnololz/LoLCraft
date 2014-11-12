@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -119,5 +120,11 @@ public class LolApiClient {
         } else {
             return null;
         }
+    }
+
+    public InputStream getChampionThumb(String version, String championName) throws IOException {
+        URL url = new URL(String.format("https://ddragon.leagueoflegends.com/cdn/%s/img/champion/%s.png", version, championName));
+        InputStream is = url.openStream();
+        return is;
     }
 }

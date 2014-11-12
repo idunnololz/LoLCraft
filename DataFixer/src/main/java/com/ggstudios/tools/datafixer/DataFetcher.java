@@ -8,6 +8,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -81,5 +82,45 @@ public class DataFetcher {
         }
 
         p("All champion data fetched!");
+    }
+
+    public static void fetchAllChampionThumb() throws IOException, JSONException {
+        // first check if our version is good...
+        String curVer = ChampionInfoFixer.loadJsonObj("champions/Annie.json").getString("version");
+/*
+        if (curVer.equals(getLatestVersion())) {
+            p("Champion thumbs up to date. No need to re-fetch.");
+            return;
+        }
+
+        p("Champion thumbs out of data. Re-fetching data...");
+*/
+        File dir = new File("res/champions_thumb");
+        dir.mkdir();
+
+        JSONObject championJson = client.getAllChampionJson();
+
+        JSONObject data = championJson.getJSONObject("data");
+
+        String latestVersion = getLatestVersion();
+        Iterator<?> iter = data.keys();
+        while (iter.hasNext()) {
+            String key = (String) iter.next();
+            OutputStream os = new FileOutputStream("res/champions_thumb/" + key + ".png");
+            InputStream is = client.getChampionThumb(latestVersion, key);
+
+            byte[] b = new byte[2048];
+            int length;
+
+            while ((length = is.read(b)) != -1) {
+                os.write(b, 0, length);
+            }
+
+            is.close();
+            os.close();
+        }
+
+        p("All champion data fetched!");
+
     }
 }
