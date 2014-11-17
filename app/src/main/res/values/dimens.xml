@@ -6,4 +6,6 @@
     
     <dimen name="rune_info_width">200dp</dimen>
 
+    <dimen name="dialog_horizontal_margin">16dp</dimen>
+
 </resources>

@@ -3,7 +3,6 @@ package com.ggstudios.lolcraft;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.ggstudios.dialogs.AlertDialogFragment;
 
 import android.content.Intent;
@@ -18,6 +17,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
@@ -26,7 +26,7 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.Button;
 
-public class SplashActivity extends SherlockFragmentActivity implements AlertDialogFragment.AlertDialogFragmentListener {
+public class SplashActivity extends FragmentActivity implements AlertDialogFragment.AlertDialogFragmentListener {
 
 	private static final int SLOW_ANIMATION_DURATION = 1500;
 	private static final int ANIMATION_DURATION = 300;

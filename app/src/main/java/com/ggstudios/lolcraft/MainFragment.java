@@ -17,7 +17,13 @@ import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -35,19 +41,11 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
-import com.actionbarsherlock.widget.SearchView;
-import com.actionbarsherlock.widget.SearchView.OnCloseListener;
-import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.ggstudios.lolcraft.LibraryUtils.OnChampionLoadListener;
 import com.ggstudios.utils.DebugLog;
 import com.ggstudios.utils.Utils;
 
-public class MainFragment extends SherlockFragment implements OnQueryTextListener {
+public class MainFragment extends Fragment implements SearchView.OnQueryTextListener {
 	private static final String TAG = "MainFragment";
 
 	private static final String KEY_SHOW_AS_LIST = "show_as_list";
@@ -90,27 +88,27 @@ public class MainFragment extends SherlockFragment implements OnQueryTextListene
 		this.menu = menu;
 
 		MenuItem searchItem = menu.findItem(R.id.action_search);
-		searchView = (SearchView) searchItem.getActionView();
+		searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 		searchView.setOnQueryTextListener(this);
 
-		searchItem.setOnActionExpandListener(new OnActionExpandListener() {
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
 
-			@Override
-			public boolean onMenuItemActionExpand(MenuItem item) {
-				// TODO Auto-generated method stub
-				return true;
-			}
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                // TODO Auto-generated method stub
+                return true;
+            }
 
-			@Override
-			public boolean onMenuItemActionCollapse(MenuItem item) {
-				ListAdapter adapter = content.getAdapter();
-				if (adapter != null) {
-					((ChampionInfoAdapter) adapter).filter(null);
-				}
-				return true;
-			}
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                ListAdapter adapter = content.getAdapter();
+                if (adapter != null) {
+                    ((ChampionInfoAdapter) adapter).filter(null);
+                }
+                return true;
+            }
 
-		});
+        });
 
 		refreshMenu();
 	}

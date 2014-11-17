@@ -1,10 +1,12 @@
 package com.ggstudios.lolcraft;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.ggstudios.utils.DebugLog;
 import com.ggstudios.utils.Utils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,10 +25,14 @@ public class BuildManager {
     private String prefKey;
 
     private JSONObject savedBuilds;
+    private JSONArray buildsArray;
 
     public static final int RETURN_CODE_SUCCESS = 0;
     public static final int RETURN_CODE_BUILD_NAME_EXIST = -1;
     public static final int RETURN_CODE_BUILD_INVALID_NAME = -2;
+    private JSONObject p;
+
+    private boolean dirty = false;
 
     public BuildManager(SharedPreferences prefs, String prefKey) {
         this.prefs = prefs;
@@ -42,6 +48,8 @@ public class BuildManager {
         } else {
             savedBuilds = new JSONObject();
         }
+
+        dirty = true;
     }
 
     public boolean hasBuild(String buildName) {
@@ -64,6 +72,7 @@ public class BuildManager {
                 }
             }
 
+            build.setBuildName(buildName);
             savedBuilds.put(buildName, build.toJson());
 
             final SharedPreferences.Editor editor = prefs.edit();
@@ -81,6 +90,8 @@ public class BuildManager {
             DebugLog.e(TAG, e);
         }
 
+        dirty = true;
+
         return RETURN_CODE_SUCCESS;
     }
 
@@ -96,5 +107,27 @@ public class BuildManager {
         }
 
         return keys;
+    }
+
+    public JSONObject getRawBuilds() {
+        return savedBuilds;
+    }
+
+    public JSONArray getJSONArray() {
+        if (dirty || buildsArray == null) {
+            buildsArray = new JSONArray();
+
+            for (Iterator<String> x = savedBuilds.keys(); x.hasNext(); ){
+                String key = (String) x.next();
+                try {
+                    buildsArray.put(savedBuilds.get(key));
+                } catch (JSONException e) {
+                    Log.e(TAG, "", e);
+                }
+            }
+
+            dirty = false;
+        }
+        return buildsArray;
     }
 }

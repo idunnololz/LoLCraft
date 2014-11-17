@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -38,9 +39,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.ggstudios.dialogs.AlertDialogFragment;
 import com.ggstudios.dialogs.AlertDialogFragment.Builder;
+import com.ggstudios.dialogs.BuildManagerDialogFragment;
 import com.ggstudios.dialogs.ItemPickerDialogFragment;
 import com.ggstudios.dialogs.RunePickerDialogFragment;
 import com.ggstudios.dialogs.SaveAsDialogFragment;
@@ -56,7 +57,7 @@ import com.ggstudios.views.RearrangeableLinearLayout.OnEdgeDragListener;
 import com.ggstudios.views.RearrangeableLinearLayout.OnItemDragListener;
 import com.ggstudios.views.RearrangeableLinearLayout.OnReorderListener;
 
-public class CraftBasicFragment extends SherlockFragment implements BuildObserver,
+public class CraftBasicFragment extends Fragment implements BuildObserver,
         AlertDialogFragment.AlertDialogFragmentListener, SaveAsDialogFragment.SaveAsDialogListener {
 	private static final String TAG = "CraftBasicFragment";
 
@@ -583,8 +584,28 @@ public class CraftBasicFragment extends SherlockFragment implements BuildObserve
         btnSave.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (build.getBuildName() == null) {
+                    SaveAsDialogFragment.newInstance(CraftBasicFragment.this)
+                            .show(getFragmentManager(), "dialog");
+                } else {
+                    trySaveBuild(build.getBuildName(), true);
+                }
+            }
+        });
+
+        btnLoad.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BuildManagerDialogFragment frag = BuildManagerDialogFragment.newInstance();
+                frag.show(getFragmentManager(), "dialog");
+            }
+        });
+
+        btnSaveAs.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 SaveAsDialogFragment.newInstance(CraftBasicFragment.this)
-                    .show(getFragmentManager(), "dialog");
+                        .show(getFragmentManager(), "dialog");
             }
         });
 

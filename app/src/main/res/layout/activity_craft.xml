@@ -4,18 +4,24 @@
     android:layout_height="match_parent"
     android:background="@color/background_color" >
 
+    <View
+        android:id="@+id/statusBarSpacer"
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
     <com.ggstudios.views.LockableScrollView
         android:id="@+id/splashScrollView"
         android:layout_width="match_parent"
-        android:layout_height="158dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_alignBottom="@+id/tab_indicator"
         android:background="@color/grey"
         android:scrollbars="none" >
 
         <ImageView
             android:id="@+id/splash"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:src="@drawable/splash_placeholder" />
@@ -278,11 +284,11 @@
     </LinearLayout>
 
     <ImageView
+        android:layout_below="@+id/statusBarSpacer"
         android:id="@+id/portrait"
         android:layout_width="100dp"
         android:layout_height="110dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="?attr/actionBarSize"
         android:paddingTop="10dp"

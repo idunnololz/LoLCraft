@@ -43,7 +43,7 @@ public class Method {
 	public static final int AMP_MAGIC = 1;
 
 	public static final int MOBI_BLINK = 1, MOBI_DASH = 2, MOBI_FLAT_MS = 3, MOBI_MSP = 4,
-        MOBI_GAP_CLOSE = 5;
+        MOBI_GAP_CLOSE = 5, MOBI_GLOBAL_TELEPORT = 6;
 	
 	private static final SparseIntArray ccDic = new SparseIntArray();
 	private static final SparseIntArray mobiDic = new SparseIntArray();
@@ -75,6 +75,7 @@ public class Method {
 		mobiDic.put(MOBI_DASH, R.string.dash);
 		mobiDic.put(MOBI_FLAT_MS, R.string.speed_up_flat);
 		mobiDic.put(MOBI_MSP, R.string.speed_up_percent);
+        mobiDic.put(MOBI_GLOBAL_TELEPORT, R.string.global_teleport);
 	}
 	
 	public static int getStringIdForCcType(int ccType) {

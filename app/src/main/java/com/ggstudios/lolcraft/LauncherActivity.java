@@ -1,12 +1,11 @@
 package com.ggstudios.lolcraft;
 
-import com.actionbarsherlock.app.SherlockActivity;
-
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-public class LauncherActivity extends SherlockActivity {
+public class LauncherActivity extends Activity {
 	
 	public static final String KEY_OPEN_ONCE = "open_once_00000000";
 

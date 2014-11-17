@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
         android:id="@+id/action_feedback"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/action_feedback"/>
     
     <item
         android:id="@+id/action_stat_summary"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/action_stat_summary"/>
 
     <item
         android:id="@+id/action_invalidate_splash"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/action_invalidate_splash"/>
 
 </menu>

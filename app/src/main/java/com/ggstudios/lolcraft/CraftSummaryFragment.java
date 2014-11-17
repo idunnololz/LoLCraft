@@ -11,6 +11,7 @@ import org.json.JSONException;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
@@ -28,7 +29,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.ggstudios.lolcraft.Build.BuildSkill;
 import com.ggstudios.lolcraft.ChampionInfo.Passive;
 import com.ggstudios.lolcraft.ChampionInfo.Skill;
@@ -39,7 +39,7 @@ import com.ggstudios.views.AnimatedExpandableListView;
 import com.ggstudios.views.AnimatedExpandableListView.AnimatedExpandableListAdapter;
 import com.ggstudios.views.SingleBarGraph;
 
-public class CraftSummaryFragment extends SherlockFragment {
+public class CraftSummaryFragment extends Fragment {
     private static final String TAG = CraftSummaryFragment.class.getSimpleName();
 
     public static final String EXTRA_CHAMPION_ID = "champId";

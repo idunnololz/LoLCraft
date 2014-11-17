@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.ggstudios.lolcraft.Build.BuildItem;
 import com.ggstudios.lolcraft.Build.BuildObserver;
 import com.ggstudios.lolcraft.Build.BuildRune;
@@ -25,7 +25,7 @@ import com.ggstudios.lolcraft.ChampionInfo.Passive;
 import com.ggstudios.lolcraft.ChampionInfo.Skill;
 import com.ggstudios.utils.DebugLog;
 
-public class CraftSkillsFragment extends SherlockFragment {
+public class CraftSkillsFragment extends Fragment {
 
 	private static final String TAG = "CraftSkillsFragment";
 

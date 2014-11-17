@@ -8,6 +8,7 @@ public class StateManager {
 	private static StateManager instance;
 	
 	private Build activeBuild;
+    private BuildManager activeBuildManager;
 	private SharedPreferences prefs;
 	
 	private StateManager(Context context) {
@@ -33,4 +34,12 @@ public class StateManager {
 	public SharedPreferences getPreferences() {
 		return prefs;
 	}
+
+    public BuildManager getActiveBuildManager() {
+        return activeBuildManager;
+    }
+
+    public void setActiveBuildManager(BuildManager activeBuildManager) {
+        this.activeBuildManager = activeBuildManager;
+    }
 }

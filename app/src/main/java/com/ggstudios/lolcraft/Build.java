@@ -131,9 +131,9 @@ public class Build {
 	private static final int MAX_STATS = 121;
 	private static final int MAX_ACTIVE_ITEMS = 6;
 
-	private static final String JSON_KEY_RUNES = "runes";
-	private static final String JSON_KEY_ITEMS = "items";
-    private static final String JSON_KEY_BUILD_NAME = "build_name";
+	public static final String JSON_KEY_RUNES = "runes";
+	public static final String JSON_KEY_ITEMS = "items";
+    public static final String JSON_KEY_BUILD_NAME = "build_name";
 
 	private static final Map<String, Integer> statKeyToIndex = new HashMap<String, Integer>();
 	private static final SparseIntArray statIdToStringId = new SparseIntArray();
@@ -1037,6 +1037,9 @@ public class Build {
 	}
 
 	public void fromJson(JSONObject o) throws JSONException {
+        clearItems();
+        clearRunes();
+
 		JSONObject runes = o.getJSONObject(JSON_KEY_RUNES);
 		JSONArray items = o.getJSONArray(JSON_KEY_ITEMS);
 

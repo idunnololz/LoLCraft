@@ -6,7 +6,7 @@
     <item
         android:id="@+id/action_report_bug"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/action_report_bug"/>
 
 </menu>

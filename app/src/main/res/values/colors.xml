@@ -3,6 +3,7 @@
     
     <color name="theme_color_highlight">#99CC00</color>
     <color name="theme_color">#669900</color>
+    <color name="theme_color_dark">#456800</color>
     
     <item name="background_color" type="color">#fff5f5f5</item>
     <item name="white97" type="color">#F7FFFFFF</item>

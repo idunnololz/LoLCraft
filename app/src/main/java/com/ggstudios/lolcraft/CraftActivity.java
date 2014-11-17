@@ -21,11 +21,16 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.view.Display;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -35,9 +40,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.ggstudios.animation.ResizeAnimation;
 import com.ggstudios.dialogs.StatSummaryDialogFragment;
 import com.ggstudios.lolcraft.ChampionInfo.OnFullyLoadedListener;
@@ -50,7 +52,7 @@ import com.ggstudios.views.LockableScrollView;
 import com.ggstudios.views.TabIndicator;
 import com.ggstudios.views.TabIndicator.TabItem;
 
-public class CraftActivity extends SherlockFragmentActivity implements ItemPickerDialogListener,
+public class CraftActivity extends ActionBarActivity implements ItemPickerDialogListener,
         RunePickerDialogListener, CraftBasicFragment.BuildManagerProvider {
 	private static final String TAG = "CraftActivity";
 
@@ -97,7 +99,6 @@ public class CraftActivity extends SherlockFragmentActivity implements ItemPicke
 
     private BuildManager buildManager;
 
-	
 	private String buildKey;
 
     private TabAdapter adapter;
@@ -174,8 +175,18 @@ public class CraftActivity extends SherlockFragmentActivity implements ItemPicke
 		prefs = StateManager.getInstance().getPreferences();
 
         buildManager = new BuildManager(prefs, buildKey);
+        StateManager.getInstance().setActiveBuildManager(buildManager);
         if (buildManager.hasBuild(BuildManager.BUILD_DEFAULT)) {
             loadBuild(BuildManager.BUILD_DEFAULT);
+        }
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            Window w = getWindow();
+            w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+            View v = findViewById(R.id.statusBarSpacer);
+            v.getLayoutParams().height = Utils.getStatusBarHeight(this);
+            v.requestLayout();
         }
 	}
 
@@ -464,7 +475,7 @@ public class CraftActivity extends SherlockFragmentActivity implements ItemPicke
     public boolean onCreateOptionsMenu(Menu menu) {
         
         // Inflate the menu; this adds items to the action bar if it is present.
-        getSupportMenuInflater().inflate(R.menu.craft_activity, menu);
+        getMenuInflater().inflate(R.menu.craft_activity, menu);
         return true;
     }
 
