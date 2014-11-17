@@ -26,6 +26,7 @@ public class LolApiClient {
 
     private static final String KEY_API_KEY = "api_key";
     private static final String KEY_CHAMPION_DATA = "champData";
+    private static final String KEY_VERSION = "version";
 
     public static final String REGION_NA = "na";
 
@@ -73,11 +74,20 @@ public class LolApiClient {
         return new JSONObject(makeRequest(REQUEST_CHAMPION, makeExtras(arr)));
     }
 
-
     public JSONObject getChampionJson(int championId) throws IOException, JSONException {
         String[][] arr = new String[][] {
                 {KEY_API_KEY, apiKey},
-                {KEY_CHAMPION_DATA, "image", "info", "lore", "partype", "passive", "spells", "stats", "tags"}
+                {KEY_CHAMPION_DATA, "image", "info", "lore", "partype", "passive", "spells", "stats", "tags"},
+        };
+
+        return new JSONObject(makeRequest(String.format(REQUEST_CHAMPION_SPECIFIC, championId), makeExtras(arr)));
+    }
+
+    public JSONObject getChampionJson(int championId, String version) throws IOException, JSONException {
+        String[][] arr = new String[][] {
+                {KEY_API_KEY, apiKey},
+                {KEY_CHAMPION_DATA, "image", "info", "lore", "partype", "passive", "spells", "stats", "tags"},
+                {KEY_VERSION, version},
         };
 
         return new JSONObject(makeRequest(String.format(REQUEST_CHAMPION_SPECIFIC, championId), makeExtras(arr)));

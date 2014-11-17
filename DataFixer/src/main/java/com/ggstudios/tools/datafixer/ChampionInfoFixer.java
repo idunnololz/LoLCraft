@@ -56,14 +56,15 @@ public class ChampionInfoFixer {
             CC_DISPLACE = 9, CC_AOE_DISPLACE = CC_DISPLACE | METHOD_AOE,
             CC_FEAR = 10, CC_AOE_FEAR = CC_FEAR | METHOD_AOE,
             CC_PARANOIA = 11,
-            CC_TAUNT = 12, CC_AOE_TAUNT = CC_TAUNT | METHOD_AOE;
+            CC_TAUNT = 12, CC_AOE_TAUNT = CC_TAUNT | METHOD_AOE,
+            CC_SUPPRESS = 13;
 
 	private static final int AMP_MAGIC = 1, AMP_ALL = 2;
 
     private static final int SPECIAL_USE_BASE_AS_SCALING = 0xFFFFFFFF;
 
 	private static final int MOBI_BLINK = 1, MOBI_DASH = 2, MOBI_FLAT_MS = 3, MOBI_MSP = 4,
-        MOBI_GAP_CLOSE = 5;
+        MOBI_GAP_CLOSE = 5, MOBI_GLOBAL_TELEPORT = 6;
 
 	private static final Object[] CHAMPION_SPELL_DAMAGE = new Object[] {
 		// 0th item is the number of methods a skill can be considered
@@ -711,20 +712,32 @@ public class ChampionInfoFixer {
                     2,  METHOD_AOE_BURST|AP,1, 150, 250, 350, 0.8, "spelldamage",
                         METHOD_CC,          0, CC_AOE_STUN, 1.25, 1.5, 1.75,
 
+        "Shaco",    1,  METHOD_BURST|AD,    1, 0, 0, 0.2, "attackdamage",
+                    2,  METHOD_BURST|AD,    1, 0, 0, 0, 0, 0, 0.4, 0.6, 0.8, 1, 1.2, "attackdamage",
+                        METHOD_MOBILITY,    0, MOBI_BLINK, 400, 400, 400, 400, 400,
+                    2,  METHOD_CC,          0, CC_FEAR, 0.5, 0.75, 1, 1.25, 1.5,
+                        METHOD_DOT_BURST|AP,1, 315, 450, 585, 720, 855, 1.8, "spelldamage",
+                    2,  METHOD_CC,          0, CC_SLOW, 0.1, 2, 0.15, 2, 0.2, 2, 0.25, 2, 0.3, 2,
+                        METHOD_BURST|AP,    2, 50, 90, 130, 170, 210, 1, "spelldamage", 1, "bonusattackdamage",
+                    2,  METHOD_AOE_BURST|AP,1, 300, 450, 600, 1, "spelldamage",
+                        METHOD_DPS,         1, 1, 0, 0, 0, 0.75, 0.75, 0.75, "attackdamage", "FlatPhysicalDamageMod",
 
+        "Shen",     1,  METHOD_BURST|AP,    2, 0, 4, 4, "level", 0.1, "bonushealth",
+                    2,  METHOD_BURST|AP,    1, 60, 100, 140, 180, 220, 0.6, "spelldamage",
+                        METHOD_SUSTAIN,     0, 0,0,0,0,0,
+                    1,  METHOD_TANK,        1, 60, 100, 140, 180, 220, 0.6, "spelldamage", "FlatHPPoolMod",
+                    2,  METHOD_AOE_BURST|AP,1, 50, 85, 120, 155, 190, 0.5, "spelldamage",
+                        METHOD_CC,          0, CC_AOE_TAUNT, 1.5, 1.5, 1.5, 1.5, 1.5,
+                    1,  METHOD_MOBILITY,    0, MOBI_GLOBAL_TELEPORT, 0, 0, 0,
 
-
-
-
-
-
-
-
-
-
-
-
-
+        "Singed",   1,  METHOD_TANK,        1, 0, 0, 0.25, "mana", "FlatHPPoolMod",
+                    1,  METHOD_AOE_DOT_BURST|AP,1, 66, 102, 138, 174, 210, 0.9, "spelldamage",
+                    1,  METHOD_CC,          0, CC_AOE_SLOW, 0.35, 5, 0.45, 5, 0.55, 5, 0.65, 5, 0.75, 5,
+                    2,  METHOD_BURST|AP,    1, 80, 125, 170, 215, 260, 0.75, "spelldamage",
+                        METHOD_CC,          0, CC_DISPLACE, 550, 550, 550, 550, 550,
+                    3,  METHOD_TANK,        0, 35, 50, 80, "FlatArmorMod",
+                        METHOD_TANK,        0, 35, 50, 80, "FlatSpellBlockMod",
+                        METHOD_MOBILITY,    0, MOBI_FLAT_MS, 35, 50, 80,
 
 		"Sivir",	1, 	METHOD_MOBILITY,	0, MOBI_FLAT_MS, 5, 1, 30, 6, 35, 11, 40, 16, 45, 18, 50,
 					1,	METHOD_BURST|AD,	2, 46.25, 83.25, 120.25, 159.1, 194.25, 0.925, "spelldamage", 1.295, 1.48, 1.665, 1.85, 2.035, "attackdamage",
@@ -732,6 +745,48 @@ public class ChampionInfoFixer {
 					0,
 					2,	METHOD_MOBILITY,	0, MOBI_MSP, 0.6, 0.6, 0.6,
 						METHOD_DPS,			0, 1, 0.4, 0.6, 0.8, "PercentAttackSpeedMod",
+
+        "Skarner",  2,  METHOD_BURST|AP,    2, 0, 15, 5, "level", 1, "attackdamage",
+                        METHOD_CC,          0, CC_STUN, 3, 1, 0.5, 7, 0.75, 13, 1,
+                    1,  METHOD_AOE_BURST|AP,1, 18, 28, 38, 48, 58, 0.4, "bonusattackdamage",
+                    2,  METHOD_TANK,        1, 80, 135, 190, 245, 300, 0.8, "spelldamage", "FlatHPPoolMod",
+                        METHOD_MOBILITY,    0, MOBI_MSP, 0.16, 0.2, 0.24, 0.28, 0.32,
+                    2,  METHOD_AOE_BURST|AP,1, 40, 60, 80, 100, 120, 0.4, "spelldamage",
+                        METHOD_CC,          0, CC_AOE_SLOW, 0.45, 2.5, 0.50, 2.5, 0.55, 2.5, 0.60, 2.5, 0.65, 2.5,
+                    2,  METHOD_CC,          0, CC_SUPPRESS, 1.75, 1.75, 1.75,
+                        METHOD_BURST|AP,    1, 350, 525, 700, 1, "spelldamage",
+
+        "Soraka",   1,  METHOD_MOBILITY,    0, MOBI_MSP, 0, 0.4,
+                    3,  METHOD_AOE_BURST|AP,1, 70, 110, 150, 190, 230, 0.35, "spelldamage",
+                        METHOD_CC,          0, CC_SLOW, 0.3, 2, 0.35, 2, 0.4, 2, 0.45, 2, 0.5, 2,
+                        METHOD_BURST|AP,    1, 35, 55, 75, 95, 115, 17.5, "spelldamage",
+                    1,  METHOD_SUSTAIN,     0, 0, 0, 0, 0, 0,
+                    3,  METHOD_AOE_DOT_BURST|AP,1, 140, 220, 300, 380, 460, 0.8, "spelldamage",
+                        METHOD_CC,          0, CC_ROOT, 1, 1.25, 1.5, 1.75, 2,
+                        METHOD_CC,          0, CC_AOE_SILENCE, 1.5, 1.5, 1.5, 1.5, 1.5,
+                    1,  METHOD_TANK,        0,  225, 375, 525, "FlatHPPoolMod",
+
+        "Swain",    0,
+                    2,  METHOD_DOT_BURST|AP,1,  75, 120, 165, 210, 255, 0.9, "spelldamage",
+                        METHOD_CC,          0, CC_SLOW, 0.2, 3, 0.25, 3, 0.3, 3, 0.35, 3, 0.4, 3,
+                    2,  METHOD_AOE_BURST|AP,1, 80, 120, 160, 200, 240, 0.7, "spelldamage",
+                        METHOD_CC,          0, CC_AOE_ROOT, 2, 2, 2, 2, 2,
+                    2,  METHOD_DOT_BURST|AD,1, 75, 115, 155, 195, 235, 0.8, "spelldamage",
+                        METHOD_BURST_AMP|AP,0, 0.08, 0.11, 0.14, 0.17, 0.2, AMP_ALL,
+                    1,  METHOD_DPS,         1, 1, 50, 70, 90, 0.2, "spelldamage", "magic_aoe_dps",
+
+        "Syndra",   0,
+                    1,  METHOD_AOE_BURST|AP,1, 70, 110, 150, 190, 264.5, 0.6, 0.6, 0.6, 0.6, 0.69, "spelldamage",
+                    2,  METHOD_AOE_BURST|AP,1,  80, 120, 160, 200, 240, 0.7, "spelldamage",
+                        METHOD_CC,          0, CC_SLOW, 0.25, 1.5, 0.3, 1.5, 0.35, 1.5, 0.4, 1.5, 0.45, 2,
+                    2,  METHOD_AOE_BURST|AP,1, 70, 115, 160, 205, 250, 0.4, "spelldamage",
+                        METHOD_CC,          0, CC_AOE_STUN, 1.5, 1.5, 1.5, 1.5, 1.5,
+                    1,  METHOD_BURST|AP,    1,  630, 975, 1260, 1.4, "spelldamage",
+
+
+
+
+
 
 
             // this is read as: Passive with 1 stat mod, giving bonus to 1 stat which has 0 level segments. The stat is 0 (base) + (9*(level-1)).

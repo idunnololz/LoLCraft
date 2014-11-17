@@ -41,6 +41,10 @@ public class DataFetcher {
         br.close();
     }
 
+    public static void listAllVersions() throws IOException, JSONException {
+        p(client.getVersions().toString());
+    }
+
     private static String getLatestVersion() throws IOException, JSONException {
         if (latestVersion == null) {
             latestVersion = client.getVersions().getString(0);
@@ -50,15 +54,23 @@ public class DataFetcher {
     }
 
     public static void fetchAllChampionJson() throws IOException, JSONException {
-        // first check if our version is good...
+        fetchAllChampionJson(null);
+    }
+
+    public static void fetchAllChampionJson(String version) throws IOException, JSONException {
+        if (version == null) {
+            version = getLatestVersion();
+        }
+
         String curVer = ChampionInfoFixer.loadJsonObj("champions/Annie.json").getString("version");
 
-        if (curVer.equals(getLatestVersion())) {
-            p("Champion data up to date. No need to re-fetch.");
+        if (curVer.equals(version)) {
+            p("Champion data correct version. No need to re-fetch.");
             return;
         }
 
-        p("Champion data out of data. Re-fetching data...");
+        p("Champion data version incorrect. Re-fetching data...");
+        p(String.format("Switching data version [v%s -> v%s]", curVer, getLatestVersion()));
 
         File dir = new File("res/champions");
         dir.mkdir();
@@ -66,6 +78,8 @@ public class DataFetcher {
         JSONObject championJson = client.getAllChampionJson();
 
         JSONObject data = championJson.getJSONObject("data");
+
+        System.out.print("Downloading new data ");
 
         Iterator<?> iter = data.keys();
         while (iter.hasNext()) {
@@ -75,10 +89,12 @@ public class DataFetcher {
             File file = new File(dir, key + ".json");
 
             JSONObject o = new JSONObject();
-            o.put("data", client.getChampionJson(value.getInt("id")));
-            o.put("version", getLatestVersion());
+            o.put("data", client.getChampionJson(value.getInt("id"), version));
+            o.put("version", version);
 
             saveJsonObj(file.getCanonicalPath(), o);
+
+            System.out.print('|');
         }
 
         p("All champion data fetched!");
