@@ -16,6 +16,7 @@ import android.util.SparseIntArray;
 
 import com.ggstudios.lolcraft.ChampionInfo.Skill;
 import com.ggstudios.utils.DebugLog;
+import com.google.gson.Gson;
 
 /**
  * Class that holds information about a build, such as build order, stats and cost. 
@@ -378,6 +379,8 @@ public class Build {
 
 	private boolean itemBuildDirty = false;
 
+    private Gson gson;
+
 	private OnRuneCountChangedListener onRuneCountChangedListener = new OnRuneCountChangedListener() {
 
 		@Override
@@ -391,6 +394,8 @@ public class Build {
 		itemBuild = new ArrayList<BuildItem>();
 		runeBuild = new ArrayList<BuildRune>();
 		activeSkills = new ArrayList<BuildSkill>();
+
+        gson = StateManager.getInstance().getGson();
 
 		if (itemLibrary == null) {
 			itemLibrary = LibraryManager.getInstance().getItemLibrary();
@@ -1015,49 +1020,41 @@ public class Build {
 		notifyBuildStatsChanged();
 	}
 
-	public JSONObject toJson() throws JSONException {
-		JSONObject obj = new JSONObject();
-		JSONObject runes = new JSONObject();
-		JSONArray items = new JSONArray();
+	public BuildSaveObject toSaveObject() {
+        BuildSaveObject o = new BuildSaveObject();
 
 		for (BuildRune r : runeBuild) {
-			runes.put(r.info.key, r.count);
+			o.runes.add(r.info.id);
+            o.runes.add(r.count);
 		}
 
 		for (BuildItem i : itemBuild) {
-			items.put(i.info.id);
-			items.put(i.count);
+			o.items.add(i.info.id);
+			o.items.add(i.count);
 		}
 
-		obj.put(JSON_KEY_RUNES, runes);
-		obj.put(JSON_KEY_ITEMS, items);
-        obj.put(JSON_KEY_BUILD_NAME, buildName);
-
-		return obj;
+        o.buildName = buildName;
+        o.buildColor = generateColorBasedOnBuild();
+		return o;
 	}
 
-	public void fromJson(JSONObject o) throws JSONException {
+	public void fromSaveObject(BuildSaveObject o) {
         clearItems();
         clearRunes();
 
-		JSONObject runes = o.getJSONObject(JSON_KEY_RUNES);
-		JSONArray items = o.getJSONArray(JSON_KEY_ITEMS);
-
-		Iterator<?> it = runes.keys();
-		while (it.hasNext()) {
-			String key = (String) it.next();
-			int count = runes.getInt(key);
-			addRune(runeLibrary.getRuneInfo(Integer.valueOf(key)), count, !it.hasNext());
+        int count = o.runes.size();
+		for (int i = 0; i < count; i += 2) {
+			addRune(runeLibrary.getRuneInfo(o.runes.get(i)), o.runes.get(i++), i + 2 >= count);
 		}
 
-		final int count = items.length();
+		count = o.items.size();
 		for (int i = 0; i < count; i += 2) {
-			int itemId = items.getInt(i);
-			int c = items.getInt(i + 1);
+			int itemId = o.items.get(i);
+			int c = o.items.get(i + 1);
 			addItem(itemLibrary.getItemInfo(itemId), c, i == count - 2);
 		}
 
-        buildName = o.optString(JSON_KEY_BUILD_NAME, null);
+        buildName = o.buildName;
 	}
 
 	public static int getSuggestedColorForGroup(int groupId) {

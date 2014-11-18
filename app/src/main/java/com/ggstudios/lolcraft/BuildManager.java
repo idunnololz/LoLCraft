@@ -5,12 +5,15 @@ import android.util.Log;
 
 import com.ggstudios.utils.DebugLog;
 import com.ggstudios.utils.Utils;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,36 +27,39 @@ public class BuildManager {
     private SharedPreferences prefs;
     private String prefKey;
 
-    private JSONObject savedBuilds;
-    private JSONArray buildsArray;
+    private HashMap<String, BuildSaveObject> savedBuilds = new HashMap<String, BuildSaveObject>();
+    private List<BuildSaveObject> buildsArray = new ArrayList<BuildSaveObject>();
 
     public static final int RETURN_CODE_SUCCESS = 0;
     public static final int RETURN_CODE_BUILD_NAME_EXIST = -1;
     public static final int RETURN_CODE_BUILD_INVALID_NAME = -2;
-    private JSONObject p;
 
     private boolean dirty = false;
+
+    private Gson gson;
 
     public BuildManager(SharedPreferences prefs, String prefKey) {
         this.prefs = prefs;
         this.prefKey = prefKey;
 
+        gson = StateManager.getInstance().getGson();
+
         if (prefs.contains(prefKey)) {
             // looks like there was a build saved!
             try {
-                savedBuilds = new JSONObject(prefs.getString(prefKey, ""));
-            } catch (JSONException e) {
-                DebugLog.e(TAG, e);
+                savedBuilds = gson.fromJson(prefs.getString(prefKey, ""), savedBuilds.getClass());
+            } catch (JsonSyntaxException e) {
+                savedBuilds = new HashMap<String, BuildSaveObject>();
             }
         } else {
-            savedBuilds = new JSONObject();
+            savedBuilds = new HashMap<String, BuildSaveObject>();
         }
 
         dirty = true;
     }
 
     public boolean hasBuild(String buildName) {
-        return savedBuilds.has(buildName);
+        return savedBuilds.containsKey(buildName);
     }
 
     public int saveBuild(Build build, String buildName) {
@@ -65,30 +71,26 @@ public class BuildManager {
             return RETURN_CODE_BUILD_INVALID_NAME;
         }
 
-        try {
-            if (!forceOverwrite) {
-                if (savedBuilds.has(buildName)) {
-                    return RETURN_CODE_BUILD_NAME_EXIST;
-                }
+        if (!forceOverwrite) {
+            if (savedBuilds.containsKey(buildName)) {
+                return RETURN_CODE_BUILD_NAME_EXIST;
+            }
+        }
+
+        build.setBuildName(buildName);
+        savedBuilds.put(buildName, build.toSaveObject());
+
+        final SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(prefKey, gson.toJson(savedBuilds));
+
+        Utils.executeInBackground(new Runnable() {
+
+            @Override
+            public void run() {
+                editor.commit();
             }
 
-            build.setBuildName(buildName);
-            savedBuilds.put(buildName, build.toJson());
-
-            final SharedPreferences.Editor editor = prefs.edit();
-            editor.putString(prefKey, savedBuilds.toString());
-
-            Utils.executeInBackground(new Runnable() {
-
-                @Override
-                public void run() {
-                    editor.commit();
-                }
-
-            });
-        } catch (JSONException e) {
-            DebugLog.e(TAG, e);
-        }
+        });
 
         dirty = true;
 
@@ -96,38 +98,37 @@ public class BuildManager {
     }
 
     public void loadBuild(Build build, String buildName) throws JSONException {
-        build.fromJson(savedBuilds.getJSONObject(buildName));
+        build.fromSaveObject(savedBuilds.get(buildName));
     }
 
-    public List<String> getBuildKeys() {
-        List<String> keys = new ArrayList<String>(savedBuilds.length());
-
-        for (Iterator<String> i = savedBuilds.keys(); i.hasNext();) {
-            keys.add(i.next());
-        }
-
-        return keys;
-    }
-
-    public JSONObject getRawBuilds() {
-        return savedBuilds;
-    }
-
-    public JSONArray getJSONArray() {
+    public List<BuildSaveObject> getSaveObjects() {
         if (dirty || buildsArray == null) {
-            buildsArray = new JSONArray();
+            buildsArray.clear();
 
-            for (Iterator<String> x = savedBuilds.keys(); x.hasNext(); ){
-                String key = (String) x.next();
-                try {
-                    buildsArray.put(savedBuilds.get(key));
-                } catch (JSONException e) {
-                    Log.e(TAG, "", e);
-                }
+            for (BuildSaveObject s : savedBuilds.values()){
+                buildsArray.add(s);
             }
 
             dirty = false;
         }
         return buildsArray;
+    }
+
+    public void deleteBuild(String buildName) {
+        savedBuilds.remove(buildName);
+        dirty = true;
+    }
+
+    public void commit() {
+        final SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(prefKey, gson.toJson(savedBuilds));
+        Utils.executeInBackground(new Runnable() {
+
+            @Override
+            public void run() {
+                editor.commit();
+            }
+
+        });
     }
 }
