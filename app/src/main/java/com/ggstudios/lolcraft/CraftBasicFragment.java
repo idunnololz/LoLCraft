@@ -39,6 +39,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ggstudios.animation.FlipAnimation;
 import com.ggstudios.dialogs.AlertDialogFragment;
 import com.ggstudios.dialogs.AlertDialogFragment.Builder;
 import com.ggstudios.dialogs.BuildManagerDialogFragment;
@@ -189,7 +190,7 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
             holder.levelBonus = gain;
 
             final FlipAnimation flipAnimation = new FlipAnimation(tv, tv);
-            flipAnimation.setOnFlipAnimationHalfDoneListener(new OnFlipAnimationHalfDoneListener() {
+            flipAnimation.setOnFlipAnimationHalfDoneListener(new FlipAnimation.OnFlipAnimationHalfDoneListener() {
                 @Override
                 public void onFlipAnimationHalfDone(boolean forward) {
                     StatViewHolder holder = ((StatViewHolder) tv.getTag());
@@ -948,100 +949,8 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
 	@Override
 	public void onNegativeClick(AlertDialogFragment dialog, String tag) {}
 
-    private static class FlipAnimation extends Animation {
-        private Camera camera;
-
-        private View fromView;
-        private View toView;
-
-        private float centerX;
-        private float centerY;
-
-        private boolean forward = true;
-
-        private OnFlipAnimationHalfDoneListener listener;
-        private boolean callHalfway = false;
-
-        /**
-         * Creates a 3D flip animation between two views.
-         *
-         * @param fromView First view in the transition.
-         * @param toView   Second view in the transition.
-         */
-        public FlipAnimation(View fromView, View toView) {
-            this.fromView = fromView;
-            this.toView = toView;
-
-            setDuration(700);
-            setFillAfter(false);
-            setInterpolator(new AccelerateDecelerateInterpolator());
-        }
-
-        public void reverse() {
-            forward = !forward;
-            View switchView = toView;
-            toView = fromView;
-            fromView = switchView;
-
-            callHalfway = false;
-        }
-
-        @Override
-        public void initialize(int width, int height, int parentWidth, int parentHeight) {
-            super.initialize(width, height, parentWidth, parentHeight);
-            centerX = width / 2;
-            centerY = height / 2;
-            camera = new Camera();
-        }
-
-        public void setOnFlipAnimationHalfDoneListener(OnFlipAnimationHalfDoneListener l) {
-            listener = l;
-        }
-
-        @Override
-        protected void applyTransformation(float interpolatedTime, Transformation t) {
-            // Angle around the y-axis of the rotation at the given time
-            // calculated both in radians and degrees.
-            final double radians = Math.PI * interpolatedTime;
-            float degrees = (float) (180.0 * radians / Math.PI);
-
-            // Once we reach the midpoint in the animation, we need to hide the
-            // source view and show the destination view. We also need to change
-            // the angle by 180 degrees so that the destination does not come in
-            // flipped around
-            if (interpolatedTime >= 0.5f) {
-                degrees -= 180.f;
-                fromView.setVisibility(View.GONE);
-                toView.setVisibility(View.VISIBLE);
-
-                if (!callHalfway) {
-                    callHalfway = true;
-
-                    if (listener != null) {
-                        listener.onFlipAnimationHalfDone(forward);
-                    }
-                }
-            }
-
-            if (forward)
-                degrees = -degrees; //determines direction of rotation when flip begins
-
-            final Matrix matrix = t.getMatrix();
-            camera.save();
-            camera.rotateY(degrees);
-            camera.getMatrix(matrix);
-            camera.restore();
-            matrix.preTranslate(-centerX, -centerY);
-            matrix.postTranslate(centerX, centerY);
-        }
-    }
-
     private BuildManager getBuildManager() {
         return ((BuildManagerProvider) getActivity()).getBuildManager();
-    }
-
-    private static interface OnFlipAnimationHalfDoneListener {
-        public void onFlipAnimationHalfDone(boolean forward);
     }
 
     public static interface BuildManagerProvider {
