@@ -181,6 +181,10 @@
     </style>
 
     <style name="ItemPickerEditTextStyle">
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:textColorHint">@color/lightgrey</item>
+        <item name="android:textColor">@color/white97</item>
+        <item name="android:textCursorDrawable">@null</item>
     </style>
 
 </resources>
