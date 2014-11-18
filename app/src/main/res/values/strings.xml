@@ -184,6 +184,7 @@
     <string name="confirm_build_overwrite">A build with the name &quot;%1$s&quot; already exists. Would you like to overwrite it?\n\nWarning: This operation is not reversable.</string>
     <string name="invalid_build_name">Invalid build name</string>
     <string name="global_teleport">Global teleport</string>
+    <string name="build_manager">Build Manager</string>
 
 
 </resources>
