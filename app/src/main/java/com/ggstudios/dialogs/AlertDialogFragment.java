@@ -12,11 +12,11 @@ public class AlertDialogFragment extends DialogFragment {
 	private static final String TAG = AlertDialogFragment.class.getSimpleName();
 
 	private static final String EXTRA_TITLE = "title";
-	private static final String EXTRA_ICON = "icon";
+	private static final String EXTRA_ICON = "imgIcon";
 	private static final String EXTRA_MESSAGE = "message";
 	
 	private static final String EXTRA_POSITIVE_TEXT = "positive_text";
-	private static final String EXTRA_NEGATIVE_TEXT = "positive_text";
+	private static final String EXTRA_NEGATIVE_TEXT = "negative_text";
 	
 	private AlertDialogFragmentListener parent;
 
