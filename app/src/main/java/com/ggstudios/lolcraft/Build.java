@@ -12,6 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.graphics.Color;
+import android.util.Log;
 import android.util.SparseIntArray;
 
 import com.ggstudios.lolcraft.ChampionInfo.Skill;
@@ -135,10 +137,23 @@ public class Build {
 	public static final String JSON_KEY_RUNES = "runes";
 	public static final String JSON_KEY_ITEMS = "items";
     public static final String JSON_KEY_BUILD_NAME = "build_name";
+    public static final String JSON_KEY_COLOR = "color";
 
 	private static final Map<String, Integer> statKeyToIndex = new HashMap<String, Integer>();
 	private static final SparseIntArray statIdToStringId = new SparseIntArray();
     private static final SparseIntArray statIdToSkillStatDescStringId = new SparseIntArray();
+
+    private static final int COLOR_AP = 0xFF59BD1A;
+    private static final int COLOR_AD = 0xFFFAA316;
+    private static final int COLOR_TANK = 0xFF1092E8;
+
+    private static final float STAT_VALUE_HP = 2.66f;
+    private static final float STAT_VALUE_AR = 20f;
+    private static final float STAT_VALUE_MR = 20f;
+    private static final float STAT_VALUE_AD = 36f;
+    private static final float STAT_VALUE_AP = 21.75f;
+    private static final float STAT_VALUE_CRIT = 50f;
+    private static final float STAT_VALUE_ASP = 30f;
 
     private static ItemLibrary itemLibrary;
 	private static RuneLibrary runeLibrary;
@@ -701,6 +716,59 @@ public class Build {
         stats[STAT_NAUTILUS_Q_CD] = 0.5;
         stats[STAT_ONE] = 1;
 	}
+
+    private static int addColor(int base, int value) {
+        double result = 1 - (1 - base / 256.0) * (1 - value / 256.0);
+        return (int) (result * 256);
+    }
+
+    public int generateColorBasedOnBuild() {
+        int r = 0, g = 0, b = 0;
+
+        int hp = 0;
+        int mr = 0;
+        int ar = 0;
+        int ad = 0;
+        int ap = 0;
+        int crit = 0;
+        int as = 0;
+
+        calculateTotalStats(stats, 1);
+
+        hp = (int) (stats[STAT_BONUS_HP] * STAT_VALUE_HP);
+        mr = (int) (stats[STAT_BONUS_MR] * STAT_VALUE_MR);
+        ar = (int) (stats[STAT_BONUS_AR] * STAT_VALUE_AR);
+        ad = (int) (stats[STAT_BONUS_AD] * STAT_VALUE_AD);
+        ap = (int) (stats[STAT_BONUS_AP] * STAT_VALUE_AP);
+        crit = (int) (stats[STAT_CRIT] * 100 * STAT_VALUE_CRIT);
+        as = (int) (stats[STAT_ASP] * 100 * STAT_VALUE_ASP);
+
+        int tank = hp + mr + ar;
+        int dps = ad + as + crit;
+        int burst = ap;
+
+        double total = tank + dps + burst;
+
+        double tankness = tank / total;
+        double adness = dps / total;
+        double apness = burst / total;
+
+        r = addColor((int) (Color.red(COLOR_AD) * adness), r);
+        r = addColor((int) (Color.red(COLOR_AP) * apness), r);
+        r = addColor((int) (Color.red(COLOR_TANK) * tankness), r);
+
+        g = addColor((int) (Color.green(COLOR_AD) * adness), g);
+        g = addColor((int) (Color.green(COLOR_AP) * apness), g);
+        g = addColor((int) (Color.green(COLOR_TANK) * tankness), g);
+
+        b = addColor((int) (Color.blue(COLOR_AD) * adness), b);
+        b = addColor((int) (Color.blue(COLOR_AP) * apness), b);
+        b = addColor((int) (Color.blue(COLOR_TANK) * tankness), b);
+
+        Log.d(TAG, String.format("Tankiness: %f Apness: %f Adness: %f", tankness, apness, adness));
+
+        return Color.rgb(r, g, b);
+    }
 
 	public BuildRune addRune(RuneInfo rune) {
 		return addRune(rune, 1, true);
