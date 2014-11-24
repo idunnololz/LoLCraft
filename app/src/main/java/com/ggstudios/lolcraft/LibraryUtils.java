@@ -293,7 +293,7 @@ public class LibraryUtils {
 
 		AssetManager assets = con.getAssets();
 		for (ChampionInfo i : champs) {
-			i.icon = Drawable.createFromStream(assets.open("champions_img/" + i.key + ".png"), null);
+			i.icon = Drawable.createFromStream(assets.open("champions_thumb/" + i.key + ".png"), null);
 
 			if (listener != null) {
 				listener.onPortraitLoad(c, i);
