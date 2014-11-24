@@ -46,6 +46,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ggstudios.lolcraft.MainActivity" />
         </activity>
+        <meta-data android:name="com.crashlytics.ApiKey" android:value="32d3fdee034cf46c66a5eff3434fad966f32718a"/>
     </application>
 
 </manifest>
