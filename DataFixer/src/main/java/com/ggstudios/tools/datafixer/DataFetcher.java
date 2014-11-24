@@ -1,24 +1,24 @@
 package com.ggstudios.tools.datafixer;
 
+import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
+import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
+import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
-import static com.ggstudios.tools.datafixer.Main.p;
+import static com.ggstudios.tools.datafixer.Main.*;
 
 public class DataFetcher {
 
@@ -27,10 +27,12 @@ public class DataFetcher {
     private static LolApiClient client;
     private static String latestVersion;
 
+    private static Map<String, BufferedImage> spriteDic = new HashMap<String, BufferedImage>();
+
     static {
         client = new LolApiClient();
         client.setRegion(LolApiClient.REGION_NA)
-            .setApiKey(API_KEY);
+                .setApiKey(API_KEY);
     }
 
     public static void saveJsonObj(String dir, JSONObject obj) throws JSONException, IOException {
@@ -42,7 +44,7 @@ public class DataFetcher {
     }
 
     public static void listAllVersions() throws IOException, JSONException {
-        p(client.getVersions().toString());
+        pln(client.getVersions().toString());
     }
 
     private static String getLatestVersion() throws IOException, JSONException {
@@ -65,12 +67,12 @@ public class DataFetcher {
         String curVer = ChampionInfoFixer.loadJsonObj("champions/Annie.json").getString("version");
 
         if (curVer.equals(version)) {
-            p("Champion data correct version. No need to re-fetch.");
+            pln("Champion data correct version. No need to re-fetch.");
             return;
         }
 
-        p("Champion data version incorrect. Re-fetching data...");
-        p(String.format("Switching data version [v%s -> v%s]", curVer, getLatestVersion()));
+        pln("Champion data version incorrect. Re-fetching data...");
+        pln(String.format("Switching data version [v%s -> v%s]", curVer, getLatestVersion()));
 
         File dir = new File("res/champions");
         dir.mkdir();
@@ -79,7 +81,7 @@ public class DataFetcher {
 
         JSONObject data = championJson.getJSONObject("data");
 
-        System.out.print("Downloading new data ");
+        p("Downloading new data ");
 
         Iterator<?> iter = data.keys();
         while (iter.hasNext()) {
@@ -94,23 +96,15 @@ public class DataFetcher {
 
             saveJsonObj(file.getCanonicalPath(), o);
 
-            System.out.print('|');
+            p("|");
         }
-
-        p("All champion data fetched!");
+        pln("");
+        pln("All thumbs retrieved!");
     }
 
     public static void fetchAllChampionThumb() throws IOException, JSONException {
-        // first check if our version is good...
-        String curVer = ChampionInfoFixer.loadJsonObj("champions/Annie.json").getString("version");
-/*
-        if (curVer.equals(getLatestVersion())) {
-            p("Champion thumbs up to date. No need to re-fetch.");
-            return;
-        }
+        p("Fetching all champions thumbnails ");
 
-        p("Champion thumbs out of data. Re-fetching data...");
-*/
         File dir = new File("res/champions_thumb");
         dir.mkdir();
 
@@ -134,9 +128,143 @@ public class DataFetcher {
 
             is.close();
             os.close();
+
+            p("|");
         }
 
-        p("All champion data fetched!");
+        pln("");
+        pln("All champion data fetched!");
+    }
 
+    public static void fetchAllItemInfo() throws IOException, JSONException {
+        String version = getLatestVersion();
+
+        String curVer = "0.0.0";
+        try {
+            curVer  = ChampionInfoFixer.loadJsonObj("item.json").getString("version");
+        } catch (Exception e) {}
+
+        if (curVer.equals(version)) {
+            pln("Item data correct version. No need to re-fetch.");
+            return;
+        }
+
+        File dir = new File("res/item");
+        dir.mkdir();
+
+        JSONObject itemJson = client.getAllItemJson();
+        JSONObject data = itemJson.getJSONObject("data");
+
+        pln("Retrieving new item data...");
+
+        File file = new File(dir, "item.json");
+
+        JSONObject o = new JSONObject();
+        o.put("data", data);
+        o.put("version", version);
+
+        saveJsonObj(file.getCanonicalPath(), o);
+
+        pln("New data retrieved!");
+    }
+
+    public static void fetchAllSpellThumb() throws IOException, JSONException {
+        p("Fetching all spell thumbnails ");
+
+        File dir = new File("res/spells");
+        if (dir.exists() && dir.isDirectory()) {
+            FileUtils.deleteDirectory(dir);
+        }
+        dir.mkdir();
+
+        JSONObject championJson = client.getAllChampionJson(new String[][] {
+                {LolApiClient.KEY_CHAMPION_DATA, LolApiClient.VALUE_SPELL}
+        });
+
+        JSONObject data = championJson.getJSONObject("data");
+
+        String latestVersion = getLatestVersion();
+        Iterator<?> iter = data.keys();
+        while (iter.hasNext()) {
+            String key = (String) iter.next();
+
+            JSONObject champInfo = data.getJSONObject(key);
+            JSONArray spells = champInfo.getJSONArray("spells");
+
+            for (int i = 0; i < spells.length(); i++) {
+                JSONObject spell = spells.getJSONObject(i);
+                JSONObject image = spell.getJSONObject("image");
+
+                String imageName = image.getString("full");
+                File imgFile = new File(dir, imageName);
+
+                OutputStream os = new FileOutputStream(imgFile);
+                InputStream is = client.getSpellImage(latestVersion, imageName);
+
+                byte[] b = new byte[2048];
+                int length;
+
+                while ((length = is.read(b)) != -1) {
+                    os.write(b, 0, length);
+                }
+
+                is.close();
+                os.close();
+
+            }
+
+            p("|");
+        }
+
+        pln("");
+        pln("All spell thumbs fetched!");
+    }
+
+    public static void fetchAllPassiveThumb() throws IOException, JSONException, URISyntaxException {
+        p("Fetching all passive thumbnails ");
+
+        File dir = new File("res/passive");
+        if (dir.exists() && dir.isDirectory()) {
+            FileUtils.deleteDirectory(dir);
+        }
+        dir.mkdir();
+
+        JSONObject championJson = client.getAllChampionJson(new String[][] {
+                {LolApiClient.KEY_CHAMPION_DATA, LolApiClient.VALUE_PASSIVE}
+        });
+
+        JSONObject data = championJson.getJSONObject("data");
+
+        String latestVersion = getLatestVersion();
+        Iterator<?> iter = data.keys();
+        while (iter.hasNext()) {
+            String key = (String) iter.next();
+
+            JSONObject champInfo = data.getJSONObject(key);
+            JSONObject passive = champInfo.getJSONObject("passive");
+
+            JSONObject image = passive.getJSONObject("image");
+
+            String imageName = image.getString("full");
+            File imgFile = new File(dir, imageName);
+
+            OutputStream os = new FileOutputStream(imgFile);
+            InputStream is = client.getPassiveImage(latestVersion, imageName);
+
+            byte[] b = new byte[2048];
+            int length;
+
+            while ((length = is.read(b)) != -1) {
+                os.write(b, 0, length);
+            }
+
+            is.close();
+            os.close();
+
+            p("|");
+        }
+
+        pln("");
+        pln("All passive thumbs fetched!");
     }
 }

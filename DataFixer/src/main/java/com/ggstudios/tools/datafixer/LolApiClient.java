@@ -11,7 +11,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 public class LolApiClient {
     // https://na.api.pvp.net/api/lol/static-data/na/v1.2/champion?api_key=0daeb2cf-a0d0-4a94-a7b2-8b282e1a4336
@@ -23,10 +26,15 @@ public class LolApiClient {
     private static final String REQUEST_CHAMPION = "champion";
     private static final String REQUEST_CHAMPION_SPECIFIC = "champion/%d";
     private static final String REQUEST_VERSIONS = "versions";
+    private static final String REQUEST_ITEM_INFO = "item";
 
-    private static final String KEY_API_KEY = "api_key";
-    private static final String KEY_CHAMPION_DATA = "champData";
-    private static final String KEY_VERSION = "version";
+    public static final String KEY_API_KEY = "api_key";
+    public static final String KEY_CHAMPION_DATA = "champData";
+    public static final String KEY_VERSION = "version";
+    public static final String KEY_ITEM_LIST_DATA = "itemListData";
+
+    public static final String VALUE_SPELL = "spells";
+    public static final String VALUE_PASSIVE = "passive";
 
     public static final String REGION_NA = "na";
 
@@ -66,12 +74,25 @@ public class LolApiClient {
         return builder.toString();
     }
 
-    public JSONObject getAllChampionJson() throws IOException, JSONException {
+    public JSONObject getAllChampionJson(String[][] args) throws IOException, JSONException {
         String[][] arr = new String[][] {
                 {KEY_API_KEY, apiKey},
         };
 
-        return new JSONObject(makeRequest(REQUEST_CHAMPION, makeExtras(arr)));
+        String[][] a;
+        if (args == null) {
+            a = args;
+        } else {
+            a = new String[arr.length + args.length][];
+            System.arraycopy(arr, 0, a, 0, arr.length);
+            System.arraycopy(args, 0, a, arr.length, args.length);
+        }
+
+        return new JSONObject(makeRequest(REQUEST_CHAMPION, makeExtras(a)));
+    }
+
+    public JSONObject getAllChampionJson() throws IOException, JSONException {
+        return getAllChampionJson(null);
     }
 
     public JSONObject getChampionJson(int championId) throws IOException, JSONException {
@@ -91,6 +112,15 @@ public class LolApiClient {
         };
 
         return new JSONObject(makeRequest(String.format(REQUEST_CHAMPION_SPECIFIC, championId), makeExtras(arr)));
+    }
+
+    public JSONObject getAllItemJson() throws IOException, JSONException {
+        String[][] arr = new String[][] {
+                {KEY_API_KEY, apiKey},
+                {KEY_ITEM_LIST_DATA, "all"},
+        };
+
+        return new JSONObject(makeRequest(REQUEST_ITEM_INFO, makeExtras(arr)));
     }
 
     public JSONArray getVersions() throws IOException, JSONException {
@@ -134,6 +164,24 @@ public class LolApiClient {
 
     public InputStream getChampionThumb(String version, String championName) throws IOException {
         URL url = new URL(String.format("https://ddragon.leagueoflegends.com/cdn/%s/img/champion/%s.png", version, championName));
+        InputStream is = url.openStream();
+        return is;
+    }
+
+    public InputStream getSpellImage(String version, String spellNameWithExtension) throws IOException {
+        URL url = new URL(String.format("https://ddragon.leagueoflegends.com/cdn/%s/img/spell/%s", version, spellNameWithExtension));
+        InputStream is = url.openStream();
+        return is;
+    }
+
+    public InputStream getPassiveImage(String version, String passiveNameWithExtension) throws IOException, URISyntaxException {
+        URI uri = new URI(
+                "https",
+                "ddragon.leagueoflegends.com",
+                String.format("/cdn/%s/img/passive", version),
+                passiveNameWithExtension,
+                null);
+        URL url = new URL(uri.toASCIIString());
         InputStream is = url.openStream();
         return is;
     }

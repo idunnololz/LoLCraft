@@ -2,6 +2,7 @@ package com.ggstudios.tools.datafixer;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,9 +21,13 @@ import org.json.JSONObject;
 
 
 public class Main {
-	public static void p(String p) {
+	public static void pln(String p) {
 		System.out.println(p);
 	}
+
+    public static void p(String p) {
+        System.out.print(p);
+    }
 
 	private static final Object[] PASSIVES = new Object[] {
 		3089, "PercentMagicDamageMod", 		0.3, null,
@@ -61,9 +66,9 @@ public class Main {
 	
 	public static void fixItemJson() throws IOException, JSONException {
 		// Load the JSON object containing champ data first...
-		URL url = Main.class.getClassLoader().getResource("res/item.json");
+        File file = new File("res/item/item.json");
 
-		InputStream is = url.openStream();
+        FileInputStream is = new FileInputStream(file);
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
 		StringBuilder builder = new StringBuilder();
@@ -90,7 +95,7 @@ public class Main {
 		JSONObject o = new JSONObject(builder.toString());
 
 		JSONObject itemData = o.getJSONObject("data");
-		//p(itemData.toString());
+		//pln(itemData.toString());
 
 		Pattern p = Pattern.compile("(?!</unique>)(<[a-zA-Z/]*>)[^>]*[ ]*\\+([0-9]+)% *Cooldown Reduction");
 		Pattern p2 = Pattern.compile("(UNIQUE |)Passive:[<>\\/a-z ]+.+");//([0-9]+)%?");
@@ -102,11 +107,11 @@ public class Main {
 
 			String desc = value.getString("description");
 
-			//p(desc);
+			//pln(desc);
 
 			Matcher matcher = p.matcher(desc);
 			if (matcher.find()) {
-				//p(matcher.group(0));
+				//pln(matcher.group(0));
 				double d = Double.valueOf(matcher.group(2)) / 100;
 				value.getJSONObject("stats").put("FlatCoolDownRedMod", d);
 			}
@@ -116,7 +121,7 @@ public class Main {
 			matcher = p2.matcher(desc);
 			if (matcher.find()) {
 				System.out.print(key + ": ");
-				p(matcher.group(0));
+				pln(matcher.group(0));
 			}
 			 */
 
@@ -135,7 +140,7 @@ public class Main {
 
 		}
 
-		//p(itemData.toString());
+		//pln(itemData.toString());
 		saveJsonObj("item.json", o);
 	}
 
@@ -144,8 +149,13 @@ public class Main {
             // Updates champion data... outputs to out/ and res/
             //DataFetcher.fetchAllChampionThumb();
             //DataFetcher.listAllVersions();
-            DataFetcher.fetchAllChampionJson("4.19.3");
-            ChampionInfoFixer.fixChampionInfo();
+            DataFetcher.fetchAllChampionJson();
+            //DataFetcher.fetchAllItemInfo();
+
+            //DataFetcher.fetchAllSpellThumb();
+            //DataFetcher.fetchAllPassiveThumb();
+
+            //ChampionInfoFixer.fixChampionInfo();
 
 			//fixItemJson();
 		} catch (Exception e) {
