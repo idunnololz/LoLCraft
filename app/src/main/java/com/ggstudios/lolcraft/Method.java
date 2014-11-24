@@ -35,7 +35,9 @@ public class Method {
             CC_DISPLACE = 9, CC_AOE_DISPLACE = CC_DISPLACE | METHOD_AOE,
             CC_FEAR = 10, CC_AOE_FEAR = CC_FEAR | METHOD_AOE,
             CC_PARANOIA = 11,
-            CC_TAUNT = 12, CC_AOE_TAUNT = CC_TAUNT | METHOD_AOE;
+            CC_TAUNT = 12, CC_AOE_TAUNT = CC_TAUNT | METHOD_AOE,
+            CC_SUPPRESS = 13,
+            CC_BLIND = 14;
 
     public static final int SPECIAL_USE_BASE_AS_SCALING = 0xFFFFFFFF;
 
@@ -70,6 +72,8 @@ public class Method {
         ccDic.put(CC_PARANOIA, R.string.paranoia);
         ccDic.put(CC_TAUNT, R.string.taunt);
         ccDic.put(CC_AOE_TAUNT, R.string.aoe_taunt);
+        ccDic.put(CC_SUPPRESS, R.string.suppress);
+        ccDic.put(CC_BLIND, R.string.blind);
 		
 		mobiDic.put(MOBI_BLINK, R.string.blink);
 		mobiDic.put(MOBI_DASH, R.string.dash);

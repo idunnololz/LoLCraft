@@ -185,6 +185,8 @@
     <string name="invalid_build_name">Invalid build name</string>
     <string name="global_teleport">Global teleport</string>
     <string name="build_manager">Build Manager</string>
+    <string name="suppress">Suppress</string>
+    <string name="blind">Blind</string>
 
 
 </resources>
