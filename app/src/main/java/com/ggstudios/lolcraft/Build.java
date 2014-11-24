@@ -24,63 +24,63 @@ import com.google.gson.Gson;
  * Class that holds information about a build, such as build order, stats and cost. 
  */
 public class Build {
-	private static final String TAG = "Build";
+    private static final String TAG = "Build";
 
-	public static final int RUNE_TYPE_RED = 0;
-	public static final int RUNE_TYPE_BLUE = 1;
-	public static final int RUNE_TYPE_YELLOW = 2;
-	public static final int RUNE_TYPE_BLACK = 3;
+    public static final int RUNE_TYPE_RED = 0;
+    public static final int RUNE_TYPE_BLUE = 1;
+    public static final int RUNE_TYPE_YELLOW = 2;
+    public static final int RUNE_TYPE_BLACK = 3;
 
-	public static final double MAX_ATTACK_SPEED = 2.5;
-	public static final double MAX_CDR = 0.4;
+    public static final double MAX_ATTACK_SPEED = 2.5;
+    public static final double MAX_CDR = 0.4;
 
-	private static final int[] RUNE_COUNT_MAX = new int[] {
-		9, 9, 9, 3
-	};
+    private static final int[] RUNE_COUNT_MAX = new int[] {
+            9, 9, 9, 3
+    };
 
-	private static final int[] GROUP_COLOR = new int[] {
-		0xff2ecc71,	// emerald
-		//0xffe74c3c,	// alizarin
-		0xff3498db,	// peter river
-		0xff9b59b6,	// amethyst
-		0xffe67e22,	// carrot
-		0xff34495e,	// wet asphalt
-		0xff1abc9c,	// turquoise
-		0xfff1c40f,	// sun flower
-	};
+    private static final int[] GROUP_COLOR = new int[] {
+            0xff2ecc71,	// emerald
+            //0xffe74c3c,	// alizarin
+            0xff3498db,	// peter river
+            0xff9b59b6,	// amethyst
+            0xffe67e22,	// carrot
+            0xff34495e,	// wet asphalt
+            0xff1abc9c,	// turquoise
+            0xfff1c40f,	// sun flower
+    };
 
-	private static final int FLAG_SCALING = 0x80000000;
+    private static final int FLAG_SCALING = 0x80000000;
 
-	public static final String SN_NULL = "null";
+    public static final String SN_NULL = "null";
 
-	public static final int STAT_NULL = 0;
-	public static final int STAT_HP = 1;
-	public static final int STAT_HPR = 2;
-	public static final int STAT_MP = 3;
-	public static final int STAT_MPR = 4;
-	public static final int STAT_AD = 5;
-	//public static final int STAT_BASE_AS = asdf;
-	public static final int STAT_ASP = 6;
-	public static final int STAT_AR = 7;
-	public static final int STAT_MR = 8;
-	public static final int STAT_MS = 9;
-	public static final int STAT_RANGE = 10;
-	public static final int STAT_CRIT = 11;
-	public static final int STAT_AP = 12;
-	public static final int STAT_LS = 13;
-	public static final int STAT_MSP = 14;
-	public static final int STAT_CDR = 15;
-	public static final int STAT_ARPEN = 16;
-	public static final int STAT_NRG = 17;
-	public static final int STAT_NRGR = 18;
-	public static final int STAT_GP10 = 19;
-	public static final int STAT_MRP = 20;
-	public static final int STAT_CD = 21;
-	public static final int STAT_DT = 22;
-	public static final int STAT_APP = 23;
-	public static final int STAT_SV = 24;
-	public static final int STAT_MPENP = 25;
-	public static final int STAT_APENP = 26;
+    public static final int STAT_NULL = 0;
+    public static final int STAT_HP = 1;
+    public static final int STAT_HPR = 2;
+    public static final int STAT_MP = 3;
+    public static final int STAT_MPR = 4;
+    public static final int STAT_AD = 5;
+    //public static final int STAT_BASE_AS = asdf;
+    public static final int STAT_ASP = 6;
+    public static final int STAT_AR = 7;
+    public static final int STAT_MR = 8;
+    public static final int STAT_MS = 9;
+    public static final int STAT_RANGE = 10;
+    public static final int STAT_CRIT = 11;
+    public static final int STAT_AP = 12;
+    public static final int STAT_LS = 13;
+    public static final int STAT_MSP = 14;
+    public static final int STAT_CDR = 15;
+    public static final int STAT_ARPEN = 16;
+    public static final int STAT_NRG = 17;
+    public static final int STAT_NRGR = 18;
+    public static final int STAT_GP10 = 19;
+    public static final int STAT_MRP = 20;
+    public static final int STAT_CD = 21;
+    public static final int STAT_DT = 22;
+    public static final int STAT_APP = 23;
+    public static final int STAT_SV = 24;
+    public static final int STAT_MPENP = 25;
+    public static final int STAT_APENP = 26;
     public static final int STAT_DMG_REDUCTION = 27;
     public static final int STAT_CC_RED = 28;
     public static final int STAT_AA_TRUE_DAMAGE = 29;
@@ -94,33 +94,34 @@ public class Build {
     public static final int STAT_AOE_DPS_MAGIC = 37;
     public static final int STAT_PERCENT_HP_MISSING = 38;
 
-	public static final int STAT_TOTAL_AR = 40;
-	public static final int STAT_TOTAL_AD = 41;
-	public static final int STAT_TOTAL_HP = 42;
-	public static final int STAT_CD_MOD = 43;
-	public static final int STAT_TOTAL_AP = 44;
-	public static final int STAT_TOTAL_MS = 45;
-	public static final int STAT_TOTAL_MR = 46;
-	public static final int STAT_AS = 47;
-	public static final int STAT_LEVEL = 48;
-	public static final int STAT_TOTAL_RANGE = 49;
+    public static final int STAT_TOTAL_AR = 40;
+    public static final int STAT_TOTAL_AD = 41;
+    public static final int STAT_TOTAL_HP = 42;
+    public static final int STAT_CD_MOD = 43;
+    public static final int STAT_TOTAL_AP = 44;
+    public static final int STAT_TOTAL_MS = 45;
+    public static final int STAT_TOTAL_MR = 46;
+    public static final int STAT_AS = 47;
+    public static final int STAT_LEVEL = 48;
+    public static final int STAT_TOTAL_RANGE = 49;
     public static final int STAT_TOTAL_MP = 50;
 
-	public static final int STAT_BONUS_AD = 60;
-	public static final int STAT_BONUS_HP = 61;
-	public static final int STAT_BONUS_MS = 62;
-	public static final int STAT_BONUS_AP = 44;	// note that cause base AP is always 0, bonusAp always = totalAp
-	public static final int STAT_BONUS_AR = 63;
-	public static final int STAT_BONUS_MR = 64;
-	public static final int STAT_LEVEL_MINUS_ONE = 65;
+    public static final int STAT_BONUS_AD = 60;
+    public static final int STAT_BONUS_HP = 61;
+    public static final int STAT_BONUS_MS = 62;
+    public static final int STAT_BONUS_AP = 44;	// note that cause base AP is always 0, bonusAp always = totalAp
+    public static final int STAT_BONUS_AR = 63;
+    public static final int STAT_BONUS_MR = 64;
+    public static final int STAT_LEVEL_MINUS_ONE = 65;
     public static final int STAT_CRIT_DMG = 66;
 
-	public static final int STAT_AA_DPS = 70;
+    public static final int STAT_AA_DPS = 70;
 
     public static final int STAT_NAUTILUS_Q_CD = 80;
     public static final int STAT_RENGAR_Q_BASE_DAMAGE = 81;
     public static final int STAT_VI_W     = 82;
     public static final int STAT_STACKS = 83;   // generic stat... could be used for Ashe/Nasus, etc
+    public static final int STAT_SOULS = 84;
 
     public static final int STAT_ENEMY_MISSING_HP = 100;
     public static final int STAT_ENEMY_CURRENT_HP = 101;
@@ -131,16 +132,16 @@ public class Build {
     public static final int STAT_TYPE_DEFAULT = 0;
     public static final int STAT_TYPE_PERCENT = 1;
 
-	private static final int MAX_STATS = 121;
-	private static final int MAX_ACTIVE_ITEMS = 6;
+    private static final int MAX_STATS = 121;
+    private static final int MAX_ACTIVE_ITEMS = 6;
 
-	public static final String JSON_KEY_RUNES = "runes";
-	public static final String JSON_KEY_ITEMS = "items";
+    public static final String JSON_KEY_RUNES = "runes";
+    public static final String JSON_KEY_ITEMS = "items";
     public static final String JSON_KEY_BUILD_NAME = "build_name";
     public static final String JSON_KEY_COLOR = "color";
 
-	private static final Map<String, Integer> statKeyToIndex = new HashMap<String, Integer>();
-	private static final SparseIntArray statIdToStringId = new SparseIntArray();
+    private static final Map<String, Integer> statKeyToIndex = new HashMap<String, Integer>();
+    private static final SparseIntArray statIdToStringId = new SparseIntArray();
     private static final SparseIntArray statIdToSkillStatDescStringId = new SparseIntArray();
 
     private static final int COLOR_AP = 0xFF59BD1A;
@@ -156,91 +157,91 @@ public class Build {
     private static final float STAT_VALUE_ASP = 30f;
 
     private static ItemLibrary itemLibrary;
-	private static RuneLibrary runeLibrary;
+    private static RuneLibrary runeLibrary;
 
     private static final double[] RENGAR_Q_BASE = new double[] {
-        30,
-        45,
-        60,
-        75,
-        90,
-        105,
-        120,
-        135,
-        150,
-        160,
-        170,
-        180,
-        190,
-        200,
-        210,
-        220,
-        230,
-        240
+            30,
+            45,
+            60,
+            75,
+            90,
+            105,
+            120,
+            135,
+            150,
+            160,
+            170,
+            180,
+            190,
+            200,
+            210,
+            220,
+            230,
+            240
     };
 
-	static {
-		statKeyToIndex.put("FlatArmorMod", 			STAT_AR);
-		statKeyToIndex.put("FlatAttackSpeedMod", 	STAT_NULL);
-		statKeyToIndex.put("FlatBlockMod", 			STAT_NULL);
-		statKeyToIndex.put("FlatCritChanceMod", 	STAT_CRIT);
-		statKeyToIndex.put("FlatCritDamageMod", 	STAT_NULL);
-		statKeyToIndex.put("FlatEXPBonus", 			STAT_NULL);
-		statKeyToIndex.put("FlatEnergyPoolMod", 	STAT_NULL);
-		statKeyToIndex.put("FlatEnergyRegenMod", 	STAT_NULL);
-		statKeyToIndex.put("FlatHPPoolMod", 		STAT_HP);
-		statKeyToIndex.put("FlatHPRegenMod", 		STAT_HPR);
-		statKeyToIndex.put("FlatMPPoolMod", 		STAT_MP);
-		statKeyToIndex.put("FlatMPRegenMod", 		STAT_MPR);
-		statKeyToIndex.put("FlatMagicDamageMod", 	STAT_AP);
-		statKeyToIndex.put("FlatMovementSpeedMod", 	STAT_MS);
-		statKeyToIndex.put("FlatPhysicalDamageMod", STAT_AD);
-		statKeyToIndex.put("FlatSpellBlockMod", 	STAT_MR);
-		statKeyToIndex.put("FlatCoolDownRedMod", 	STAT_CDR);
-		statKeyToIndex.put("PercentArmorMod", 		STAT_NULL);
-		statKeyToIndex.put("PercentAttackSpeedMod", STAT_ASP);
-		statKeyToIndex.put("PercentBlockMod", 		STAT_NULL);
-		statKeyToIndex.put("PercentCritChanceMod", 	STAT_NULL);
-		statKeyToIndex.put("PercentCritDamageMod", 	STAT_NULL);
-		statKeyToIndex.put("PercentDodgeMod", 		STAT_NULL);
-		statKeyToIndex.put("PercentEXPBonus", 		STAT_NULL);
-		statKeyToIndex.put("PercentHPPoolMod", 		STAT_NULL);
-		statKeyToIndex.put("PercentHPRegenMod", 	STAT_NULL);
-		statKeyToIndex.put("PercentLifeStealMod", 	STAT_LS);
-		statKeyToIndex.put("PercentMPPoolMod", 		STAT_NULL);
-		statKeyToIndex.put("PercentMPRegenMod", 	STAT_NULL);
-		statKeyToIndex.put("PercentMagicDamageMod", STAT_APP);
-		statKeyToIndex.put("PercentMovementSpeedMod",	STAT_MSP);
-		statKeyToIndex.put("PercentPhysicalDamageMod", 	STAT_NULL);
-		statKeyToIndex.put("PercentSpellBlockMod", 		STAT_NULL);
-		statKeyToIndex.put("PercentSpellVampMod", 		STAT_SV);
+    static {
+        statKeyToIndex.put("FlatArmorMod", 			STAT_AR);
+        statKeyToIndex.put("FlatAttackSpeedMod", 	STAT_NULL);
+        statKeyToIndex.put("FlatBlockMod", 			STAT_NULL);
+        statKeyToIndex.put("FlatCritChanceMod", 	STAT_CRIT);
+        statKeyToIndex.put("FlatCritDamageMod", 	STAT_NULL);
+        statKeyToIndex.put("FlatEXPBonus", 			STAT_NULL);
+        statKeyToIndex.put("FlatEnergyPoolMod", 	STAT_NULL);
+        statKeyToIndex.put("FlatEnergyRegenMod", 	STAT_NULL);
+        statKeyToIndex.put("FlatHPPoolMod", 		STAT_HP);
+        statKeyToIndex.put("FlatHPRegenMod", 		STAT_HPR);
+        statKeyToIndex.put("FlatMPPoolMod", 		STAT_MP);
+        statKeyToIndex.put("FlatMPRegenMod", 		STAT_MPR);
+        statKeyToIndex.put("FlatMagicDamageMod", 	STAT_AP);
+        statKeyToIndex.put("FlatMovementSpeedMod", 	STAT_MS);
+        statKeyToIndex.put("FlatPhysicalDamageMod", STAT_AD);
+        statKeyToIndex.put("FlatSpellBlockMod", 	STAT_MR);
+        statKeyToIndex.put("FlatCoolDownRedMod", 	STAT_CDR);
+        statKeyToIndex.put("PercentArmorMod", 		STAT_NULL);
+        statKeyToIndex.put("PercentAttackSpeedMod", STAT_ASP);
+        statKeyToIndex.put("PercentBlockMod", 		STAT_NULL);
+        statKeyToIndex.put("PercentCritChanceMod", 	STAT_NULL);
+        statKeyToIndex.put("PercentCritDamageMod", 	STAT_NULL);
+        statKeyToIndex.put("PercentDodgeMod", 		STAT_NULL);
+        statKeyToIndex.put("PercentEXPBonus", 		STAT_NULL);
+        statKeyToIndex.put("PercentHPPoolMod", 		STAT_NULL);
+        statKeyToIndex.put("PercentHPRegenMod", 	STAT_NULL);
+        statKeyToIndex.put("PercentLifeStealMod", 	STAT_LS);
+        statKeyToIndex.put("PercentMPPoolMod", 		STAT_NULL);
+        statKeyToIndex.put("PercentMPRegenMod", 	STAT_NULL);
+        statKeyToIndex.put("PercentMagicDamageMod", STAT_APP);
+        statKeyToIndex.put("PercentMovementSpeedMod",	STAT_MSP);
+        statKeyToIndex.put("PercentPhysicalDamageMod", 	STAT_NULL);
+        statKeyToIndex.put("PercentSpellBlockMod", 		STAT_NULL);
+        statKeyToIndex.put("PercentSpellVampMod", 		STAT_SV);
         statKeyToIndex.put("CCRed",                     STAT_CC_RED);
         statKeyToIndex.put("FlatAaTrueDamageMod",         STAT_AA_TRUE_DAMAGE);
         statKeyToIndex.put("FlatAaMagicDamageMod",      STAT_AA_MAGIC_DAMAGE);
         statKeyToIndex.put("magic_aoe_dps",             STAT_AOE_DPS_MAGIC);
         statKeyToIndex.put("perpercenthpmissing",       STAT_PERCENT_HP_MISSING);
 
-		statKeyToIndex.put("rFlatArmorModPerLevel", 			STAT_AR | FLAG_SCALING);	
-		statKeyToIndex.put("rFlatArmorPenetrationMod", 			STAT_ARPEN);	
-		statKeyToIndex.put("rFlatArmorPenetrationModPerLevel", 	STAT_ARPEN | FLAG_SCALING);
-		statKeyToIndex.put("rFlatEnergyModPerLevel", 			STAT_NRG | FLAG_SCALING);	
-		statKeyToIndex.put("rFlatEnergyRegenModPerLevel", 		STAT_NRGR | FLAG_SCALING);	
-		statKeyToIndex.put("rFlatGoldPer10Mod", 				STAT_GP10);	
-		statKeyToIndex.put("rFlatHPModPerLevel", 				STAT_HP | FLAG_SCALING);	
-		statKeyToIndex.put("rFlatHPRegenModPerLevel", 			STAT_HPR | FLAG_SCALING);	
-		statKeyToIndex.put("rFlatMPModPerLevel", 				STAT_MP | FLAG_SCALING);	
-		statKeyToIndex.put("rFlatMPRegenModPerLevel", 			STAT_MPR | FLAG_SCALING);	
-		statKeyToIndex.put("rFlatMagicDamageModPerLevel", 		STAT_AP | FLAG_SCALING);	
-		statKeyToIndex.put("rFlatMagicPenetrationMod", 			STAT_MRP);	
-		statKeyToIndex.put("rFlatMagicPenetrationModPerLevel", 	STAT_MRP | FLAG_SCALING);
-		statKeyToIndex.put("rFlatPhysicalDamageModPerLevel", 	STAT_AD | FLAG_SCALING);	
-		statKeyToIndex.put("rFlatSpellBlockModPerLevel", 		STAT_MR | FLAG_SCALING);
-		statKeyToIndex.put("rPercentCooldownMod", 				STAT_CD);					// negative val...
-		statKeyToIndex.put("rPercentCooldownModPerLevel", 		STAT_CD | FLAG_SCALING);
-		statKeyToIndex.put("rPercentTimeDeadMod", 				STAT_DT);	
-		statKeyToIndex.put("rPercentTimeDeadModPerLevel", 		STAT_DT | FLAG_SCALING);	
-		statKeyToIndex.put("rPercentMagicPenetrationMod",		STAT_MPENP);
-		statKeyToIndex.put("rPercentArmorPenetrationMod",		STAT_APENP);
+        statKeyToIndex.put("rFlatArmorModPerLevel", 			STAT_AR | FLAG_SCALING);
+        statKeyToIndex.put("rFlatArmorPenetrationMod", 			STAT_ARPEN);
+        statKeyToIndex.put("rFlatArmorPenetrationModPerLevel", 	STAT_ARPEN | FLAG_SCALING);
+        statKeyToIndex.put("rFlatEnergyModPerLevel", 			STAT_NRG | FLAG_SCALING);
+        statKeyToIndex.put("rFlatEnergyRegenModPerLevel", 		STAT_NRGR | FLAG_SCALING);
+        statKeyToIndex.put("rFlatGoldPer10Mod", 				STAT_GP10);
+        statKeyToIndex.put("rFlatHPModPerLevel", 				STAT_HP | FLAG_SCALING);
+        statKeyToIndex.put("rFlatHPRegenModPerLevel", 			STAT_HPR | FLAG_SCALING);
+        statKeyToIndex.put("rFlatMPModPerLevel", 				STAT_MP | FLAG_SCALING);
+        statKeyToIndex.put("rFlatMPRegenModPerLevel", 			STAT_MPR | FLAG_SCALING);
+        statKeyToIndex.put("rFlatMagicDamageModPerLevel", 		STAT_AP | FLAG_SCALING);
+        statKeyToIndex.put("rFlatMagicPenetrationMod", 			STAT_MRP);
+        statKeyToIndex.put("rFlatMagicPenetrationModPerLevel", 	STAT_MRP | FLAG_SCALING);
+        statKeyToIndex.put("rFlatPhysicalDamageModPerLevel", 	STAT_AD | FLAG_SCALING);
+        statKeyToIndex.put("rFlatSpellBlockModPerLevel", 		STAT_MR | FLAG_SCALING);
+        statKeyToIndex.put("rPercentCooldownMod", 				STAT_CD);					// negative val...
+        statKeyToIndex.put("rPercentCooldownModPerLevel", 		STAT_CD | FLAG_SCALING);
+        statKeyToIndex.put("rPercentTimeDeadMod", 				STAT_DT);
+        statKeyToIndex.put("rPercentTimeDeadModPerLevel", 		STAT_DT | FLAG_SCALING);
+        statKeyToIndex.put("rPercentMagicPenetrationMod",		STAT_MPENP);
+        statKeyToIndex.put("rPercentArmorPenetrationMod",		STAT_APENP);
         statKeyToIndex.put("damagereduction",                   STAT_DMG_REDUCTION);
         statKeyToIndex.put("magicaldamagereduction",            STAT_MAGIC_DMG_REDUCTION);
         statKeyToIndex.put("FlatMagicHp",                       STAT_MAGIC_HP);
@@ -249,19 +250,18 @@ public class Build {
         statKeyToIndex.put("CcImmune",                          STAT_CC_IMMUNE);
         statKeyToIndex.put("InvulnerabilityButOne",             STAT_INVULNERABILITY_ALL_BUT_ONE);
 
-
-		// keys used for skills...
-		statKeyToIndex.put("spelldamage", 			STAT_TOTAL_AP);
-		statKeyToIndex.put("attackdamage", 			STAT_TOTAL_AD);
-		statKeyToIndex.put("bonushealth", 			STAT_BONUS_HP);
-		statKeyToIndex.put("armor", 				STAT_TOTAL_AR);
-		statKeyToIndex.put("bonusattackdamage", 	STAT_BONUS_AD);
-		statKeyToIndex.put("health", 				STAT_TOTAL_HP);
-		statKeyToIndex.put("bonusarmor", 			STAT_BONUS_AR);
-		statKeyToIndex.put("bonusspellblock", 		STAT_BONUS_MR);
-		statKeyToIndex.put("levelMinusOne", 		STAT_LEVEL_MINUS_ONE);
+        // keys used for skills...
+        statKeyToIndex.put("spelldamage", 			STAT_TOTAL_AP);
+        statKeyToIndex.put("attackdamage", 			STAT_TOTAL_AD);
+        statKeyToIndex.put("bonushealth", 			STAT_BONUS_HP);
+        statKeyToIndex.put("armor", 				STAT_TOTAL_AR);
+        statKeyToIndex.put("bonusattackdamage", 	STAT_BONUS_AD);
+        statKeyToIndex.put("health", 				STAT_TOTAL_HP);
+        statKeyToIndex.put("bonusarmor", 			STAT_BONUS_AR);
+        statKeyToIndex.put("bonusspellblock", 		STAT_BONUS_MR);
+        statKeyToIndex.put("levelMinusOne", 		STAT_LEVEL_MINUS_ONE);
         statKeyToIndex.put("level", 		        STAT_LEVEL);
-		statKeyToIndex.put("RangeMod", 				STAT_RANGE);
+        statKeyToIndex.put("RangeMod", 				STAT_RANGE);
         statKeyToIndex.put("mana",                  STAT_TOTAL_MP);
         statKeyToIndex.put("critdamage",            STAT_CRIT_DMG);
         statKeyToIndex.put("enemymissinghealth",    STAT_ENEMY_MISSING_HP);
@@ -269,12 +269,13 @@ public class Build {
         statKeyToIndex.put("enemymaxhealth",        STAT_ENEMY_MAX_HP);
         statKeyToIndex.put("movementspeed",         STAT_TOTAL_MS);
 
-		// special keys...
-		statKeyToIndex.put("@special.BraumWArmor", 	STAT_NULL);
-		statKeyToIndex.put("@special.BraumWMR", 	STAT_NULL);
+        // special keys...
+        statKeyToIndex.put("@special.BraumWArmor", 	STAT_NULL);
+        statKeyToIndex.put("@special.BraumWMR", 	STAT_NULL);
 
-		statKeyToIndex.put("@cooldownchampion", 	STAT_CD_MOD);
+        statKeyToIndex.put("@cooldownchampion", 	STAT_CD_MOD);
         statKeyToIndex.put("@stacks", STAT_STACKS);
+        statKeyToIndex.put("@souls", STAT_SOULS);
 
         // heim
         statKeyToIndex.put("@dynamic.abilitypower", STAT_AP);
@@ -290,57 +291,57 @@ public class Build {
         // darius
         statKeyToIndex.put("@special.dariusr3",     STAT_ONE);
 
-		statKeyToIndex.put("null", 	STAT_NULL);
+        statKeyToIndex.put("null", 	STAT_NULL);
 
-		SparseIntArray a = statIdToStringId;
-		a.put(STAT_NULL, R.string.stat_desc_null);
-		a.put(STAT_HP, R.string.stat_desc_hp);
-		a.put(STAT_HPR, R.string.stat_desc_hpr);
-		a.put(STAT_MP, R.string.stat_desc_mp);
-		a.put(STAT_MPR, R.string.stat_desc_mpr);
-		a.put(STAT_AD, R.string.stat_desc_ad);
-		a.put(STAT_ASP, R.string.stat_desc_asp);
-		a.put(STAT_AR, R.string.stat_desc_ar);
-		a.put(STAT_MR, R.string.stat_desc_mr);
-		//		public static final int STAT_MS = 9;
-		a.put(STAT_RANGE, R.string.stat_desc_range);
-		//		public static final int STAT_CRIT = 11;
-		//		public static final int STAT_AP = 12;
-		//		public static final int STAT_LS = 13;
-		//		public static final int STAT_MSP = 14;
-		//		public static final int STAT_CDR = 15;
-		//		public static final int STAT_ARPEN = 16;
-		//		public static final int STAT_NRG = 17;
-		//		public static final int STAT_NRGR = 18;
-		//		public static final int STAT_GP10 = 19;
-		//		public static final int STAT_MRP = 20;
-		//		public static final int STAT_CD = 21;
-		//		public static final int STAT_DT = 22;
-		//		public static final int STAT_APP = 23;
-		//		public static final int STAT_SV = 24;
-		//		public static final int STAT_MPENP = 25;
-		//		public static final int STAT_APENP = 26;
+        SparseIntArray a = statIdToStringId;
+        a.put(STAT_NULL, R.string.stat_desc_null);
+        a.put(STAT_HP, R.string.stat_desc_hp);
+        a.put(STAT_HPR, R.string.stat_desc_hpr);
+        a.put(STAT_MP, R.string.stat_desc_mp);
+        a.put(STAT_MPR, R.string.stat_desc_mpr);
+        a.put(STAT_AD, R.string.stat_desc_ad);
+        a.put(STAT_ASP, R.string.stat_desc_asp);
+        a.put(STAT_AR, R.string.stat_desc_ar);
+        a.put(STAT_MR, R.string.stat_desc_mr);
+        //		public static final int STAT_MS = 9;
+        a.put(STAT_RANGE, R.string.stat_desc_range);
+        //		public static final int STAT_CRIT = 11;
+        //		public static final int STAT_AP = 12;
+        //		public static final int STAT_LS = 13;
+        //		public static final int STAT_MSP = 14;
+        //		public static final int STAT_CDR = 15;
+        //		public static final int STAT_ARPEN = 16;
+        //		public static final int STAT_NRG = 17;
+        //		public static final int STAT_NRGR = 18;
+        //		public static final int STAT_GP10 = 19;
+        //		public static final int STAT_MRP = 20;
+        //		public static final int STAT_CD = 21;
+        //		public static final int STAT_DT = 22;
+        //		public static final int STAT_APP = 23;
+        //		public static final int STAT_SV = 24;
+        //		public static final int STAT_MPENP = 25;
+        //		public static final int STAT_APENP = 26;
         a.put(STAT_DMG_REDUCTION, R.string.stat_desc_damage_reduction);
-		//		
-		//		public static final int STAT_TOTAL_AR = 40;
-		//		public static final int STAT_TOTAL_AD = 41;
-		//		public static final int STAT_TOTAL_HP = 42;
-		//		public static final int STAT_CD_MOD = 43;
-		//		public static final int STAT_TOTAL_AP = 44;
-		//		public static final int STAT_TOTAL_MS = 45;
-		//		public static final int STAT_TOTAL_MR = 46;
-		//		public static final int STAT_AS = 47;
-		//		public static final int STAT_LEVEL = 48;
-		//		
-		//		public static final int STAT_BONUS_AD = 50;
-		//		public static final int STAT_BONUS_HP = 51;
-		//		public static final int STAT_BONUS_MS = 52;
-		//		public static final int STAT_BONUS_AP = 44;	// note that cause base AP is always 0, bonusAp always = totalAp
-		//		public static final int STAT_BONUS_AR = 53;
-		//		public static final int STAT_BONUS_MR = 54;
-		//
-		//
-		//		public static final int STAT_AA_DPS = 60;
+        //
+        //		public static final int STAT_TOTAL_AR = 40;
+        //		public static final int STAT_TOTAL_AD = 41;
+        //		public static final int STAT_TOTAL_HP = 42;
+        //		public static final int STAT_CD_MOD = 43;
+        //		public static final int STAT_TOTAL_AP = 44;
+        //		public static final int STAT_TOTAL_MS = 45;
+        //		public static final int STAT_TOTAL_MR = 46;
+        //		public static final int STAT_AS = 47;
+        //		public static final int STAT_LEVEL = 48;
+        //
+        //		public static final int STAT_BONUS_AD = 50;
+        //		public static final int STAT_BONUS_HP = 51;
+        //		public static final int STAT_BONUS_MS = 52;
+        //		public static final int STAT_BONUS_AP = 44;	// note that cause base AP is always 0, bonusAp always = totalAp
+        //		public static final int STAT_BONUS_AR = 53;
+        //		public static final int STAT_BONUS_MR = 54;
+        //
+        //
+        //		public static final int STAT_AA_DPS = 60;
 
         SparseIntArray b = statIdToSkillStatDescStringId;
         b.put(STAT_NULL,                R.string.skill_stat_null);
@@ -369,58 +370,58 @@ public class Build {
 //        public static final int STAT_BONUS_MR = 64;
 //        public static final int STAT_LEVEL_MINUS_ONE = 65;
 //        public static final int STAT_CRIT_DMG = 66;
-	}
+    }
 
     private String buildName;
 
-	private List<BuildSkill> activeSkills;
-	private List<BuildRune> runeBuild;
-	private List<BuildItem> itemBuild;
+    private List<BuildSkill> activeSkills;
+    private List<BuildRune> runeBuild;
+    private List<BuildItem> itemBuild;
 
-	private ChampionInfo champ;
-	private int champLevel;
+    private ChampionInfo champ;
+    private int champLevel;
 
-	private List<BuildObserver> observers = new ArrayList<BuildObserver>();
+    private List<BuildObserver> observers = new ArrayList<BuildObserver>();
 
-	private int enabledBuildStart = 0;
-	private int enabledBuildEnd = 0;
+    private int enabledBuildStart = 0;
+    private int enabledBuildEnd = 0;
 
-	private int currentGroupCounter = 0;
+    private int currentGroupCounter = 0;
 
-	private int[] runeCount = new int[4];
+    private int[] runeCount = new int[4];
 
-	private double[] stats = new double[MAX_STATS];
-	private double[] statsWithActives = new double[MAX_STATS];
+    private double[] stats = new double[MAX_STATS];
+    private double[] statsWithActives = new double[MAX_STATS];
 
-	private boolean itemBuildDirty = false;
+    private boolean itemBuildDirty = false;
 
     private Gson gson;
 
-	private OnRuneCountChangedListener onRuneCountChangedListener = new OnRuneCountChangedListener() {
+    private OnRuneCountChangedListener onRuneCountChangedListener = new OnRuneCountChangedListener() {
 
-		@Override
-		public void onRuneCountChanged(BuildRune rune, int oldCount, int newCount) {
-			Build.this.onRuneCountChanged(rune, oldCount, newCount);
-		}
+        @Override
+        public void onRuneCountChanged(BuildRune rune, int oldCount, int newCount) {
+            Build.this.onRuneCountChanged(rune, oldCount, newCount);
+        }
 
-	};
+    };
 
-	public Build() {
-		itemBuild = new ArrayList<BuildItem>();
-		runeBuild = new ArrayList<BuildRune>();
-		activeSkills = new ArrayList<BuildSkill>();
+    public Build() {
+        itemBuild = new ArrayList<BuildItem>();
+        runeBuild = new ArrayList<BuildRune>();
+        activeSkills = new ArrayList<BuildSkill>();
 
         gson = StateManager.getInstance().getGson();
 
-		if (itemLibrary == null) {
-			itemLibrary = LibraryManager.getInstance().getItemLibrary();
-		}
-		if (runeLibrary == null) {
-			runeLibrary = LibraryManager.getInstance().getRuneLibrary();
-		}
+        if (itemLibrary == null) {
+            itemLibrary = LibraryManager.getInstance().getItemLibrary();
+        }
+        if (runeLibrary == null) {
+            runeLibrary = LibraryManager.getInstance().getRuneLibrary();
+        }
 
-		champLevel = 1;
-	}
+        champLevel = 1;
+    }
 
     public void setBuildName(String name) {
         buildName = name;
@@ -430,292 +431,292 @@ public class Build {
         return buildName;
     }
 
-	private void clearGroups() {
-		for (BuildItem item : itemBuild) {
-			item.group = -1;
-			item.to = null;
-			item.depth = 0;
-			item.from.clear();
-		}
+    private void clearGroups() {
+        for (BuildItem item : itemBuild) {
+            item.group = -1;
+            item.to = null;
+            item.depth = 0;
+            item.from.clear();
+        }
 
-		currentGroupCounter = 0;
-	}
+        currentGroupCounter = 0;
+    }
 
-	private void recalculateAllGroups() {
-		clearGroups();
+    private void recalculateAllGroups() {
+        clearGroups();
 
-		for (int i = 0; i < itemBuild.size(); i++) {
-			labelAllIngredients(itemBuild.get(i), i);
-		}
-	}
+        for (int i = 0; i < itemBuild.size(); i++) {
+            labelAllIngredients(itemBuild.get(i), i);
+        }
+    }
 
-	private BuildItem getFreeItemWithId(int id, int index) {
-		for (int i = index - 1; i >= 0; i--) {
-			if (itemBuild.get(i).getId() == id && itemBuild.get(i).to == null) {
-				return itemBuild.get(i);
-			}
-		}
-		return null;
-	}
+    private BuildItem getFreeItemWithId(int id, int index) {
+        for (int i = index - 1; i >= 0; i--) {
+            if (itemBuild.get(i).getId() == id && itemBuild.get(i).to == null) {
+                return itemBuild.get(i);
+            }
+        }
+        return null;
+    }
 
-	private void labelAllIngredients(BuildItem item, int index) {
-		int curGroup = currentGroupCounter;
+    private void labelAllIngredients(BuildItem item, int index) {
+        int curGroup = currentGroupCounter;
 
-		boolean grouped = false;
-		Stack<Integer> from = new Stack<Integer>();
-		from.addAll(item.info.from);
-		while (!from.empty()) {
-			int i = from.pop();
-			BuildItem ingredient = getFreeItemWithId(i, index);
+        boolean grouped = false;
+        Stack<Integer> from = new Stack<Integer>();
+        from.addAll(item.info.from);
+        while (!from.empty()) {
+            int i = from.pop();
+            BuildItem ingredient = getFreeItemWithId(i, index);
 
-			if (ingredient != null && ingredient.to == null) {
-				if (ingredient.group != -1) {
-					curGroup = ingredient.group;
-				}
-				ingredient.to = item;
-				item.from.add(ingredient);
-				grouped = true;
+            if (ingredient != null && ingredient.to == null) {
+                if (ingredient.group != -1) {
+                    curGroup = ingredient.group;
+                }
+                ingredient.to = item;
+                item.from.add(ingredient);
+                grouped = true;
 
-				calculateItemCost(item);
-			} else {
-				from.addAll(itemLibrary.getItemInfo(i).from);
-			}
-		}
+                calculateItemCost(item);
+            } else {
+                from.addAll(itemLibrary.getItemInfo(i).from);
+            }
+        }
 
-		if (grouped) {
-			increaseIngredientDepth(item);
+        if (grouped) {
+            increaseIngredientDepth(item);
 
-			for (BuildItem i : item.from) {
-				i.group = curGroup;
-			}
+            for (BuildItem i : item.from) {
+                i.group = curGroup;
+            }
 
-			item.group = curGroup;
+            item.group = curGroup;
 
-			if (curGroup == currentGroupCounter) {
-				currentGroupCounter++;
-			}
-		}
-	}
+            if (curGroup == currentGroupCounter) {
+                currentGroupCounter++;
+            }
+        }
+    }
 
-	private void calculateItemCost(BuildItem item) {
-		int p = item.info.totalGold;
-		for (BuildItem i : item.from) {
-			p -= i.info.totalGold;
-		}
+    private void calculateItemCost(BuildItem item) {
+        int p = item.info.totalGold;
+        for (BuildItem i : item.from) {
+            p -= i.info.totalGold;
+        }
 
-		item.costPer = p;
-	}
+        item.costPer = p;
+    }
 
-	private void recalculateItemCosts() {
-		for (BuildItem item : itemBuild) {
-			calculateItemCost(item);
-		}
-	}
+    private void recalculateItemCosts() {
+        for (BuildItem item : itemBuild) {
+            calculateItemCost(item);
+        }
+    }
 
-	private void increaseIngredientDepth(BuildItem item) {
-		for (BuildItem i : item.from) {
-			i.depth++;
+    private void increaseIngredientDepth(BuildItem item) {
+        for (BuildItem i : item.from) {
+            i.depth++;
 
-			increaseIngredientDepth(i);
-		}
-	}
+            increaseIngredientDepth(i);
+        }
+    }
 
-	public void addItem(ItemInfo item) {
-		addItem(item, 1, true);
-	}
+    public void addItem(ItemInfo item) {
+        addItem(item, 1, true);
+    }
 
-	public void addItem(ItemInfo item, int count, boolean isAll) {
-		BuildItem buildItem = null;
-		BuildItem last = getLastItem();
-		if (last != null && item == last.info) {
-			if (item.stacks > last.count) {
-				last.count += count;
-				buildItem = last;
-			}
-		}
+    public void addItem(ItemInfo item, int count, boolean isAll) {
+        BuildItem buildItem = null;
+        BuildItem last = getLastItem();
+        if (last != null && item == last.info) {
+            if (item.stacks > last.count) {
+                last.count += count;
+                buildItem = last;
+            }
+        }
 
-		if (isAll == false) {
-			itemBuildDirty = true;
-		}
+        if (isAll == false) {
+            itemBuildDirty = true;
+        }
 
-		boolean itemNull = buildItem == null;
-		if (itemNull) {
-			buildItem = new BuildItem(item);
-			buildItem.count = Math.min(item.stacks, count);
-			// check if ingredients of this item is already part of the build...
-			labelAllIngredients(buildItem, itemBuild.size());
+        boolean itemNull = buildItem == null;
+        if (itemNull) {
+            buildItem = new BuildItem(item);
+            buildItem.count = Math.min(item.stacks, count);
+            // check if ingredients of this item is already part of the build...
+            labelAllIngredients(buildItem, itemBuild.size());
 
-			if (itemBuild.size() == enabledBuildEnd) {
-				enabledBuildEnd++;
-			}
-			itemBuild.add(buildItem);
+            if (itemBuild.size() == enabledBuildEnd) {
+                enabledBuildEnd++;
+            }
+            itemBuild.add(buildItem);
 
-			calculateItemCost(buildItem);
-		}
+            calculateItemCost(buildItem);
+        }
 
-		if (isAll) {
-			recalculateStats();
-			if (itemBuildDirty) {
-				itemBuildDirty = false;
-				buildItem = null;
-			}
-			notifyItemAdded(buildItem, itemNull);
-		}
-	}
+        if (isAll) {
+            recalculateStats();
+            if (itemBuildDirty) {
+                itemBuildDirty = false;
+                buildItem = null;
+            }
+            notifyItemAdded(buildItem, itemNull);
+        }
+    }
 
-	public void clearItems() {
-		itemBuild.clear();
+    public void clearItems() {
+        itemBuild.clear();
 
-		normalizeValues();
-		recalculateItemCosts();
-		recalculateAllGroups();
+        normalizeValues();
+        recalculateItemCosts();
+        recalculateAllGroups();
 
-		recalculateStats();
-		notifyBuildChanged();
-	}
+        recalculateStats();
+        notifyBuildChanged();
+    }
 
-	public void removeItemAt(int position) {
-		BuildItem item = itemBuild.get(position);
-		itemBuild.remove(position);
-		normalizeValues();
-		recalculateItemCosts();
-		recalculateAllGroups();
+    public void removeItemAt(int position) {
+        BuildItem item = itemBuild.get(position);
+        itemBuild.remove(position);
+        normalizeValues();
+        recalculateItemCosts();
+        recalculateAllGroups();
 
-		recalculateStats();
-		notifyBuildChanged();
-	}
-	
-	public int getItemCount() {
-		return itemBuild.size();
-	}
+        recalculateStats();
+        notifyBuildChanged();
+    }
 
-	private void clearStats(double[] stats) {
-		for (int i = 0; i < stats.length; i++) {
-			stats[i] = 0;	 
-		}
-	}
+    public int getItemCount() {
+        return itemBuild.size();
+    }
 
-	private void recalculateStats() {
-		calculateStats(stats, enabledBuildStart, enabledBuildEnd, false, champLevel);
-	}
+    private void clearStats(double[] stats) {
+        for (int i = 0; i < stats.length; i++) {
+            stats[i] = 0;
+        }
+    }
 
-	private void calculateStats(double[] stats, int startItemBuild, int endItemBuild, boolean onlyDoRawCalculation, int champLevel) {
-		clearStats(stats);
+    private void recalculateStats() {
+        calculateStats(stats, enabledBuildStart, enabledBuildEnd, false, champLevel);
+    }
 
-		int active = 0;
+    private void calculateStats(double[] stats, int startItemBuild, int endItemBuild, boolean onlyDoRawCalculation, int champLevel) {
+        clearStats(stats);
 
-		for (BuildRune r : runeBuild) {
-			appendStat(stats, r);
-		}
+        int active = 0;
 
-		if (!onlyDoRawCalculation) {
-			for (BuildItem item : itemBuild) {
-				item.active = false;
-			}
-		}
+        for (BuildRune r : runeBuild) {
+            appendStat(stats, r);
+        }
 
-		HashSet<Integer> alreadyAdded = new HashSet<Integer>();
+        if (!onlyDoRawCalculation) {
+            for (BuildItem item : itemBuild) {
+                item.active = false;
+            }
+        }
 
-		for (int i = endItemBuild - 1; i >= startItemBuild; i--) {
-			BuildItem item = itemBuild.get(i);
-			if (item.to == null || itemBuild.indexOf(item.to) >= enabledBuildEnd) {
-				if (!onlyDoRawCalculation) {
-					item.active = true;
-				}
+        HashSet<Integer> alreadyAdded = new HashSet<Integer>();
 
-				ItemInfo info = item.info;
+        for (int i = endItemBuild - 1; i >= startItemBuild; i--) {
+            BuildItem item = itemBuild.get(i);
+            if (item.to == null || itemBuild.indexOf(item.to) >= enabledBuildEnd) {
+                if (!onlyDoRawCalculation) {
+                    item.active = true;
+                }
 
-				appendStat(stats, info.stats);
+                ItemInfo info = item.info;
 
-				int id = info.id;
-				if (info.uniquePassiveStat != null && !alreadyAdded.contains(id)) {
-					alreadyAdded.add(info.id);
-					appendStat(stats, info.uniquePassiveStat);
-				}
+                appendStat(stats, info.stats);
+
+                int id = info.id;
+                if (info.uniquePassiveStat != null && !alreadyAdded.contains(id)) {
+                    alreadyAdded.add(info.id);
+                    appendStat(stats, info.uniquePassiveStat);
+                }
 
 
-				active++;
+                active++;
 
-				if (active == MAX_ACTIVE_ITEMS)
-					break;
-			}
-		}
+                if (active == MAX_ACTIVE_ITEMS)
+                    break;
+            }
+        }
 
-		calculateTotalStats(stats, champLevel);
-		if (!onlyDoRawCalculation) {
-			notifyBuildStatsChanged();
-		}
-	}
+        calculateTotalStats(stats, champLevel);
+        if (!onlyDoRawCalculation) {
+            notifyBuildStatsChanged();
+        }
+    }
 
-	private void appendStat(double[] stats, JSONObject jsonStats) {
-		Iterator<?> iter = jsonStats.keys();
-		while (iter.hasNext()) {
-			String key = (String) iter.next();
-			try {
-				stats[getStatIndex(key)] += jsonStats.getDouble(key);
+    private void appendStat(double[] stats, JSONObject jsonStats) {
+        Iterator<?> iter = jsonStats.keys();
+        while (iter.hasNext()) {
+            String key = (String) iter.next();
+            try {
+                stats[getStatIndex(key)] += jsonStats.getDouble(key);
 
-			} catch (JSONException e) {
-				DebugLog.e(TAG, e);
-			}
-		}
-	}
+            } catch (JSONException e) {
+                DebugLog.e(TAG, e);
+            }
+        }
+    }
 
-	private void appendStat(double[] stats, BuildRune rune) {
-		RuneInfo info = rune.info;
-		Iterator<?> iter = info.stats.keys();
-		while (iter.hasNext()) {
-			String key = (String) iter.next();
-			try {
-				int f = getStatIndex(key);
-				if ((f & FLAG_SCALING) != 0) {
-					stats[f & ~FLAG_SCALING] += info.stats.getDouble(key) * champLevel * rune.count;
-				} else {
-					stats[f] += info.stats.getDouble(key) * rune.count;
-				}
+    private void appendStat(double[] stats, BuildRune rune) {
+        RuneInfo info = rune.info;
+        Iterator<?> iter = info.stats.keys();
+        while (iter.hasNext()) {
+            String key = (String) iter.next();
+            try {
+                int f = getStatIndex(key);
+                if ((f & FLAG_SCALING) != 0) {
+                    stats[f & ~FLAG_SCALING] += info.stats.getDouble(key) * champLevel * rune.count;
+                } else {
+                    stats[f] += info.stats.getDouble(key) * rune.count;
+                }
 
-			} catch (JSONException e) {
-				DebugLog.e(TAG, e);
-			}
-		}
-	}
+            } catch (JSONException e) {
+                DebugLog.e(TAG, e);
+            }
+        }
+    }
 
-	private void calculateTotalStats() {
-		calculateTotalStats(stats, champLevel);
-	}
+    private void calculateTotalStats() {
+        calculateTotalStats(stats, champLevel);
+    }
 
-	private void calculateTotalStats(double[] stats, int champLevel) {
-		// do some stat normalization...
-		stats[STAT_CDR] = Math.min(MAX_CDR, stats[STAT_CDR] - stats[STAT_CD]);
+    private void calculateTotalStats(double[] stats, int champLevel) {
+        // do some stat normalization...
+        stats[STAT_CDR] = Math.min(MAX_CDR, stats[STAT_CDR] - stats[STAT_CD]);
 
         int levMinusOne = champLevel - 1;
 
-		stats[STAT_TOTAL_AR] = stats[STAT_AR] + champ.ar + champ.arG * levMinusOne;
-		stats[STAT_TOTAL_AD] = stats[STAT_AD] + champ.ad + champ.adG * levMinusOne;
-		stats[STAT_TOTAL_HP] = stats[STAT_HP] + champ.hp + champ.hpG * levMinusOne;
-		stats[STAT_CD_MOD] = 1.0 - stats[STAT_CDR];
-		stats[STAT_TOTAL_MS] = (stats[STAT_MS] + champ.ms) * stats[STAT_MSP] + stats[STAT_MS] + champ.ms;
-		stats[STAT_TOTAL_AP] = stats[STAT_AP] * (stats[STAT_APP] + 1);
-		stats[STAT_TOTAL_MR] = stats[STAT_MR] + champ.mr + champ.mrG * levMinusOne;
-		stats[STAT_AS] = Math.min(champ.as * (1 + levMinusOne * champ.asG + stats[STAT_ASP]), MAX_ATTACK_SPEED);
-		stats[STAT_LEVEL] = champLevel;
-		stats[STAT_TOTAL_RANGE] = stats[STAT_RANGE] + champ.range;
+        stats[STAT_TOTAL_AR] = stats[STAT_AR] + champ.ar + champ.arG * levMinusOne;
+        stats[STAT_TOTAL_AD] = stats[STAT_AD] + champ.ad + champ.adG * levMinusOne;
+        stats[STAT_TOTAL_HP] = stats[STAT_HP] + champ.hp + champ.hpG * levMinusOne;
+        stats[STAT_CD_MOD] = 1.0 - stats[STAT_CDR];
+        stats[STAT_TOTAL_MS] = (stats[STAT_MS] + champ.ms) * stats[STAT_MSP] + stats[STAT_MS] + champ.ms;
+        stats[STAT_TOTAL_AP] = stats[STAT_AP] * (stats[STAT_APP] + 1);
+        stats[STAT_TOTAL_MR] = stats[STAT_MR] + champ.mr + champ.mrG * levMinusOne;
+        stats[STAT_AS] = Math.min(champ.as * (1 + levMinusOne * champ.asG + stats[STAT_ASP]), MAX_ATTACK_SPEED);
+        stats[STAT_LEVEL] = champLevel;
+        stats[STAT_TOTAL_RANGE] = stats[STAT_RANGE] + champ.range;
         stats[STAT_TOTAL_MP] = stats[STAT_MP] + champ.mp + champ.mpG * levMinusOne;
 
-		stats[STAT_BONUS_AD] = stats[STAT_TOTAL_AD] - champ.ad;
-		stats[STAT_BONUS_HP] = stats[STAT_TOTAL_HP] - champ.hp;
-		stats[STAT_BONUS_MS] = stats[STAT_TOTAL_MS] - champ.ms;
-		stats[STAT_BONUS_AR] = stats[STAT_TOTAL_AR] - champ.ar;
-		stats[STAT_BONUS_MR] = stats[STAT_TOTAL_MR] - champ.mr;
-		stats[STAT_LEVEL_MINUS_ONE] = stats[STAT_LEVEL] - 1;
+        stats[STAT_BONUS_AD] = stats[STAT_TOTAL_AD] - champ.ad;
+        stats[STAT_BONUS_HP] = stats[STAT_TOTAL_HP] - champ.hp;
+        stats[STAT_BONUS_MS] = stats[STAT_TOTAL_MS] - champ.ms;
+        stats[STAT_BONUS_AR] = stats[STAT_TOTAL_AR] - champ.ar;
+        stats[STAT_BONUS_MR] = stats[STAT_TOTAL_MR] - champ.mr;
+        stats[STAT_LEVEL_MINUS_ONE] = stats[STAT_LEVEL] - 1;
         stats[STAT_CRIT_DMG] = stats[STAT_TOTAL_AD] * 2.0;
 
-		// pure stats...
-		stats[STAT_AA_DPS] = stats[STAT_TOTAL_AD] * stats[STAT_AS];
+        // pure stats...
+        stats[STAT_AA_DPS] = stats[STAT_TOTAL_AD] * stats[STAT_AS];
 
         // static values...
         stats[STAT_NAUTILUS_Q_CD] = 0.5;
         stats[STAT_ONE] = 1;
-	}
+    }
 
     private static int addColor(int base, int value) {
         double result = 1 - (1 - base / 256.0) * (1 - value / 256.0);
@@ -770,271 +771,271 @@ public class Build {
         return Color.rgb(r, g, b);
     }
 
-	public BuildRune addRune(RuneInfo rune) {
-		return addRune(rune, 1, true);
-	}
+    public BuildRune addRune(RuneInfo rune) {
+        return addRune(rune, 1, true);
+    }
 
-	public BuildRune addRune(RuneInfo rune, int count, boolean isAll) {
-		// Check if this rune is already in the build...
+    public BuildRune addRune(RuneInfo rune, int count, boolean isAll) {
+        // Check if this rune is already in the build...
 
-		BuildRune r = null;
-		for (BuildRune br : runeBuild) {
-			if (br.id == rune.id) {
-				r = br;
-				break;
-			}
-		}
+        BuildRune r = null;
+        for (BuildRune br : runeBuild) {
+            if (br.id == rune.id) {
+                r = br;
+                break;
+            }
+        }
 
-		if (r == null) {
-			r = new BuildRune(rune, rune.id);
-			runeBuild.add(r);
-			r.listener = onRuneCountChangedListener;
-			notifyRuneAdded(r);
-		}
+        if (r == null) {
+            r = new BuildRune(rune, rune.id);
+            runeBuild.add(r);
+            r.listener = onRuneCountChangedListener;
+            notifyRuneAdded(r);
+        }
 
-		r.addRune(count);
+        r.addRune(count);
 
-		recalculateStats();
+        recalculateStats();
 
-		return r;
-	}
+        return r;
+    }
 
-	public void clearRunes() {
-		for (BuildRune r : runeBuild) {
-			r.listener = null;
-			notifyRuneRemoved(r);
-		}
-		
-		runeBuild.clear();
-		recalculateStats();
-	}
+    public void clearRunes() {
+        for (BuildRune r : runeBuild) {
+            r.listener = null;
+            notifyRuneRemoved(r);
+        }
 
-	public boolean canAdd(RuneInfo rune) {
-		return runeCount[rune.runeType] + 1 <= RUNE_COUNT_MAX[rune.runeType];
-	}
+        runeBuild.clear();
+        recalculateStats();
+    }
 
-	public void removeRune(BuildRune rune) {
-		rune.listener = null;
-		runeBuild.remove(rune);
+    public boolean canAdd(RuneInfo rune) {
+        return runeCount[rune.runeType] + 1 <= RUNE_COUNT_MAX[rune.runeType];
+    }
 
-		recalculateStats();
-		notifyRuneRemoved(rune);
-	}
+    public void removeRune(BuildRune rune) {
+        rune.listener = null;
+        runeBuild.remove(rune);
 
-	private void onRuneCountChanged(BuildRune rune, int oldCount, int newCount) {
-		int runeType = rune.info.runeType;
-		if (runeCount[runeType] + (newCount - oldCount) > RUNE_COUNT_MAX[runeType]) {
-			rune.count = oldCount;
-			return;
-		}
+        recalculateStats();
+        notifyRuneRemoved(rune);
+    }
 
-		runeCount[runeType] += (newCount - oldCount);
+    private void onRuneCountChanged(BuildRune rune, int oldCount, int newCount) {
+        int runeType = rune.info.runeType;
+        if (runeCount[runeType] + (newCount - oldCount) > RUNE_COUNT_MAX[runeType]) {
+            rune.count = oldCount;
+            return;
+        }
 
-		if (rune.getCount() == 0) {
-			removeRune(rune);
-		} else {
-			recalculateStats();
-		}
-	}
+        runeCount[runeType] += (newCount - oldCount);
 
-	public BuildSkill addActiveSkill(Skill skill, double base, double scaling, String scaleType, String bonusType) {
-		BuildSkill sk = new BuildSkill();
-		sk.skill = skill;
-		sk.base = base;
-		sk.scaleTypeId = getStatIndex(scaleType);
-		sk.bonusTypeId = getStatIndex(bonusType);
-		sk.scaling = scaling;
-		activeSkills.add(sk);
+        if (rune.getCount() == 0) {
+            removeRune(rune);
+        } else {
+            recalculateStats();
+        }
+    }
 
-		DebugLog.d(TAG, "Skill " + skill.name + " bonus: " + base + "; ");
+    public BuildSkill addActiveSkill(Skill skill, double base, double scaling, String scaleType, String bonusType) {
+        BuildSkill sk = new BuildSkill();
+        sk.skill = skill;
+        sk.base = base;
+        sk.scaleTypeId = getStatIndex(scaleType);
+        sk.bonusTypeId = getStatIndex(bonusType);
+        sk.scaling = scaling;
+        activeSkills.add(sk);
 
-		return sk;
-	}
+        DebugLog.d(TAG, "Skill " + skill.name + " bonus: " + base + "; ");
 
-	public double[] calculateStatWithActives(int gold, int champLevel) {
-		double[] s = new double[stats.length];
+        return sk;
+    }
 
-		int itemEndIndex = itemBuild.size();
-		int buildCost = 0;
-		for (int i = 0; i < itemBuild.size(); i++) {
-			BuildItem item = itemBuild.get(i);
-			int itemCost = item.costPer * item.count;
+    public double[] calculateStatWithActives(int gold, int champLevel) {
+        double[] s = new double[stats.length];
 
-			if (buildCost + itemCost > gold) {
-				itemEndIndex = i;
-				break;
-			} else {
-				buildCost += itemCost;
-			}
-		}
+        int itemEndIndex = itemBuild.size();
+        int buildCost = 0;
+        for (int i = 0; i < itemBuild.size(); i++) {
+            BuildItem item = itemBuild.get(i);
+            int itemCost = item.costPer * item.count;
 
-		calculateStats(s, 0, itemEndIndex, true, champLevel);
+            if (buildCost + itemCost > gold) {
+                itemEndIndex = i;
+                break;
+            } else {
+                buildCost += itemCost;
+            }
+        }
 
-		for (BuildSkill sk : activeSkills) {
-			sk.totalBonus = s[sk.scaleTypeId] * sk.scaling + sk.base;
-			s[sk.bonusTypeId] += sk.totalBonus;
-		}
+        calculateStats(s, 0, itemEndIndex, true, champLevel);
 
-		calculateTotalStats(s, champLevel);
+        for (BuildSkill sk : activeSkills) {
+            sk.totalBonus = s[sk.scaleTypeId] * sk.scaling + sk.base;
+            s[sk.bonusTypeId] += sk.totalBonus;
+        }
 
-		return s;
-	}
+        calculateTotalStats(s, champLevel);
 
-	public List<BuildSkill> getActives() {
-		return activeSkills;
-	}
+        return s;
+    }
 
-	public void clearActiveSkills() {
-		activeSkills.clear();
-	}
+    public List<BuildSkill> getActives() {
+        return activeSkills;
+    }
+
+    public void clearActiveSkills() {
+        activeSkills.clear();
+    }
 
 
-	public void setChampion(ChampionInfo champ) {
-		this.champ = champ;
+    public void setChampion(ChampionInfo champ) {
+        this.champ = champ;
 
-		recalculateStats();
-	}
+        recalculateStats();
+    }
 
-	public void setChampionLevel(int level) {
-		champLevel = level;
+    public void setChampionLevel(int level) {
+        champLevel = level;
 
-		recalculateStats();
-	}
+        recalculateStats();
+    }
 
-	public void registerObserver(BuildObserver observer) {
-		observers.add(observer);
-	}
+    public void registerObserver(BuildObserver observer) {
+        observers.add(observer);
+    }
 
-	public void unregisterObserver(BuildObserver observer) {
-		observers.remove(observer);
-	}
+    public void unregisterObserver(BuildObserver observer) {
+        observers.remove(observer);
+    }
 
-	private void notifyBuildChanged() {
-		for (BuildObserver o : observers) {
-			o.onBuildChanged(this);
-		}
-	}
+    private void notifyBuildChanged() {
+        for (BuildObserver o : observers) {
+            o.onBuildChanged(this);
+        }
+    }
 
-	private void notifyItemAdded(BuildItem item, boolean isNewItem) {
-		for (BuildObserver o : observers) {
-			o.onItemAdded(this, item, isNewItem);
-		}
-	}
+    private void notifyItemAdded(BuildItem item, boolean isNewItem) {
+        for (BuildObserver o : observers) {
+            o.onItemAdded(this, item, isNewItem);
+        }
+    }
 
-	private void notifyRuneAdded(BuildRune rune) {
-		for (BuildObserver o : observers) {
-			o.onRuneAdded(this, rune);
-		}
-	}
+    private void notifyRuneAdded(BuildRune rune) {
+        for (BuildObserver o : observers) {
+            o.onRuneAdded(this, rune);
+        }
+    }
 
-	private void notifyRuneRemoved(BuildRune rune) {
-		for (BuildObserver o : observers) {
-			o.onRuneRemoved(this, rune);
-		}
-	}
+    private void notifyRuneRemoved(BuildRune rune) {
+        for (BuildObserver o : observers) {
+            o.onRuneRemoved(this, rune);
+        }
+    }
 
-	private void notifyBuildStatsChanged() {
-		for (BuildObserver o : observers) {
-			o.onBuildStatsChanged();
-		}
-	}
+    private void notifyBuildStatsChanged() {
+        for (BuildObserver o : observers) {
+            o.onBuildStatsChanged();
+        }
+    }
 
-	private void normalizeValues() {
-		if (enabledBuildStart < 0) {
-			enabledBuildStart = 0;
-		}
+    private void normalizeValues() {
+        if (enabledBuildStart < 0) {
+            enabledBuildStart = 0;
+        }
 
-		if (enabledBuildEnd > itemBuild.size()) {
-			enabledBuildEnd = itemBuild.size();
-		}
-	}
+        if (enabledBuildEnd > itemBuild.size()) {
+            enabledBuildEnd = itemBuild.size();
+        }
+    }
 
-	public BuildItem getItem(int index) {
-		return itemBuild.get(index);
-	}
+    public BuildItem getItem(int index) {
+        return itemBuild.get(index);
+    }
 
-	public int getBuildSize() {
-		return itemBuild.size();
-	}
+    public int getBuildSize() {
+        return itemBuild.size();
+    }
 
-	public BuildRune getRune(int index) {
-		return runeBuild.get(index);
-	}
+    public BuildRune getRune(int index) {
+        return runeBuild.get(index);
+    }
 
-	public int getRuneCount() {
-		return runeBuild.size();
-	}
+    public int getRuneCount() {
+        return runeBuild.size();
+    }
 
-	public BuildItem getLastItem() {
-		if (itemBuild.size() == 0) return null;
-		return itemBuild.get(itemBuild.size() - 1);
-	}
+    public BuildItem getLastItem() {
+        if (itemBuild.size() == 0) return null;
+        return itemBuild.get(itemBuild.size() - 1);
+    }
 
-	public double getBonusHp() {
-		return stats[STAT_HP];
-	}
+    public double getBonusHp() {
+        return stats[STAT_HP];
+    }
 
-	public double getBonusHpRegen() {
-		return stats[STAT_HPR];
-	}
+    public double getBonusHpRegen() {
+        return stats[STAT_HPR];
+    }
 
-	public double getBonusMp() {
-		if (champ.partype == ChampionInfo.TYPE_MANA) {
-			return stats[STAT_MP];
-		} else {
-			return 0;
-		}
-	}
+    public double getBonusMp() {
+        if (champ.partype == ChampionInfo.TYPE_MANA) {
+            return stats[STAT_MP];
+        } else {
+            return 0;
+        }
+    }
 
-	public double getBonusMpRegen() {
-		if (champ.partype == ChampionInfo.TYPE_MANA) {
-			return stats[STAT_MPR];
-		} else {
-			return 0;
-		}
-	}
+    public double getBonusMpRegen() {
+        if (champ.partype == ChampionInfo.TYPE_MANA) {
+            return stats[STAT_MPR];
+        } else {
+            return 0;
+        }
+    }
 
-	public double getBonusAd() {
-		return stats[STAT_AD];
-	}
+    public double getBonusAd() {
+        return stats[STAT_AD];
+    }
 
-	public double getBonusAs() {
-		return stats[STAT_ASP];
-	}
+    public double getBonusAs() {
+        return stats[STAT_ASP];
+    }
 
-	public double getBonusAr() {
-		return stats[STAT_AR];
-	}
+    public double getBonusAr() {
+        return stats[STAT_AR];
+    }
 
-	public double getBonusMr() {
-		return stats[STAT_MR];
-	}
+    public double getBonusMr() {
+        return stats[STAT_MR];
+    }
 
-	public double getBonusMs() {
-		return stats[STAT_BONUS_MS];
-	}
+    public double getBonusMs() {
+        return stats[STAT_BONUS_MS];
+    }
 
-	public double getBonusRange() {
-		return stats[STAT_RANGE];
-	}
+    public double getBonusRange() {
+        return stats[STAT_RANGE];
+    }
 
-	public double getBonusAp() {
-		return stats[STAT_BONUS_AP];
-	}
+    public double getBonusAp() {
+        return stats[STAT_BONUS_AP];
+    }
 
-	public double getBonusEnergy() {
-		return stats[STAT_NRG];
-	}
+    public double getBonusEnergy() {
+        return stats[STAT_NRG];
+    }
 
-	public double getBonusEnergyRegen() {
-		return stats[STAT_NRGR];
-	}
+    public double getBonusEnergyRegen() {
+        return stats[STAT_NRGR];
+    }
 
-	public double[] getRawStats() {
-		return stats;
-	}
+    public double[] getRawStats() {
+        return stats;
+    }
 
-	public double getStat(String key) {
+    public double getStat(String key) {
         int statId = getStatIndex(key);
         if (statId == STAT_NULL) return 0.0;
 
@@ -1047,203 +1048,203 @@ public class Build {
             stats[STAT_VI_W] = 0.00081632653 * stats[STAT_BONUS_AD];
         }
 
-		return stats[statId];
-	}
+        return stats[statId];
+    }
 
     public double getStat(int statId) {
         if (statId == STAT_NULL) return 0.0;
         return stats[statId];
     }
 
-	public void reorder(int itemOldPosition, int itemNewPosition) {
-		BuildItem item = itemBuild.get(itemOldPosition);
-		itemBuild.remove(itemOldPosition);
-		itemBuild.add(itemNewPosition, item);
+    public void reorder(int itemOldPosition, int itemNewPosition) {
+        BuildItem item = itemBuild.get(itemOldPosition);
+        itemBuild.remove(itemOldPosition);
+        itemBuild.add(itemNewPosition, item);
 
-		recalculateAllGroups();
+        recalculateAllGroups();
 
-		recalculateStats();
-		notifyBuildStatsChanged();
-	}
+        recalculateStats();
+        notifyBuildStatsChanged();
+    }
 
-	public int getEnabledBuildStart() {
-		return enabledBuildStart;
-	}
+    public int getEnabledBuildStart() {
+        return enabledBuildStart;
+    }
 
-	public int getEnabledBuildEnd() {
-		return enabledBuildEnd;
-	}
+    public int getEnabledBuildEnd() {
+        return enabledBuildEnd;
+    }
 
-	public void setEnabledBuildStart(int start) {
-		enabledBuildStart = start;
+    public void setEnabledBuildStart(int start) {
+        enabledBuildStart = start;
 
-		recalculateStats();
-		notifyBuildStatsChanged();
-	}
+        recalculateStats();
+        notifyBuildStatsChanged();
+    }
 
-	public void setEnabledBuildEnd(int end) {
-		enabledBuildEnd = end;
+    public void setEnabledBuildEnd(int end) {
+        enabledBuildEnd = end;
 
-		recalculateStats();
-		notifyBuildStatsChanged();
-	}
+        recalculateStats();
+        notifyBuildStatsChanged();
+    }
 
-	public BuildSaveObject toSaveObject() {
+    public BuildSaveObject toSaveObject() {
         BuildSaveObject o = new BuildSaveObject();
 
-		for (BuildRune r : runeBuild) {
-			o.runes.add(r.info.id);
+        for (BuildRune r : runeBuild) {
+            o.runes.add(r.info.id);
             o.runes.add(r.count);
-		}
+        }
 
-		for (BuildItem i : itemBuild) {
-			o.items.add(i.info.id);
-			o.items.add(i.count);
-		}
+        for (BuildItem i : itemBuild) {
+            o.items.add(i.info.id);
+            o.items.add(i.count);
+        }
 
         o.buildName = buildName;
         o.buildColor = generateColorBasedOnBuild();
-		return o;
-	}
+        return o;
+    }
 
-	public void fromSaveObject(BuildSaveObject o) {
+    public void fromSaveObject(BuildSaveObject o) {
         clearItems();
         clearRunes();
 
         int count = o.runes.size();
-		for (int i = 0; i < count; i += 2) {
-			addRune(runeLibrary.getRuneInfo(o.runes.get(i)), o.runes.get(i++), i + 2 >= count);
-		}
+        for (int i = 0; i < count; i += 2) {
+            addRune(runeLibrary.getRuneInfo(o.runes.get(i)), o.runes.get(i++), i + 2 >= count);
+        }
 
-		count = o.items.size();
-		for (int i = 0; i < count; i += 2) {
-			int itemId = o.items.get(i);
-			int c = o.items.get(i + 1);
-			addItem(itemLibrary.getItemInfo(itemId), c, i == count - 2);
-		}
+        count = o.items.size();
+        for (int i = 0; i < count; i += 2) {
+            int itemId = o.items.get(i);
+            int c = o.items.get(i + 1);
+            addItem(itemLibrary.getItemInfo(itemId), c, i == count - 2);
+        }
 
         buildName = o.buildName;
-	}
+    }
 
-	public static int getSuggestedColorForGroup(int groupId) {
-		return GROUP_COLOR[groupId % GROUP_COLOR.length];
-	}
+    public static int getSuggestedColorForGroup(int groupId) {
+        return GROUP_COLOR[groupId % GROUP_COLOR.length];
+    }
 
-	public static interface BuildObserver {
-		public void onBuildChanged(Build build);
-		public void onItemAdded(Build build, BuildItem item, boolean isNewItem);
-		public void onRuneAdded(Build build, BuildRune rune);
-		public void onRuneRemoved(Build build, BuildRune rune);
-		public void onBuildStatsChanged();
-	}
+    public static interface BuildObserver {
+        public void onBuildChanged(Build build);
+        public void onItemAdded(Build build, BuildItem item, boolean isNewItem);
+        public void onRuneAdded(Build build, BuildRune rune);
+        public void onRuneRemoved(Build build, BuildRune rune);
+        public void onBuildStatsChanged();
+    }
 
-	public static class BuildItem {
-		ItemInfo info;
-		int group = -1;
-		boolean active = true;
+    public static class BuildItem {
+        ItemInfo info;
+        int group = -1;
+        boolean active = true;
 
-		int count = 1;
-		int costPer = 0;
+        int count = 1;
+        int costPer = 0;
 
-		int depth = 0;
+        int depth = 0;
 
-		List<BuildItem> from;
-		BuildItem to;
+        List<BuildItem> from;
+        BuildItem to;
 
-		private BuildItem(ItemInfo info) {
-			this.info = info;
+        private BuildItem(ItemInfo info) {
+            this.info = info;
 
-			from = new ArrayList<BuildItem>();
-		}
+            from = new ArrayList<BuildItem>();
+        }
 
-		public int getId() {
-			return info.id;
-		}
-	}
+        public int getId() {
+            return info.id;
+        }
+    }
 
-	public static class BuildRune {
-		RuneInfo info;
-		Object tag;
-		int id;
+    public static class BuildRune {
+        RuneInfo info;
+        Object tag;
+        int id;
 
-		private int count;
-		private OnRuneCountChangedListener listener;
-		private OnRuneCountChangedListener onRuneCountChangedListener;
+        private int count;
+        private OnRuneCountChangedListener listener;
+        private OnRuneCountChangedListener onRuneCountChangedListener;
 
-		private BuildRune(RuneInfo info, int id) {
-			this.info = info;
-			count = 0;
-			this.id = id;
-		}
+        private BuildRune(RuneInfo info, int id) {
+            this.info = info;
+            count = 0;
+            this.id = id;
+        }
 
-		public void addRune() {
-			addRune(1);
-		}
+        public void addRune() {
+            addRune(1);
+        }
 
-		public void addRune(int n) {
-			count += n;
+        public void addRune(int n) {
+            count += n;
 
-			int c = count;
+            int c = count;
 
-			listener.onRuneCountChanged(this, count - n, count);
-			if (c == count && onRuneCountChangedListener != null) {
-				onRuneCountChangedListener.onRuneCountChanged(this, count - n, count);
-			}
-		}
+            listener.onRuneCountChanged(this, count - n, count);
+            if (c == count && onRuneCountChangedListener != null) {
+                onRuneCountChangedListener.onRuneCountChanged(this, count - n, count);
+            }
+        }
 
-		public void removeRune() {
-			if (count == 0) return;
-			count--;
+        public void removeRune() {
+            if (count == 0) return;
+            count--;
 
-			int c = count;
+            int c = count;
 
-			listener.onRuneCountChanged(this, count + 1, count);
-			if (c == count && onRuneCountChangedListener != null) {
-				onRuneCountChangedListener.onRuneCountChanged(this, count + 1, count);
-			}
-		}
+            listener.onRuneCountChanged(this, count + 1, count);
+            if (c == count && onRuneCountChangedListener != null) {
+                onRuneCountChangedListener.onRuneCountChanged(this, count + 1, count);
+            }
+        }
 
-		public int getCount() {
-			return count;
-		}
+        public int getCount() {
+            return count;
+        }
 
-		public void setOnRuneCountChangedListener(OnRuneCountChangedListener listener) {
-			onRuneCountChangedListener = listener;
-		}
-	}
+        public void setOnRuneCountChangedListener(OnRuneCountChangedListener listener) {
+            onRuneCountChangedListener = listener;
+        }
+    }
 
-	public static class BuildSkill {
-		public double totalBonus;
-		Skill skill;
-		double base;
-		double scaling;
-		int scaleTypeId;
-		int bonusTypeId;
-	}
+    public static class BuildSkill {
+        public double totalBonus;
+        Skill skill;
+        double base;
+        double scaling;
+        int scaleTypeId;
+        int bonusTypeId;
+    }
 
-	public static interface OnRuneCountChangedListener {
-		public void onRuneCountChanged(BuildRune rune, int oldCount, int newCount);
-	}
+    public static interface OnRuneCountChangedListener {
+        public void onRuneCountChanged(BuildRune rune, int oldCount, int newCount);
+    }
 
-	public static int getStatIndex(String statName) {
-		Integer i;
-		i = statKeyToIndex.get(statName);
-		if (i == null) {
-			throw new RuntimeException("Stat name not found: " + statName);
-		}
+    public static int getStatIndex(String statName) {
+        Integer i;
+        i = statKeyToIndex.get(statName);
+        if (i == null) {
+            throw new RuntimeException("Stat name not found: " + statName);
+        }
 
-		return i;
-	}
+        return i;
+    }
 
-	public static int getStatName(int statId) {
-		int i;
-		i = statIdToStringId.get(statId);
-		if (i == 0) {
-			throw new RuntimeException("Stat id does not have string resource: " + statId);
-		}
+    public static int getStatName(int statId) {
+        int i;
+        i = statIdToStringId.get(statId);
+        if (i == 0) {
+            throw new RuntimeException("Stat id does not have string resource: " + statId);
+        }
 
-		return i;
-	}
+        return i;
+    }
 
     public static int getSkillStatDesc(int statId) {
         int i;
