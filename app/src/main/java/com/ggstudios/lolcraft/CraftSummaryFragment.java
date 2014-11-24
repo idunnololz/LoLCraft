@@ -870,6 +870,8 @@ public class CraftSummaryFragment extends Fragment {
 
                     }
 
+                    holder.pieChart.invalidate();
+
                     ((PieLegendAdapter) holder.list.getAdapter()).setSlices(holder.pieChart.getSlices());
 
                     break;
