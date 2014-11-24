@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.URL;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,7 +17,7 @@ import org.json.JSONObject;
 import com.ggstudios.tools.datafixer.ChampionInfo.Passive;
 import com.ggstudios.tools.datafixer.ChampionInfo.Skill;
 
-import static com.ggstudios.tools.datafixer.Main.p;
+import static com.ggstudios.tools.datafixer.Main.pln;
 
 public class ChampionInfoFixer {
 
@@ -57,7 +56,8 @@ public class ChampionInfoFixer {
             CC_FEAR = 10, CC_AOE_FEAR = CC_FEAR | METHOD_AOE,
             CC_PARANOIA = 11,
             CC_TAUNT = 12, CC_AOE_TAUNT = CC_TAUNT | METHOD_AOE,
-            CC_SUPPRESS = 13;
+            CC_SUPPRESS = 13,
+            CC_BLIND = 14;
 
 	private static final int AMP_MAGIC = 1, AMP_ALL = 2;
 
@@ -289,7 +289,7 @@ public class ChampionInfoFixer {
                         METHOD_BURST|AP,    1, 60, 110, 160, 210, 260, 1, "spelldamage",
                     2,  METHOD_DPS,         0, 1, 0.6, 0.75, 0.9, 1.05, 1.2, "PercentAttackSpeedMod",
                         METHOD_MOBILITY,    0, MOBI_MSP, 0.21, 0.27, 0.33, 0.39, 0.45,
-                    1,  METHOD_AOE_BURST|AD,1, 320, 660, 1000, 2.4, "attackdamage",
+                    1,  METHOD_AOE_BURST|AD,1, 325, 663, 1001, 2.34, "attackdamage",
 
         "Fizz",     0,
                     2,  METHOD_BURST|AD,    1, 0, 0, 0, 0, 0, 1, "attackdamage",
@@ -431,7 +431,7 @@ public class ChampionInfoFixer {
                         METHOD_MOBILITY,    0, MOBI_MSP, 0.15, 0.2, 0.25, 0.3, 0.35,
                     2,  METHOD_BURST|AP,    1, 60, 85, 110, 135, 160, 0.4, "spelldamage",
                         METHOD_MOBILITY,    0, MOBI_BLINK, 700, 700, 700, 700, 700,
-                    1,  METHOD_AOE_BURST|AP,2, 400, 575, 750, 2.5, "spelldamage", 3.75, "bonusattackdamage",
+                    1,  METHOD_AOE_BURST|AP,2, 350, 550, 750, 2.5, "spelldamage", 3.75, "bonusattackdamage",
 
         "Kayle",    0,
                     2,  METHOD_BURST|AP,    2, 60, 110, 160, 210, 260, 0.6, "spelldamage", 1, "bonusattackdamage",
@@ -783,13 +783,45 @@ public class ChampionInfoFixer {
                         METHOD_CC,          0, CC_AOE_STUN, 1.5, 1.5, 1.5, 1.5, 1.5,
                     1,  METHOD_BURST|AP,    1,  630, 975, 1260, 1.4, "spelldamage",
 
+        "Talon",    1,  METHOD_DPS,         1, 1, 0, 0, 0.1, "attackdamage", "FlatPhysicalDamageMod",
+                    1,  METHOD_DOT_BURST|AD,1, 40, 80, 120, 160, 200, 1.3, "bonusattackdamage",
+                    2,  METHOD_AOE_BURST|AD,1,  60, 110, 160, 210, 260, 1.2, "bonusattackdamage",
+                        METHOD_CC,          0, CC_AOE_SLOW, 0.2, 2, 0.25, 2, 0.3, 2, 0.35, 2, 0.4, 2,
+                    2,  METHOD_BURST_AMP|AD,0, 0.03, 0.06, 0.09, 0.12, 0.15, AMP_ALL,
+                        METHOD_MOBILITY,    0, MOBI_BLINK, 700, 700, 700, 700, 700,
+                    2,  METHOD_AOE_BURST|AD,1, 240, 340, 440, 1.5, "bonusattackdamage",
+                        METHOD_MOBILITY,    0, MOBI_MSP, 0.4, 0.4, 0.4,
 
+        "Taric",    1,  METHOD_BURST|AP,    1, 0, 0, 0.2, "armor",
+                    1,  METHOD_TANK,        2, 84, 140, 196, 252, 308, 0.42, "spelldamage", 0.07, "bonushealth", "FlatHPPoolMod",
+                    2,  METHOD_TANK,        1,  10, 15, 20, 25, 30, 0.12, "armor", "FlatArmorMod",
+                        METHOD_AOE_BURST|AP,1, 40, 80, 120, 160, 200, 0.2, "armor",
+                    2,  METHOD_CC,          0, CC_STUN, 1.2, 1.3, 1.4, 1.5, 1.6,
+                        METHOD_BURST|AP,    1, 80, 140, 200, 260, 320, 0.4, "spelldamage",
+                    2,  METHOD_AOE_BURST|AP,1, 150, 250, 350, 0.5, "spelldamage",
+                        METHOD_DPS,         0, 1, 30, 50, 70, "FlatPhysicalDamageMod",
 
+        "Teemo",    0,
+                    2,  METHOD_BURST|AP,    1, 80, 125, 170, 215, 260, 0.8, "spelldamage",
+                        METHOD_CC,          0, CC_BLIND, 1.5, 1.75, 2, 2.25, 2.5,
+                    1,  METHOD_MOBILITY,    0, MOBI_MSP, 0.20, 0.28, 0.36, 0.44, 0.52,
+                    1,  METHOD_DPS,         1, 1, 34, 68, 102, 136, 170, 0.7, "spelldamage", "FlatAaMagicDamageMod",
+                    2,  METHOD_CC,          0, CC_AOE_SLOW, 0.3, 4, 0.4, 4, 0.5, 4,
+                        METHOD_AOE_DOT_BURST|AP,1, 200, 325, 450, 0.5, "spelldamage",
 
+        "Thresh",   0,
+                    3,  METHOD_BURST|AP,    1, 80, 120, 160, 200, 240, 0.5, "spelldamage",
+                        METHOD_CC,          0, CC_STUN, 1.5, 1.5, 1.5, 1.5, 1.5,
+                        METHOD_MOBILITY,    0, MOBI_DASH, 1100, 1100, 1100, 1100, 1100,
+                    1,  METHOD_TANK,        1, 60, 100, 140, 180, 220, 0.4, "spelldamage", "FlatHPPoolMod",
+                    4,  METHOD_BURST|AP,    2, 0, 0, 0, 0, 0, 1, "@souls", 0.8, 1.1, 1.4, 1.7, 2, "attackdamage",
+                        METHOD_BURST|AP,    1, 65, 95, 125, 155, 185, 0.4, "spelldamage",
+                        METHOD_CC,          0, CC_AOE_SLOW, 0.2, 1, 0.25, 1, 0.3, 1, 0.35, 1, 0.4, 1,
+                        METHOD_CC,          0, CC_AOE_DISPLACE, 50, 50, 50, 50, 50,
+                    2,  METHOD_CC,          0, CC_AOE_SLOW, 0.99, 2, 0.99, 2, 0.99, 2,
+                        METHOD_AOE_BURST|AP,1, 250, 400, 550, 1, "spelldamage",
 
-
-
-            // this is read as: Passive with 1 stat mod, giving bonus to 1 stat which has 0 level segments. The stat is 0 (base) + (9*(level-1)).
+        // this is read as: Passive with 1 stat mod, giving bonus to 1 stat which has 0 level segments. The stat is 0 (base) + (9*(level-1)).
 		//					And the stat is award to range
 		"Tristana",	1,	METHOD_DPS,			1, 1, 0, 0, 9, "levelMinusOne", "RangeMod",
 					1,	METHOD_DPS,			0, 1, 0.3, 0.45, 0.6, 0.75, 0.9, "PercentAttackSpeedMod",
@@ -954,7 +986,7 @@ public class ChampionInfoFixer {
                 JSONObject champData = o.getJSONObject("data");
                 ChampionInfo info = completeChampionInfo(champData);
 
-                p(info.name);
+                pln(info.name);
 
                 // this is a passive!
                 JSONArray methods = new JSONArray();
@@ -986,10 +1018,10 @@ public class ChampionInfoFixer {
                 saveJsonObj(champKey + ".json", o);
             }
         } catch (Exception e) {
-            p("i = " + i);
+            pln("i = " + i);
 
             for (int j = Math.max(0, i - 5); j < Math.min(a.length, i + 5); j++) {
-                p("a[" + j + "] = " + a[j]);
+                pln("a[" + j + "] = " + a[j]);
             }
             e.printStackTrace();
         }
@@ -1159,7 +1191,7 @@ public class ChampionInfoFixer {
 			}
 			return i;
 		} catch (ClassCastException e) {
-			p("i=" + i + "; a[i]=" + a[i]);
+			pln("i=" + i + "; a[i]=" + a[i]);
 			e.printStackTrace();
 			throw e;
 		}
