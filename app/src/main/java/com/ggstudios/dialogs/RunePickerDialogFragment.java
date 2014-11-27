@@ -144,9 +144,11 @@ public class RunePickerDialogFragment extends ItemPickerDialogFragment {
 
 			@Override
 			protected void onPostExecute(Void v) {
-				filterAndShowRunes();
+                if (isAdded()) {
+                    filterAndShowRunes();
 
-				new IconFetcher().execute(getActivity().getAssets());
+                    new IconFetcher().execute(getActivity().getAssets());
+                }
 			}
 
 		}.execute();
