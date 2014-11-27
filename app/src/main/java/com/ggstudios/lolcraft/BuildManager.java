@@ -67,7 +67,7 @@ public class BuildManager {
     }
 
     public int saveBuild(Build build, String buildName, boolean forceOverwrite) {
-        if (buildName == null || buildName.length() == 0) {
+        if (buildName == null || buildName.length() == 0 || !buildName.matches("[a-zA-Z_ ]+")) {
             return RETURN_CODE_BUILD_INVALID_NAME;
         }
 
