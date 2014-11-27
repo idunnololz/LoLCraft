@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Spannable;
@@ -614,18 +615,22 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
 	}
 
     @Override
-    public void onSaveAsDialogOkClick(String text) {
-        trySaveBuild(text, false);
+    public void onSaveAsDialogOkClick(DialogFragment frag, String text) {
+        if (trySaveBuild(text, false)) {
+            frag.dismiss();
+        }
     }
 
     @Override
-    public void onSaveAsDialogCancelClick() {}
+    public void onSaveAsDialogCancelClick(DialogFragment frag) {
+        frag.dismiss();
+    }
 
-    private void trySaveBuild(String buildName, boolean force) {
+    private boolean trySaveBuild(String buildName, boolean force) {
         int result = getBuildManager().saveBuild(build, buildName, force);
         switch (result) {
             case BuildManager.RETURN_CODE_SUCCESS:
-                break;
+                return true;
             case BuildManager.RETURN_CODE_BUILD_NAME_EXIST:
                 AlertDialogFragment dialog = new Builder()
                         .setMessage(getString(R.string.confirm_build_overwrite, buildName))
@@ -636,10 +641,12 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
                 dialog.getArguments().putString("buildName", buildName);
 
                 dialog.show(getFragmentManager(), OVERWRITE_BUILD_DIALOG_TAG);
-                break;
+                return false;
             case BuildManager.RETURN_CODE_BUILD_INVALID_NAME:
                 Toast.makeText(getActivity(), R.string.invalid_build_name, Toast.LENGTH_LONG).show();
-                break;
+                return false;
+            default:
+                return false;
         }
     }
 

@@ -8,6 +8,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.ggstudios.lolcraft.R;
@@ -28,26 +29,38 @@ public class SaveAsDialogFragment extends DialogFragment {
 
         final EditText txtName = (EditText) v.findViewById(R.id.editText);
 
-        return new AlertDialog.Builder(getActivity())
+        final AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.save_as)
                 .setView(v)
-                .setPositiveButton(android.R.string.ok,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                getListener().onSaveAsDialogOkClick(txtName.getText().toString());
-                                dismiss();
-                            }
-                        }
-                )
-                .setNegativeButton(android.R.string.cancel,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                getListener().onSaveAsDialogCancelClick();
-                                dismiss();
-                            }
-                        }
-                )
+                .setPositiveButton(android.R.string.ok, null)
+                .setNegativeButton(android.R.string.cancel, null)
                 .create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(DialogInterface d) {
+                Button b = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                b.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        getListener().onSaveAsDialogOkClick(SaveAsDialogFragment.this, txtName.getText().toString());
+                    }
+                });
+
+                b = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                b.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        getListener().onSaveAsDialogCancelClick(SaveAsDialogFragment.this);
+                    }
+                });
+            }
+        });
+
+        return dialog;
     }
 
     public SaveAsDialogListener getListener() {
@@ -60,7 +73,7 @@ public class SaveAsDialogFragment extends DialogFragment {
     }
 
     public static interface SaveAsDialogListener {
-        public void onSaveAsDialogOkClick(String text);
-        public void onSaveAsDialogCancelClick();
+        public void onSaveAsDialogOkClick(DialogFragment frag, String text);
+        public void onSaveAsDialogCancelClick(DialogFragment frag);
     }
 }
