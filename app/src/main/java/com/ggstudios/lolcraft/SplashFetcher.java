@@ -2,9 +2,11 @@ package com.ggstudios.lolcraft;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
+import java.util.concurrent.Executor;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,6 +15,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.ggstudios.utils.DebugLog;
 import com.ggstudios.utils.DiskLruImageCache;
@@ -132,38 +135,45 @@ public class SplashFetcher {
         Utils.executeAsyncTask(task, key);
     }
 
-	public void fetchChampionSplash(final String key, int reqWidth, int reqHeight, final OnDrawableRetrievedListener listener) {
-		if (diskCache != null) {
-			if (diskCache.isInErrorState()) return;
-			final String sanatizedKey = key.toLowerCase(Locale.US);
+    public FetchToken fetchChampionSplash(final String key, int reqWidth, int reqHeight, final OnDrawableRetrievedListener listener) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+            return fetchChampionSplash(AsyncTask.THREAD_POOL_EXECUTOR, key, reqWidth, reqHeight, listener);
+        } else {
+            return fetchChampionSplash(null, key, reqWidth, reqHeight, listener);
+        }
+    }
 
-			if (diskCache.containsKey(sanatizedKey)) {
-				listener.onDrawableRetrieved(new BitmapDrawable(context.getResources(), 
-						diskCache.getBitmap(sanatizedKey)));
-				return;
-			}
-		}
+    public FetchToken fetchChampionSplash(Executor executor, final String key, int reqWidth, int reqHeight, final OnDrawableRetrievedListener listener) {
+		AsyncTask<Object, Void, Object> task = new AsyncTask<Object, Void, Object>(){
 
-		AsyncTask<Object, Void, Drawable> task = new AsyncTask<Object, Void, Drawable>(){
+            String sanatizedKey;
 
 			@Override
-			protected Drawable doInBackground(Object... params) {
+			protected Object doInBackground(Object... params) {
 				if (diskCache == null) {
 					synchronized(cacheLock) {
 						if (diskCache == null) {
 							initialize();
 						}
 					}
-				}			
+				}
 
-				if (diskCache.isInErrorState()) return null;
+                if (isCancelled()) {
+                    return 0;
+                }
 
-				final String sanatizedKey = key.toLowerCase(Locale.US);
+				if (diskCache.isInErrorState()) return 0;
+
+                sanatizedKey = key.toLowerCase(Locale.US);
 
 				if (diskCache.containsKey(sanatizedKey)) {
 					return new BitmapDrawable(context.getResources(), 
 							diskCache.getBitmap(sanatizedKey));
 				}
+
+                if (isCancelled()) {
+                    return 0;
+                }
 				
 				int reqWidth = (Integer) params[1];
 				int reqHeight = (Integer) params[2];
@@ -175,19 +185,30 @@ public class SplashFetcher {
 							+ params[0] + "_0.jpg");
 
 					Bitmap bmp = decodeSampledBitmapFromResource(url, reqWidth, reqHeight);
-					diskCache.put(sanatizedKey, bmp);
-					return new BitmapDrawable(context.getResources(), bmp);
+                    if (isCancelled()) {
+                        return -1;
+                    }
+                    if (bmp != null) {
+                        diskCache.put(sanatizedKey, bmp);
+                        return new BitmapDrawable(context.getResources(), bmp);
+                    }
 				} catch (MalformedURLException e) {
 					DebugLog.e(TAG, e);
-				} catch (IOException e) {
+                    return -1;
+				} catch (InterruptedIOException e) {
+                    DebugLog.e(TAG, sanatizedKey, e);
+                    return -1;
+                } catch (IOException e) {
 					DebugLog.e(TAG, e);
+                    return -1;
 				} catch (OutOfMemoryError e) {
-					DebugLog.e(TAG, e);
-					
-					// free some memory...
-					
-				} finally {
-				
+                    DebugLog.e(TAG, e);
+                    return -1;
+
+                    // free some memory...
+                } catch (Exception e) {
+                    DebugLog.e(TAG, e);
+                } finally {
 					if (stream != null) {
 						try {
 							stream.close();
@@ -196,19 +217,44 @@ public class SplashFetcher {
 						}
 					}
 				}
-				return null;
+				return 0;
 			}
 
-			protected void onPostExecute(Drawable d) {
-				listener.onDrawableRetrieved(d);
+            protected void onCancelled(Object d) {
+                if (d instanceof Integer) {
+                    int code = (Integer) d;
+                    if (code < 0) {
+                        // remove the bitmap if we were interrupted to prevent corruption...
+                        deleteCache(sanatizedKey);
+                    }
+                }
+            }
+
+			protected void onPostExecute(Object d) {
+                if (d instanceof Drawable) {
+                    listener.onDrawableRetrieved((Drawable) d);
+                }
 			}
 
 		};
 
-		Utils.executeAsyncTask(task, key, reqWidth, reqHeight);
+		Utils.executeAsyncTaskOnExecutor(executor, task, key, reqWidth, reqHeight);
+        return new FetchToken(task);
 	}
 
 	public static interface OnDrawableRetrievedListener {
 		public void onDrawableRetrieved(Drawable d);
 	}
+
+    public static class FetchToken {
+        private AsyncTask task;
+
+        private FetchToken(AsyncTask task) {
+            this.task = task;
+        }
+
+        public void cancel() {
+            task.cancel(true);
+        }
+    }
 }

@@ -4,6 +4,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.json.JSONException;
 
@@ -13,6 +20,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Camera;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -150,25 +158,23 @@ public class MainFragment extends Fragment implements SearchView.OnQueryTextList
 			initializeChampionInfo();
 		} else {
 			if (isList) {
-				((ListView) content).setAdapter(new ChampionInfoAdapter(getActivity(), champs));
+				((ListView) content).setAdapter(new ChampionInfoListAdapter(getActivity(), champs));
 			} else {
 				((GridView) content).setAdapter(new ChampionInfoAdapter(getActivity(), champs));
 			}
 		}
 
-		content.setOnItemClickListener(new OnItemClickListener(){
+        if (!isList) {
+            content.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view,
+                                        int position, long id) {
+                    onItemSelected((ChampionInfo) content.getItemAtPosition(position));
+                }
 
-				Intent i = new Intent(getActivity(), CraftActivity.class);
-				i.putExtra(CraftActivity.EXTRA_CHAMPION_ID, 
-						((ChampionInfo) content.getItemAtPosition(position)).id);
-				startActivity(i);
-			}
-
-		});
+            });
+        }
 
 		if (animate) {
 			flipCard();
@@ -178,7 +184,13 @@ public class MainFragment extends Fragment implements SearchView.OnQueryTextList
 		}
 	}
 
-	@SuppressLint("CommitPrefEdits") @Override
+    private void onItemSelected(ChampionInfo info) {
+        Intent i = new Intent(getActivity(), CraftActivity.class);
+        i.putExtra(CraftActivity.EXTRA_CHAMPION_ID, info.id);
+        startActivity(i);
+    }
+
+    @SuppressLint("CommitPrefEdits") @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 		case R.id.action_view_as_grid:
@@ -226,11 +238,11 @@ public class MainFragment extends Fragment implements SearchView.OnQueryTextList
 
 										@Override
 										public void run() {
-											if (isList) {
-												((ListView) content).setAdapter(new ChampionInfoAdapter(getActivity(), champs));
-											} else {
-												((GridView) content).setAdapter(new ChampionInfoAdapter(getActivity(), champs));
-											}
+                                            if (isList) {
+                                                ((ListView) content).setAdapter(new ChampionInfoListAdapter(getActivity(), champs));
+                                            } else {
+                                                ((GridView) content).setAdapter(new ChampionInfoAdapter(getActivity(), champs));
+                                            }
 										}
 
 									});
@@ -273,16 +285,28 @@ public class MainFragment extends Fragment implements SearchView.OnQueryTextList
 		}.execute();
 	}
 
+    private class ListViewHolder {
+        ImageView splash;
+        ImageView portrait;
+        TextView name;
+        TextView title;
+        View hotspot;
+
+        SplashFetcher.FetchToken lastToken;
+        ChampionInfo lastInfo;
+        Runnable runnable;
+    }
+
 	private class ViewHolder {
 		ImageView portrait;
 		TextView name;
 	}
 
 	public class ChampionInfoAdapter extends BaseAdapter {
-		private Context context;
-		private List<ChampionInfo> champInfoFull;
-		private List<ChampionInfo> champInfo;
-		private LayoutInflater inflater;
+		protected Context context;
+        protected List<ChampionInfo> champInfoFull;
+        protected List<ChampionInfo> champInfo;
+        protected LayoutInflater inflater;
 
 		private Drawable placeHolder;
 
@@ -328,11 +352,7 @@ public class MainFragment extends Fragment implements SearchView.OnQueryTextList
 
 			if (convertView == null) {  // if it's not recycled, initialize some attributes
 				holder = new ViewHolder();
-				if (isList) {
-					convertView = inflater.inflate(R.layout.item_champion_info_list, parent, false);
-				} else {
-					convertView = inflater.inflate(R.layout.item_champion_info, parent, false);
-				}
+			    convertView = inflater.inflate(R.layout.item_champion_info, parent, false);
 				holder.portrait = (ImageView) convertView.findViewById(R.id.portrait);
                 holder.name = (TextView) convertView.findViewById(R.id.name);
 
@@ -360,6 +380,122 @@ public class MainFragment extends Fragment implements SearchView.OnQueryTextList
 			return convertView;
 		}
 	}
+
+    public class ChampionInfoListAdapter extends ChampionInfoAdapter {
+        private static final int ANIMATION_DURATION = 300;
+        private Drawable placeHolder;
+
+        public ChampionInfoListAdapter(Context c, List<ChampionInfo> champions) {
+            super(c, champions);
+        }
+
+        public int getCount() {
+            return champInfo.size();
+        }
+
+        public Object getItem(int position) {
+            return champInfo.get(position);
+        }
+
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        // create a new ImageView for each item referenced by the Adapter
+        public View getView(int position, View convertView, ViewGroup parent) {
+            final ListViewHolder holder;
+
+            if (convertView == null) {  // if it's not recycled, initialize some attributes
+                holder = new ListViewHolder();
+                convertView = inflater.inflate(R.layout.item_champion_info_list, parent, false);
+                holder.name = (TextView) convertView.findViewById(R.id.name);
+                holder.title = (TextView) convertView.findViewById(R.id.title);
+
+                if (convertView.findViewById(R.id.splash) == null) {
+                    content.setBackgroundColor(Color.WHITE);
+                    holder.portrait = (ImageView) convertView.findViewById(R.id.portrait);
+                    convertView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (holder.lastInfo != null)
+                                onItemSelected(holder.lastInfo);
+                        }
+                    });
+                } else {
+                    holder.splash = (ImageView) convertView.findViewById(R.id.splash);
+                    holder.hotspot = convertView.findViewById(R.id.hotspot);
+                    holder.runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            SplashFetcher.FetchToken token = SplashFetcher.getInstance().fetchChampionSplash(
+                                    android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB ?
+                                            THREAD_POOL_EXECUTOR : null,
+                                    holder.lastInfo.key, holder.splash.getWidth(), 0, new SplashFetcher.OnDrawableRetrievedListener() {
+
+                                        @Override
+                                        public void onDrawableRetrieved(Drawable d) {
+
+                                            holder.lastToken = null;
+                                            holder.splash.setImageDrawable(d);
+                                            fadeViewIn(holder.splash);
+                                        }
+
+                                    });
+
+                            holder.lastToken = token;
+                        }
+                    };
+
+                    placeHolder = holder.splash.getDrawable();
+
+                    holder.hotspot.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (holder.lastInfo != null)
+                                onItemSelected(holder.lastInfo);
+                        }
+                    });
+                }
+
+                convertView.setTag(holder);
+            } else {
+                holder = (ListViewHolder) convertView.getTag();
+            }
+
+            final ChampionInfo info = champInfo.get(position);
+
+            holder.lastInfo = info;
+
+            holder.name.setText(info.name);
+            holder.title.setText(info.title);
+
+            if (holder.splash == null) {
+                if (info.icon != null) {
+                    holder.portrait.setImageDrawable(info.icon);
+                } else {
+                    holder.portrait.setImageDrawable(placeHolder);
+                }
+            } else {
+                holder.splash.clearAnimation();
+                holder.splash.setVisibility(View.INVISIBLE);
+
+                if (holder.lastToken != null) {
+                    holder.lastToken.cancel();
+                }
+
+                holder.splash.post(holder.runnable);
+            }
+
+            return convertView;
+        }
+
+        private void fadeViewIn(ImageView view) {
+            Animation a = new AlphaAnimation(0f, 1f);
+            a.setDuration(ANIMATION_DURATION);
+            view.setVisibility(View.VISIBLE);
+            view.startAnimation(a);
+        }
+    }
 
 	@Override
 	public boolean onQueryTextSubmit(String query) {
@@ -444,4 +580,27 @@ public class MainFragment extends Fragment implements SearchView.OnQueryTextList
 		}
 
 	}
+
+    private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
+    private static final int CORE_POOL_SIZE = CPU_COUNT == 1 ? 1 : CPU_COUNT - 1;
+    private static final int MAXIMUM_POOL_SIZE = CORE_POOL_SIZE;
+    private static final int KEEP_ALIVE = 1;
+
+    private static final ThreadFactory sThreadFactory = new ThreadFactory() {
+        private final AtomicInteger mCount = new AtomicInteger(1);
+
+        public Thread newThread(Runnable r) {
+            return new Thread(r, "AsyncTask #" + mCount.getAndIncrement());
+        }
+    };
+
+    private static final BlockingQueue<Runnable> sPoolWorkQueue =
+            new LinkedBlockingQueue<Runnable>(128);
+
+    /**
+     * An {@link java.util.concurrent.Executor} that can be used to execute tasks in parallel.
+     */
+    public static final Executor THREAD_POOL_EXECUTOR
+            = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
+            TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
 }

@@ -2,6 +2,7 @@ package com.ggstudios.utils;
 
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.Executor;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -69,6 +70,15 @@ public class Utils {
 			task.execute(params);
 		}
 	}
+
+    public static <T> void executeAsyncTaskOnExecutor(Executor executor, AsyncTask<T, ?, ?> task,
+                                            T... params) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+            task.executeOnExecutor(executor, params);
+        } else {
+            task.execute(params);
+        }
+    }
 
 	public static Intent createEmailOnlyChooserIntent(Context context, Intent source,
 			CharSequence chooserTitle) {
