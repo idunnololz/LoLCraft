@@ -250,7 +250,6 @@ public class CraftActivity extends ActionBarActivity implements ItemPickerDialog
 		super.onPause();
 
         buildManager.saveBuild(build, BuildManager.BUILD_DEFAULT, true);
-		Toast.makeText(this, R.string.build_saved, Toast.LENGTH_LONG).show();
 	}
 	
 	@Override
