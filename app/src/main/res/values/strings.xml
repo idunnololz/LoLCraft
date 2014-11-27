@@ -187,6 +187,24 @@
     <string name="build_manager">Build Manager</string>
     <string name="suppress">Suppress</string>
     <string name="blind">Blind</string>
+    <string name="champion_splash">Champion splash</string>
+    <string name="action_about">About</string>
+    <string name="about">About</string>
+
+    <string name="about_text"><![CDATA[
+<b>LoL Craft</b> <small>by Gary Guo</small>
+<br>
+<b>Version %1$s</b>
+<br>
+<br>
+<b>Changelog</b>
+<br>
+<small>
+- Added ability to save and load builds<br>
+- New champion list design<br>
+- Fixed more crashes<br>
+</small>
+]]></string>
 
 
 </resources>

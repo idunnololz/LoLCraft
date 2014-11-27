@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ggstudios.dialogs.AboutDialogFragment;
 import com.ggstudios.utils.Utils;
 
 public class MainActivity extends ActionBarActivity {
@@ -41,6 +42,8 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_report_bug) {
         	Utils.startBugReportIntent(this);
             return true;
+        } else if (id == R.id.action_about) {
+            AboutDialogFragment.newInstance().show(getSupportFragmentManager(), "dialog");
         }
         return super.onOptionsItemSelected(item);
     }
