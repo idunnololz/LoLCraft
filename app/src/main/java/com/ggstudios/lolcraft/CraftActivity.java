@@ -23,6 +23,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,6 +62,7 @@ public class CraftActivity extends ActionBarActivity implements ItemPickerDialog
 	private static final int PARALLAX_WIDTH_DP = 10;
 	private static final int RESIZE_DURATION = 200;
 	private static final int FADE_IN_DURATION = 100;
+    private static final int ANIMATION_DURATION = 200;
 
 	private ChampionInfo info;
 
@@ -125,6 +127,7 @@ public class CraftActivity extends ActionBarActivity implements ItemPickerDialog
 		splashScroll = (LockableScrollView) findViewById(R.id.splashScrollView);
 		
 		splashScroll.setScrollingEnabled(false);
+        splash.setVisibility(View.INVISIBLE);
 
 		Bundle args = new Bundle();
 		args.putInt(EXTRA_CHAMPION_ID, champId);
@@ -204,6 +207,9 @@ public class CraftActivity extends ActionBarActivity implements ItemPickerDialog
             height = display.getHeight();
         }
 
+        splashScroll.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
+
         final int parallaxW = (int) Utils.convertDpToPixel(PARALLAX_WIDTH_DP, this);
         final int parallaxPer = parallaxW / adapter.getCount();
 
@@ -228,18 +234,18 @@ public class CraftActivity extends ActionBarActivity implements ItemPickerDialog
             public void onDrawableRetrieved(Drawable d) {
                 splash.setImageDrawable(d);
 
-                if (splash.getWidth() == 0) {
-                    splash.post(new Runnable() {
+                splash.getLayoutParams().width = splashScroll.getMeasuredWidth() + parallaxW;
+                splashScroll.requestLayout();
 
-                        @Override
-                        public void run() {
-                            setUpSplash(parallaxW);
-                        }
-
-                    });
-                } else {
-                    setUpSplash(parallaxW);
-                }
+                splashScroll.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlphaAnimation ani = new AlphaAnimation(0f, 1f);
+                        ani.setDuration(ANIMATION_DURATION);
+                        splash.setVisibility(View.VISIBLE);
+                        splash.startAnimation(ani);
+                    }
+                });
             }
 
         });
@@ -441,33 +447,6 @@ public class CraftActivity extends ActionBarActivity implements ItemPickerDialog
 			
 		});
 		champInfoContent.startAnimation(ani);
-	}
-
-	private void setUpSplash(int parallaxW) {
-		splash.getLayoutParams().width = splashScroll.getWidth() + parallaxW;
-		splashScroll.requestLayout();
-
-		int w = MeasureSpec.makeMeasureSpec(splash.getLayoutParams().width, MeasureSpec.EXACTLY);
-		int h = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE, MeasureSpec.UNSPECIFIED);
-		splash.measure(w, h);
-
-		int y = (splash.getMeasuredHeight() - splashScroll.getHeight()) / 2;
-		
-		DebugLog.d(TAG, "y:" + y);
-
-		if (y > 0) {
-			splashScroll.scrollTo(0, y);
-		} else {
-			splashScroll.post(new Runnable() {
-
-				@Override
-				public void run() {
-					int y = (splash.getMeasuredHeight() - splashScroll.getLayoutParams().height) / 2;
-					splashScroll.scrollTo(0, y);
-				}
-
-			});
-		}
 	}
 	
     @Override

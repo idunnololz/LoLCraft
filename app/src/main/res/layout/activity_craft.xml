@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color" >
+    android:background="@color/black_almost">
 
     <View
         android:id="@+id/statusBarSpacer"
@@ -15,7 +15,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignBottom="@+id/tab_indicator"
-        android:background="@color/grey"
         android:scrollbars="none" >
 
         <ImageView
@@ -23,8 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/splash_placeholder" />
+            android:scaleType="centerCrop" />
     </com.ggstudios.views.LockableScrollView>
 
     <com.ggstudios.views.TabIndicator
