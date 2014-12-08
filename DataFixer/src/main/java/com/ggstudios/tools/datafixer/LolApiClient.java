@@ -81,7 +81,7 @@ public class LolApiClient {
 
         String[][] a;
         if (args == null) {
-            a = args;
+            a = arr;
         } else {
             a = new String[arr.length + args.length][];
             System.arraycopy(arr, 0, a, 0, arr.length);

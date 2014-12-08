@@ -149,13 +149,13 @@ public class Main {
             // Updates champion data... outputs to out/ and res/
             //DataFetcher.fetchAllChampionThumb();
             //DataFetcher.listAllVersions();
-            DataFetcher.fetchAllChampionJson();
+            DataFetcher.fetchAllChampionJson("4.20.1");
             //DataFetcher.fetchAllItemInfo();
 
             //DataFetcher.fetchAllSpellThumb();
             //DataFetcher.fetchAllPassiveThumb();
 
-            //ChampionInfoFixer.fixChampionInfo();
+            ChampionInfoFixer.fixChampionInfo();
 
 			//fixItemJson();
 		} catch (Exception e) {
