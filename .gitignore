@@ -6,3 +6,6 @@
 /build
 /res
 /out
+
+#crashlytics stuff
+**/crashlytics-build.properties
