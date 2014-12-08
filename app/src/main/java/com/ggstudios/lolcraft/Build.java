@@ -1260,6 +1260,9 @@ public class Build {
     public static int getStatType(int statId) {
         switch (statId) {
             case STAT_DMG_REDUCTION:
+            case STAT_ENEMY_MAX_HP:
+            case STAT_ENEMY_CURRENT_HP:
+            case STAT_ENEMY_MISSING_HP:
                 return STAT_TYPE_PERCENT;
             default:
                 return STAT_TYPE_DEFAULT;
