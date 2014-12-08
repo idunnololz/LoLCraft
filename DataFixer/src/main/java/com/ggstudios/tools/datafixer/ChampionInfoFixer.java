@@ -453,7 +453,7 @@ public class ChampionInfoFixer {
         "KogMaw",   1,  METHOD_AOE_BURST|TR,0, 0, 100,
                     2,  METHOD_DPS,         0, 1, 0.1, 0.15, 0.2, 0.25, 0.3, "PercentAttackSpeedMod",
                         METHOD_BURST|AP,    1, 80, 130, 180, 230, 280, 0.5, "spelldamage",
-                    2,  METHOD_DPS,         0, 1, 130, 150, 170, 190, 210, "range",
+                    2,  METHOD_DPS,         0, 1, 130, 150, 170, 190, 210, "RangeMod",
                         METHOD_DPS,         1, 1, 0.02, 0.03, 0.04, 0.05, 0.06, 0.0001, "spelldamage", "enemymaxhealth",
                     2,  METHOD_AOE_BURST|AP,1, 60, 110, 160, 210, 260, 0.7, "spelldamage",
                         METHOD_CC,          0, CC_AOE_SLOW, 0.2, 4, 0.28, 4, 0.36, 4, 0.44, 4, 0.52, 4,

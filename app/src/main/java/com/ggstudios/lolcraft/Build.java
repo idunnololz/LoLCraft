@@ -305,6 +305,7 @@ public class Build {
         a.put(STAT_MR, R.string.stat_desc_mr);
         //		public static final int STAT_MS = 9;
         a.put(STAT_RANGE, R.string.stat_desc_range);
+        a.put(STAT_ENEMY_MAX_HP, R.string.stat_desc_enemy_max_hp);
         //		public static final int STAT_CRIT = 11;
         //		public static final int STAT_AP = 12;
         //		public static final int STAT_LS = 13;
