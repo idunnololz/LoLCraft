@@ -272,6 +272,7 @@ public class Build {
         // special keys...
         statKeyToIndex.put("@special.BraumWArmor", 	STAT_NULL);
         statKeyToIndex.put("@special.BraumWMR", 	STAT_NULL);
+        statKeyToIndex.put("@special.jaycew", 	    STAT_NULL);
 
         statKeyToIndex.put("@cooldownchampion", 	STAT_CD_MOD);
         statKeyToIndex.put("@stacks", STAT_STACKS);

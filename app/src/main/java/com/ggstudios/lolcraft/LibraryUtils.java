@@ -104,9 +104,9 @@ public class LibraryUtils {
 			//DebugLog.d(TAG, "Data: " + champData.toString());
 			//DebugLog.d(TAG, "Data: " + skills.toString());
 
-			Skill[] skills = new Skill[5];
+			Skill[] skills = new Skill[skillsJson.length() + 1];
 
-			String[] keys = {"q", "w", "e", "r"};
+			String[] keys = {"q", "w", "e", "r", "", "", "", "", "", "", "", "", "", "", "",};
 
 			skills[0] = new ChampionInfo.Passive();
 			for (int i = 1; i < skills.length; i++) {
