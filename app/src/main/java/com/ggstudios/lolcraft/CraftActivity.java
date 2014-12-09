@@ -451,9 +451,13 @@ public class CraftActivity extends ActionBarActivity implements ItemPickerDialog
 	
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.craft_activity, menu);
+
+        if (!BuildConfig.DEBUG) {
+            menu.findItem(R.id.action_stat_summary).setVisible(false);
+        }
+
         return true;
     }
 
