@@ -93,6 +93,7 @@ public class Build {
     public static final int STAT_INVULNERABILITY_ALL_BUT_ONE = 36;
     public static final int STAT_AOE_DPS_MAGIC = 37;
     public static final int STAT_PERCENT_HP_MISSING = 38;
+    public static final int STAT_UNDYING = 39;
 
     public static final int STAT_TOTAL_AR = 40;
     public static final int STAT_TOTAL_AD = 41;
@@ -249,6 +250,7 @@ public class Build {
         statKeyToIndex.put("SpellBlock",                        STAT_SPELL_BLOCK);
         statKeyToIndex.put("CcImmune",                          STAT_CC_IMMUNE);
         statKeyToIndex.put("InvulnerabilityButOne",             STAT_INVULNERABILITY_ALL_BUT_ONE);
+        statKeyToIndex.put("Undying",                           STAT_UNDYING);
 
         // keys used for skills...
         statKeyToIndex.put("spelldamage", 			STAT_TOTAL_AP);

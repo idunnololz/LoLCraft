@@ -842,6 +842,14 @@ public class ChampionInfoFixer {
                         METHOD_CC,          0, CC_SLOW, 0.25, 6, 0.3, 6, 0.35, 6, 0.4, 6, 0.45, 6,
                     1,  METHOD_DOT_BURST|AP,1, 0, 0, 0, 0.2, 0.24, 0.28, "enemymaxhealth",
 
+        "Tryndamere",1,  METHOD_DPS,         0, 1, 0, 0.35, "FlatCritChanceMod",
+                    2,  METHOD_DPS,         0, 1, 20, 30, 40, 50, 60, "FlatPhysicalDamageMod",
+                        METHOD_SUSTAIN,     0, 0, 0, 0, 0, 0,
+                    1,  METHOD_CC,          0, CC_AOE_SLOW, 0.3, 4, 0.375, 4, 0.45, 4, 0.525, 4, 0.6, 4,
+                    2,  METHOD_AOE_BURST|AD,2, 70, 100, 130, 160, 190, 1, "spelldamage", 1.2, "bonusattackdamage",
+                        METHOD_MOBILITY,    0, MOBI_DASH, 660, 660, 660, 660, 660,
+                    1,  METHOD_TANK,        0, 5, 5, 5, "Undying",
+
 	};
 	
 	private static final String ANALYSIS_KEY = "analysis";
