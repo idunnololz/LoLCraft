@@ -2,8 +2,10 @@ package com.ggstudios.lolcraft;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -294,6 +296,7 @@ public class CraftSummaryFragment extends Fragment {
 
         private MethodAnalysis analyzeBurst(ChampionInfo info, Build b, GamePhase gamePhase) throws JSONException {
             Skill[] skills = info.getRawSkills();
+            Map<String, BurstAnalysisItem> burstItemNameDic = new HashMap<>();
 
             BurstAnalysis analysis = new BurstAnalysis();
             int totalBurst = 0;
@@ -355,11 +358,25 @@ public class CraftSummaryFragment extends Fragment {
                         dmg += scaling.scaling * rawStats[Build.getStatIndex(scaling.type)];
                     }
 
+                    BurstAnalysisItem item = null;
+                    if (burstItemNameDic.containsKey(s.name)) {
+                        item = burstItemNameDic.get(s.name);
+                        item.value += dmg;
+                    } else {
+                        item = new BurstAnalysisItem();
+                        item.value = dmg;
+                        item.statTypeId = method;
+                        item.name = s.name;
+                        analysis.bonuses.add(item);
+
+                        burstItemNameDic.put(s.name, item);
+                    }
+
                     StatBonus bonus = new StatBonus();
                     bonus.value = dmg;
                     bonus.statTypeId = method;
                     bonus.name = s.name;
-                    analysis.bonuses.add(bonus);
+                    item.breakDown.add(bonus);
 
                     totalBurst += dmg;
                 }
@@ -847,7 +864,7 @@ public class CraftSummaryFragment extends Fragment {
                     holder.txtTotalDamage.setText(attackDamageFormat.format(a.totalDamage));
 
                     holder.pieChart.clearChart();
-                    List<StatBonus> bonuses = a.bonuses;
+                    List<? extends StatBonus> bonuses = a.getBonuses();
                     int index = 0;
                     for (StatBonus b : bonuses) {
                         if (graphOverall) {
@@ -1169,6 +1186,21 @@ public class CraftSummaryFragment extends Fragment {
         int statTypeId;
     }
 
+    /**
+     * BurstAnalysisItem is an analysis of a spell, item, or other active that is considered to
+     * deal burst damage. Each spell, item or other with a unique name can only appear once, however
+     * due to the nature and complexity of a spell, item or other, the burst damage might have
+     * multiple parts. For instance, one spell could deal 100 damage and 10% of the enemy's max hp.
+     * Such a spell's damage would be composed of (1) the 100 damage dealt and (2) the dynamic
+     * damage dealt based on the enemy's hp.
+     *
+     * For simplicity sake, we group the damage together to form a unified damage value, but we keep
+     * the breakdown available for further analysis if necessary.
+     */
+    private static class BurstAnalysisItem extends StatBonus{
+        List<StatBonus> breakDown = new ArrayList<StatBonus>();
+    }
+
     private static class DpsAnalysis extends MethodAnalysis {
         double dps;
         double damagePerAa;
@@ -1191,7 +1223,7 @@ public class CraftSummaryFragment extends Fragment {
     private static class BurstAnalysis extends MethodAnalysis {
 
         double totalDamage;
-        List<StatBonus> bonuses = new ArrayList<StatBonus>();
+        private List<BurstAnalysisItem> bonuses = new ArrayList<BurstAnalysisItem>();
 
         public BurstAnalysis() {
             methodType = Method.METHOD_BURST;
