@@ -337,7 +337,7 @@ public class CraftSummaryFragment extends Fragment {
                         skillRanks = s.ranks;
                     }
 
-                    int dmg = 0;
+                    double dmg = 0;
                     for (int i = 0; i < skillRanks; i++) {
                         int req = 0;
                         if (levelDivided) {
@@ -348,14 +348,27 @@ public class CraftSummaryFragment extends Fragment {
                         if (skillRank < req) {
                             idx++;
                         } else {
-                            dmg = a.getInt(idx++);
+                            dmg = a.getDouble(idx++);
                         }
+                    }
+
+                    String damageMod = null;
+                    if (a.get(idx) instanceof String) {
+                        damageMod = a.getString(idx++);
                     }
 
                     for (int i = 0; i < scalings; i++) {
                         idx = parseScaling(a, idx, skillRanks, skillRank, scaling);
 
-                        dmg += scaling.scaling * rawStats[Build.getStatIndex(scaling.type)];
+                        if ((int)scaling.scaling == Method.SPECIAL_USE_BASE_AS_SCALING) {
+                            dmg += dmg * rawStats[Build.getStatIndex(scaling.type)];
+                        } else {
+                            dmg += scaling.scaling * rawStats[Build.getStatIndex(scaling.type)];
+                        }
+                    }
+
+                    if (damageMod != null) {
+                        dmg = dmg * rawStats[Build.getStatIndex(damageMod)];
                     }
 
                     BurstAnalysisItem item = null;
