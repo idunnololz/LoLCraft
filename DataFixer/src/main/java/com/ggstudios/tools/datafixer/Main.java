@@ -149,7 +149,7 @@ public class Main {
             // Updates champion data... outputs to out/ and res/
             //DataFetcher.fetchAllChampionThumb();
             //DataFetcher.listAllVersions();
-            DataFetcher.fetchAllChampionJson("4.20.1");
+            DataFetcher.fetchAllChampionJson();
             //DataFetcher.fetchAllItemInfo();
 
             //DataFetcher.fetchAllSpellThumb();

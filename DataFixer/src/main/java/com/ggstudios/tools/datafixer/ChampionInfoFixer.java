@@ -82,7 +82,9 @@ public class ChampionInfoFixer {
 		// Calculation for the different categories will go as:
 		// METHOD_DPS = Stats will be added in before DPS calculations, this can also be stats that will be considered when determining dps such as range boosts
 		// METHOD_SUSTAIN = All stats counted as HP regain
-		// METHOD_BURST = All stats counted as damage. To be totaled
+		// METHOD_BURST = All stats counted as damage by default. To be totaled.
+        //              = To define indirect damage, format goes like: METHOD_DPS, <scaling_count>, <base>, [<type>], <scaling>, ...
+        //              = For instance, <type> could be based on enemy's max hp
 		// METHOD_CC = Define type of CC duration and strength
 		// METHOD_TANK = Define tanking stats (such as hp game, mr gain, ar gain, etc)
 		// METHOD_MOBILITY = Define modifiers to movement speed or distance coverage
@@ -278,7 +280,7 @@ public class ChampionInfoFixer {
                     2,  METHOD_DOT_BURST|AP,1, 300, 450, 600, 750, 900, 2.25, "spelldamage",
                         METHOD_SUSTAIN,     0, 0, 0, 0, 0, 0,
                     2,  METHOD_AOE_BURST|AP,1, 195, 255, 315, 375, 435, 1.35, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SILENCE, 1.2, 1.2, 1.2, 1.2, 1.2,
+                        METHOD_CC,          0, CC_AOE_SILENCE, 1.25, 1.25, 1.25, 1.25, 1.25,
                     2,  METHOD_AOE_BURST|AP,1, 625, 1125, 1625, 2.25, "spelldamage",
                         METHOD_MOBILITY,    0, MOBI_BLINK, 800, 800, 800,
 
@@ -397,8 +399,8 @@ public class ChampionInfoFixer {
                     1,  METHOD_BURST|AP,    1, 40, 75, 110, 145, 180, 0.6, "spelldamage",
                     2,  METHOD_CC,          0, CC_AOE_STUN, 1, 1, 1, 1, 1,
                         METHOD_AOE_BURST|AD,1, 100, 150, 200, 250, 300, 1, "attackdamage",
-                    3,  METHOD_TANK,        1, 25, 35, 45, 0.3, "bonusattackdamage", "FlatArmorMod",
-                        METHOD_TANK,        1, 25, 35, 45, 0.2, "spelldamage", "FlatSpellBlockMod",
+                    3,  METHOD_TANK,        1, 20, 35, 50, 0.5, "bonusattackdamage", "FlatArmorMod",
+                        METHOD_TANK,        1, 20, 35, 50, 0.2, "spelldamage", "FlatSpellBlockMod",
                         METHOD_DPS,         1, 1, 33.33, 53.33, 73.33, 0.2333, "spelldamage", "FlatAaMagicDamageMod",
 
         "Jinx",     1,  METHOD_MOBILITY,    0, MOBI_MSP, 0, 1.75,
@@ -499,7 +501,7 @@ public class ChampionInfoFixer {
                         METHOD_CC,          0, CC_AOE_SLOW, 0.3, 3, 0.45, 3, 0.75, 3,
 
         // we count lucian's passive at 150% because normally he can cast 3 spells thus procing it 3 times
-        "Lucian",   1,  METHOD_BURST|AD,    1, 0, 0, 1.5, "attackdamage",
+        "Lucian",   1,  METHOD_BURST|AD,    1, 3, 1, 0.3, 7, 0.4, 13, 0.5, SPECIAL_USE_BASE_AS_SCALING, "attackdamage",
                     1,  METHOD_AOE_BURST|AD,1, 80, 110, 140, 170, 200, 0.6, 0.75, 0.9, 1.05, 1.2, "bonusattackdamage",
                     1,  METHOD_AOE_BURST|AP,1, 60, 100, 140, 180, 220, 0.9, "spelldamage",
                     1,  METHOD_MOBILITY,    0, MOBI_DASH, 425, 425, 425, 425, 425,
@@ -702,12 +704,12 @@ public class ChampionInfoFixer {
                     1,  METHOD_MOBILITY,    0, MOBI_FLAT_MS, 80, 80, 80,
 
         "Sejuani",  1,  METHOD_TANK,        0, 4, 1, 10, 7, 15, 12, 20, 17, 25, "FlatArmorMod",
-                    3,  METHOD_BURST|AP,    2, 40, 70, 100, 130, 160, 0.4, "spelldamage", 0.04, 0.06, 0.08, 0.1, 0.12, "enemymaxhealth",
+                    3,  METHOD_BURST|AP,    1, 80, 125, 170, 215, 260, 0.4, "spelldamage",
                         METHOD_CC,          0, CC_KNOCKUP, 0.5, 0.5, 0.5, 0.5, 0.5,
                         METHOD_MOBILITY,    0, MOBI_DASH, 650, 650, 650, 650, 650,
-                    2,  METHOD_AOE_DOT_BURST|AP,2, 80, 120, 160, 200, 240, 0.1, "bonushealth", 0.6, "spelldamage",
-                        METHOD_BURST|AP,    1, 40, 60, 80, 100, 120, 0.3, "spelldamage",
-                    2,  METHOD_CC,          0, CC_AOE_SLOW, 0.5, 1.5, 0.55, 1.75, 0.6, 2, 0.65, 2.25, 0.7, 2.5,
+                    2,  METHOD_AOE_DOT_BURST|AP,2, 40, 70, 100, 130, 160, 0.04, 0.06, 0.08, 0.1, 0.12, "health", 0.6, "spelldamage",
+                        METHOD_BURST|AP,    1, 0.04, 0.06, 0.08, 0.1, 0.12, "enemymaxhealth", 0.0003, "spelldamage",
+                    2,  METHOD_CC,          0, CC_AOE_SLOW, 0.5, 1.5, 0.55, 1.5, 0.6, 1.5, 0.65, 1.5, 0.7, 1.5,
                         METHOD_AOE_BURST|AP,1, 60, 110, 160, 210, 260, 0.5, "spelldamage",
                     2,  METHOD_AOE_BURST|AP,1, 150, 250, 350, 0.8, "spelldamage",
                         METHOD_CC,          0, CC_AOE_STUN, 1.25, 1.5, 1.75,
@@ -1149,6 +1151,10 @@ public class ChampionInfoFixer {
 					double bonus = toDouble(a[i++]);
 					method.put(bonus);
 				}
+
+                if (a[i] instanceof String) {
+                    method.put(a[i++]);
+                }
 
 				for (int k = 0; k < scalings; k++) {
 					i = parseScaling(a, i, method, skillRanks);
