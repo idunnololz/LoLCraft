@@ -357,6 +357,7 @@ public class Build {
         b.put(STAT_CD_MOD,              R.string.skill_stat_cd_mod);
         b.put(STAT_STACKS,              R.string.skill_stat_stacks);
         b.put(STAT_ONE,                 R.string.skill_stat_one);
+        b.put(STAT_BONUS_HP,            R.string.skill_stat_bonus_hp);
 //        public static final int STAT_TOTAL_AR = 40;
 //        public static final int STAT_TOTAL_AD = 41;
 //        public static final int STAT_TOTAL_HP = 42;

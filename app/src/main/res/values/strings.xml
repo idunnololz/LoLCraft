@@ -207,6 +207,8 @@
 ]]></string>
     <string name="stat_desc_enemy_max_hp">enemy\'s max HP</string>
     <string name="stat_desc_level_minus_one">level - 1</string>
+    <string name="skill_stat_enemy_max_hp">enemy\'s max hp</string>
+    <string name="skill_stat_bonus_hp">bonus HP</string>
 
 
 </resources>
