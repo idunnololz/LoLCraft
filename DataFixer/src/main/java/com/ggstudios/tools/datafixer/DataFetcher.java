@@ -78,6 +78,8 @@ public class DataFetcher {
         dir.mkdir();
 
         JSONObject championJson = client.getAllChampionJson();
+        File championJsonFile = new File("res/champion.json");
+        saveJsonObj(championJsonFile.getCanonicalPath(), championJson);
 
         JSONObject data = championJson.getJSONObject("data");
 
