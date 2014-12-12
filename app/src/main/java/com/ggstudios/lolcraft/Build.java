@@ -1122,7 +1122,7 @@ public class Build {
 
         int count = o.runes.size();
         for (int i = 0; i < count; i += 2) {
-            addRune(runeLibrary.getRuneInfo(o.runes.get(i)), o.runes.get(i++), i + 2 >= count);
+            addRune(runeLibrary.getRuneInfo(o.runes.get(i)), o.runes.get(i + 1), i + 2 >= count);
         }
 
         count = o.items.size();
