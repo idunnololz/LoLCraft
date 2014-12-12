@@ -308,6 +308,7 @@ public class CraftSummaryFragment extends Fragment {
 
             int skillIndex = 0;
             for (Skill s: skills) {
+                double maxDmg = 0;
                 List<JSONArray> found = s.getAnalysisMethod(Method.METHOD_BURST);
 
                 boolean passive = s instanceof Passive;
@@ -369,6 +370,18 @@ public class CraftSummaryFragment extends Fragment {
 
                     if (damageMod != null) {
                         dmg = dmg * rawStats[Build.getStatIndex(damageMod)];
+                    }
+
+                    if (a.length() != idx) {
+                        Object o = a.get(idx);
+                        if (o instanceof Integer) {
+                            int val = (Integer) o;
+
+                            if (val == Method.METHOD_OR) {
+                                maxDmg = Math.max(dmg, maxDmg);
+                                continue;
+                            }
+                        }
                     }
 
                     BurstAnalysisItem item = null;
