@@ -307,9 +307,10 @@ public class Build {
         a.put(STAT_AR, R.string.stat_desc_ar);
         a.put(STAT_MR, R.string.stat_desc_mr);
         a.put(STAT_LEVEL_MINUS_ONE, R.string.stat_desc_level_minus_one);
-        //		public static final int STAT_MS = 9;
+        a.put(STAT_MS, R.string.stat_desc_ms);
         a.put(STAT_RANGE, R.string.stat_desc_range);
         a.put(STAT_ENEMY_MAX_HP, R.string.stat_desc_enemy_max_hp);
+        a.put(STAT_TOTAL_MP, R.string.stat_desc_total_mp);
         //		public static final int STAT_CRIT = 11;
         //		public static final int STAT_AP = 12;
         //		public static final int STAT_LS = 13;
@@ -358,6 +359,8 @@ public class Build {
         b.put(STAT_STACKS,              R.string.skill_stat_stacks);
         b.put(STAT_ONE,                 R.string.skill_stat_one);
         b.put(STAT_BONUS_HP,            R.string.skill_stat_bonus_hp);
+        b.put(STAT_TOTAL_AR,            R.string.skill_stat_total_ar);
+        b.put(STAT_TOTAL_MP,            R.string.skill_stat_total_mp);
 //        public static final int STAT_TOTAL_AR = 40;
 //        public static final int STAT_TOTAL_AD = 41;
 //        public static final int STAT_TOTAL_HP = 42;
