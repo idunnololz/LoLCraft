@@ -58,14 +58,17 @@ public class ChampionInfoFixer {
             CC_PARANOIA = 11,
             CC_TAUNT = 12, CC_AOE_TAUNT = CC_TAUNT | METHOD_AOE,
             CC_SUPPRESS = 13,
-            CC_BLIND = 14;
+            CC_BLIND = 14,
+            CC_REVEAL_ALL_CHAMPIONS = 15;
 
 	private static final int AMP_MAGIC = 1, AMP_ALL = 2;
 
     private static final int SPECIAL_USE_BASE_AS_SCALING = 0xFFFFFFFF;
 
 	private static final int MOBI_BLINK = 1, MOBI_DASH = 2, MOBI_FLAT_MS = 3, MOBI_MSP = 4,
-        MOBI_GAP_CLOSE = 5, MOBI_GLOBAL_TELEPORT = 6;
+        MOBI_GAP_CLOSE = 5, MOBI_GLOBAL_TELEPORT = 6, MOBI_STEALTH = 7;
+
+    private static final int RANGE_GLOBAL = Integer.MAX_VALUE;
 
 	private static final Object[] CHAMPION_SPELL_DAMAGE = new Object[] {
 		// 0th item is the number of methods a skill can be considered
@@ -853,6 +856,27 @@ public class ChampionInfoFixer {
                         METHOD_MOBILITY,    0, MOBI_DASH, 660, 660, 660, 660, 660,
                     1,  METHOD_TANK,        0, 5, 5, 5, "Undying",
 
+        "TwistedFate",0,
+                    1,  METHOD_AOE_BURST|AP,1, 60, 110, 160, 210, 260, 0.65, "spelldamage",
+                    5,  METHOD_BURST|AP,    2, 40, 60, 80, 100, 120, 1, "attackdamage", 0.5, "spelldamage", METHOD_OR,
+                        METHOD_AOE_BURST|AP,2,  30, 45, 60, 75, 90, 1, "attackdamage", 0.5, "spelldamage", METHOD_OR,
+                        METHOD_BURST|AP,    2, 15, 22.5, 30, 37.5, 45, 1, "attackdamage", 0.5, "spelldamage",
+                        METHOD_CC,          0, CC_AOE_SLOW, 0.3, 2.5, 0.35, 2.5, 0.4, 2.5, 0.45, 2.5, 0.5, 2.5,
+                        METHOD_CC,          0, CC_STUN, 1, 1.25, 1.5, 1.75, 2,
+                    2,  METHOD_DPS,         0, 1, 0.1, 0.15, 0.2, 0.25, 0.3, "PercentAttackSpeedMod",
+                        METHOD_BURST|AP,    1, 55, 80, 105, 130, 155, 0.5, "spelldamage",
+                    2,  METHOD_MOBILITY,    0, MOBI_BLINK, RANGE_GLOBAL, RANGE_GLOBAL, RANGE_GLOBAL,
+                        METHOD_CC,          0, CC_REVEAL_ALL_CHAMPIONS, 6, 8, 10,
+
+        "Twitch",   1,  METHOD_DOT_BURST|TR,0, 6, 1, 36, 4, 72, 7, 108, 10,144, 13, 180, 16, 216,
+                    3,  METHOD_MOBILITY,    0, MOBI_MSP, 0.2, 0.2, 0.2, 0.2, 0.2,
+                        METHOD_MOBILITY,    0, MOBI_STEALTH, 4, 5, 6, 7, 8,
+                        METHOD_DPS,         0, 1, 0.3, 0.4, 0.5, 0.6, 0.7, "PercentAttackSpeedMod",
+                    1,  METHOD_CC,          0, CC_AOE_SLOW, 0.25, 3, 0.3, 3, 0.35, 3, 0.4, 3, 0.45, 3,
+                    1,  METHOD_AOE_BURST|AD,2, 110, 155, 200, 245, 290, 1.2, "spelldamage", 1.5, "bonusattackdamage",
+                    2,  METHOD_DPS,         0, 1, 20, 28, 36, "FlatPhysicalDamageMod",
+                        METHOD_DPS,         0, 1, 300, 300, 300, "RangeMod",
+
 	};
 	
 	private static final String ANALYSIS_KEY = "analysis";
@@ -1164,6 +1188,10 @@ public class ChampionInfoFixer {
 					int ampType = (Integer) a[i++];
 					method.put(ampType);
 				}
+
+                if (a.length != i && a[i] instanceof Integer && (int)a[i] == METHOD_OR) {
+                    method.put(a[i++]);
+                }
 				break;
 			case METHOD_CC:
 				int vals = 1;

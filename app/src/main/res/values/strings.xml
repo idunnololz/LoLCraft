@@ -213,6 +213,8 @@
     <string name="stat_desc_total_mp">total mana</string>
     <string name="stat_desc_ms">movement speed</string>
     <string name="skill_stat_total_mp">MP</string>
+    <string name="reveal_all_champions">Reveal All Champions</string>
+    <string name="stealth">Stealth</string>
 
 
 </resources>

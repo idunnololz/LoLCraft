@@ -38,7 +38,8 @@ public class Method {
             CC_PARANOIA = 11,
             CC_TAUNT = 12, CC_AOE_TAUNT = CC_TAUNT | METHOD_AOE,
             CC_SUPPRESS = 13,
-            CC_BLIND = 14;
+            CC_BLIND = 14,
+            CC_REVEAL_ALL_CHAMPIONS = 15;
 
     public static final int SPECIAL_USE_BASE_AS_SCALING = 0xFFFFFFFF;
 
@@ -46,7 +47,7 @@ public class Method {
 	public static final int AMP_MAGIC = 1;
 
 	public static final int MOBI_BLINK = 1, MOBI_DASH = 2, MOBI_FLAT_MS = 3, MOBI_MSP = 4,
-        MOBI_GAP_CLOSE = 5, MOBI_GLOBAL_TELEPORT = 6;
+        MOBI_GAP_CLOSE = 5, MOBI_GLOBAL_TELEPORT = 6, MOBI_STEALTH = 7;
 	
 	private static final SparseIntArray ccDic = new SparseIntArray();
 	private static final SparseIntArray mobiDic = new SparseIntArray();
@@ -75,12 +76,14 @@ public class Method {
         ccDic.put(CC_AOE_TAUNT, R.string.aoe_taunt);
         ccDic.put(CC_SUPPRESS, R.string.suppress);
         ccDic.put(CC_BLIND, R.string.blind);
+        ccDic.put(CC_REVEAL_ALL_CHAMPIONS, R.string.reveal_all_champions);
 		
 		mobiDic.put(MOBI_BLINK, R.string.blink);
 		mobiDic.put(MOBI_DASH, R.string.dash);
 		mobiDic.put(MOBI_FLAT_MS, R.string.speed_up_flat);
 		mobiDic.put(MOBI_MSP, R.string.speed_up_percent);
         mobiDic.put(MOBI_GLOBAL_TELEPORT, R.string.global_teleport);
+        mobiDic.put(MOBI_STEALTH, R.string.stealth);
 	}
 	
 	public static int getStringIdForCcType(int ccType) {
