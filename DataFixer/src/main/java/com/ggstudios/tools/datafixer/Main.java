@@ -153,7 +153,7 @@ public class Main {
             //DataFetcher.fetchAllItemInfo();
 
             //DataFetcher.fetchAllSpellThumb();
-            //DataFetcher.fetchAllPassiveThumb();
+            DataFetcher.fetchAllPassiveThumb();
 
             ChampionInfoFixer.fixChampionInfo();
 

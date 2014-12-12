@@ -178,8 +178,8 @@ public class LolApiClient {
         URI uri = new URI(
                 "https",
                 "ddragon.leagueoflegends.com",
-                String.format("/cdn/%s/img/passive", version),
-                passiveNameWithExtension,
+                String.format("/cdn/%s/img/passive/%s", version, passiveNameWithExtension),
+                null,
                 null);
         URL url = new URL(uri.toASCIIString());
         InputStream is = url.openStream();
