@@ -420,7 +420,7 @@ public class LibraryUtils {
 
 		AssetManager assets = con.getAssets();
 		for (ItemInfo i : items) {
-			i.icon = Drawable.createFromStream(assets.open("item/" + i.key + ".png"), null);
+			i.icon = Drawable.createFromStream(assets.open("item_thumb/" + i.key + ".png"), null);
 
 			if (listener != null) {
 				listener.onPortraitLoad(c, i);
