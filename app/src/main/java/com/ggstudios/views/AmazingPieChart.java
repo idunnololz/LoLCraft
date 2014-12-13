@@ -1,8 +1,5 @@
 package com.ggstudios.views;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -10,6 +7,9 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.View;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AmazingPieChart extends View {
 	private static final String TAG = AmazingPieChart.class.getSimpleName();

@@ -1,5 +1,15 @@
 package com.ggstudios.lolcraft;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.util.SparseIntArray;
+
+import com.ggstudios.lolcraft.ChampionInfo.Skill;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,25 +18,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
-import android.util.SparseIntArray;
-
-import com.ggstudios.lolcraft.ChampionInfo.Skill;
-import com.ggstudios.utils.DebugLog;
-import com.google.gson.Gson;
+import timber.log.Timber;
 
 /**
  * Class that holds information about a build, such as build order, stats and cost. 
  */
 public class Build {
-    private static final String TAG = "Build";
-
     public static final int RUNE_TYPE_RED = 0;
     public static final int RUNE_TYPE_BLUE = 1;
     public static final int RUNE_TYPE_YELLOW = 2;
@@ -673,7 +670,7 @@ public class Build {
                 stats[getStatIndex(key)] += jsonStats.getDouble(key);
 
             } catch (JSONException e) {
-                DebugLog.e(TAG, e);
+                Timber.e("", e);
             }
         }
     }
@@ -692,7 +689,7 @@ public class Build {
                 }
 
             } catch (JSONException e) {
-                DebugLog.e(TAG, e);
+                Timber.e("", e);
             }
         }
     }
@@ -783,7 +780,7 @@ public class Build {
         b = addColor((int) (Color.blue(COLOR_AP) * apness), b);
         b = addColor((int) (Color.blue(COLOR_TANK) * tankness), b);
 
-        Log.d(TAG, String.format("Tankiness: %f Apness: %f Adness: %f", tankness, apness, adness));
+        Timber.d(String.format("Tankiness: %f Apness: %f Adness: %f", tankness, apness, adness));
 
         return Color.rgb(r, g, b);
     }
@@ -864,7 +861,7 @@ public class Build {
         sk.scaling = scaling;
         activeSkills.add(sk);
 
-        DebugLog.d(TAG, "Skill " + skill.name + " bonus: " + base + "; ");
+        Timber.d("Skill " + skill.name + " bonus: " + base + "; ");
 
         return sk;
     }

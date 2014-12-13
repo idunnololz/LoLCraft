@@ -1,8 +1,8 @@
 package com.ggstudios.lolcraft;
 
-import java.util.List;
-
 import android.util.SparseArray;
+
+import java.util.List;
 
 public class RuneLibrary {
 	private SparseArray<RuneInfo> runeDictionary;

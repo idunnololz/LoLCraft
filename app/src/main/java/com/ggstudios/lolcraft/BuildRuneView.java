@@ -1,9 +1,5 @@
 package com.ggstudios.lolcraft;
 
-import com.ggstudios.animation.ResizeAnimation;
-import com.ggstudios.lolcraft.Build.BuildRune;
-import com.ggstudios.lolcraft.Build.OnRuneCountChangedListener;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -12,11 +8,14 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
-import android.view.animation.Transformation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.ggstudios.animation.ResizeAnimation;
+import com.ggstudios.lolcraft.Build.BuildRune;
+import com.ggstudios.lolcraft.Build.OnRuneCountChangedListener;
 
 public class BuildRuneView extends RelativeLayout implements OnRuneCountChangedListener {
 

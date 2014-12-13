@@ -1,16 +1,16 @@
 package com.ggstudios.lolcraft;
 
+import android.content.Context;
+import android.util.SparseArray;
+
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONException;
-
-import com.ggstudios.utils.DebugLog;
-
-import android.content.Context;
-import android.util.SparseArray;
+import timber.log.Timber;
 
 public class ChampionLibrary {
 	private static final String TAG = "ChampionLibrary";
@@ -49,9 +49,9 @@ public class ChampionLibrary {
 			try {
 				initialize(LibraryUtils.getAllChampionInfo(context, null));
 			} catch (IOException e) {
-				DebugLog.e(TAG, e);
+				Timber.e("", e);
 			} catch (JSONException e) {
-				DebugLog.e(TAG, e);
+				Timber.e("", e);
 			}
 		}
 		if (champId == -1) return null;

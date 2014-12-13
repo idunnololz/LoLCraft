@@ -1,11 +1,6 @@
 package com.ggstudios.views;
 
-import com.ggstudios.lolcraft.R;
-
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -15,6 +10,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.ggstudios.lolcraft.R;
 
 public class TabIndicator extends ViewGroup implements OnPageChangeListener {
 

@@ -1,12 +1,5 @@
 package com.ggstudios.views;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.ggstudios.utils.DebugLog;
-import com.ggstudios.utils.Utils;
-
-import android.animation.LayoutTransition;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -16,10 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
-import android.view.animation.ScaleAnimation;
 import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
+
+import com.ggstudios.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import timber.log.Timber;
 
 public class RearrangeableLinearLayout extends LinearLayout {
 	private static final String TAG = "RearrangeableLinearLayout";
@@ -79,7 +78,7 @@ public class RearrangeableLinearLayout extends LinearLayout {
 
 			@Override
 			public boolean onLongClick(View v) {
-				DebugLog.d(TAG, "Dragging!");
+				Timber.d("Dragging!");
 
 				currentView = v;
 				dragging = true;
@@ -89,7 +88,7 @@ public class RearrangeableLinearLayout extends LinearLayout {
 				lp.width = currentView.getWidth();
 				lp.height = currentView.getHeight();
 
-				DebugLog.d(TAG, "W: " + lp.width + " H: " + lp.height);
+				Timber.d("W: " + lp.width + " H: " + lp.height);
 
 				int index = indexOfChild(v);
 
@@ -138,7 +137,7 @@ public class RearrangeableLinearLayout extends LinearLayout {
 
 	private void remove() {
 		readding = false;
-		DebugLog.d(TAG, "Removing item...");
+		Timber.d("Removing item...");
 		placeHolder.clearAnimation();
 		Animation ani = new ResizeAnimation(placeHolder, placeHolder.getWidth(), placeHolder.getHeight(), 0, placeHolder.getHeight());
 		ani.setDuration(ANIMATION_DURATION);
@@ -156,7 +155,7 @@ public class RearrangeableLinearLayout extends LinearLayout {
 						@Override
 						public void run() {
 							removeView(placeHolder);
-							DebugLog.d(TAG, "Item removed!");
+							Timber.d("Item removed!");
 						}
 
 					});
@@ -202,7 +201,7 @@ public class RearrangeableLinearLayout extends LinearLayout {
 					insertIndex = getChildCount();
 				}
 
-				DebugLog.d(TAG, "Inserting item back at position: " + insertIndex);
+				Timber.d("Inserting item back at position: " + insertIndex);
 
 				placeHolder.clearAnimation();
 
@@ -219,7 +218,7 @@ public class RearrangeableLinearLayout extends LinearLayout {
 					hitbox.add(new Rect());
 					RearrangeableLinearLayout.super.addView(placeHolder, insertIndex);
 				}
-				DebugLog.d(TAG, "Starting animation!");
+				Timber.d("Starting animation!");
 				Animation ani = new ResizeAnimation(placeHolder, 0, placeHolder.getHeight(), currentView.getWidth(), placeHolder.getHeight());
 				ani.setDuration(ANIMATION_DURATION);
 				ani.setFillAfter(true);
@@ -331,7 +330,7 @@ public class RearrangeableLinearLayout extends LinearLayout {
 			dragging = false;
 			onDragComplete();
 
-			DebugLog.d(TAG, "Drag done");
+			Timber.d("Drag done");
 			invalidate();
 
 			removeView(placeHolder);

@@ -20,7 +20,6 @@ import com.ggstudios.lolcraft.LibraryManager;
 import com.ggstudios.lolcraft.LibraryUtils;
 import com.ggstudios.lolcraft.LibraryUtils.OnItemLoadListener;
 import com.ggstudios.lolcraft.R;
-import com.ggstudios.utils.DebugLog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -51,9 +50,9 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import timber.log.Timber;
+
 public class ItemPickerDialogFragment extends DialogFragment {
-	private static final String TAG = "ItemPickerDialogFragment";
-	
 	public static final String EXTRA_CHAMPION_ID = "champId";
 	public static final String EXTRA_MAP_ID = "mapId";
 
@@ -109,8 +108,8 @@ public class ItemPickerDialogFragment extends DialogFragment {
 		if (args != null) {
 			champId = args.getInt(EXTRA_CHAMPION_ID, -1);
 			mapId = args.getInt(EXTRA_MAP_ID, -1);
-			
-			DebugLog.d(TAG, "MapId: " + mapId);
+
+            Timber.d("MapId: " + mapId);
 		}
 		
 		if (items == null) {
@@ -124,8 +123,7 @@ public class ItemPickerDialogFragment extends DialogFragment {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				
-				DebugLog.d(TAG, ((ItemInfo) parent.getItemAtPosition(position)).rawJson.toString());
+                Timber.d(((ItemInfo) parent.getItemAtPosition(position)).rawJson.toString());
 				
 				return false;
 			}
@@ -343,9 +341,9 @@ public class ItemPickerDialogFragment extends DialogFragment {
 
                             });
 				} catch (IOException e) {
-					DebugLog.e(TAG, e);
+                    Timber.e("", e);
 				} catch (JSONException e) {
-					DebugLog.e(TAG, e);
+                    Timber.e("", e);
 				}
 				return null;
 			}

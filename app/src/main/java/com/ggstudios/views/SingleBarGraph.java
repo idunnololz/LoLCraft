@@ -1,18 +1,13 @@
 package com.ggstudios.views;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.ggstudios.views.AmazingPieChart.PieItem;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.SparseArray;
 import android.view.View;
-import android.view.View.MeasureSpec;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SingleBarGraph extends View {
 	private static final String TAG = AmazingPieChart.class.getSimpleName();

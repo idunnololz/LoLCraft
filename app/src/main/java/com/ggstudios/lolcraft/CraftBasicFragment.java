@@ -1,11 +1,7 @@
 package com.ggstudios.lolcraft;
 
-import java.text.DecimalFormat;
-
 import android.annotation.SuppressLint;
-import android.graphics.Camera;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -22,11 +18,9 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
-import android.view.animation.Transformation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
@@ -52,12 +46,15 @@ import com.ggstudios.lolcraft.Build.BuildItem;
 import com.ggstudios.lolcraft.Build.BuildObserver;
 import com.ggstudios.lolcraft.Build.BuildRune;
 import com.ggstudios.lolcraft.ChampionInfo.OnFullyLoadedListener;
-import com.ggstudios.utils.DebugLog;
 import com.ggstudios.utils.Utils;
 import com.ggstudios.views.RearrangeableLinearLayout;
 import com.ggstudios.views.RearrangeableLinearLayout.OnEdgeDragListener;
 import com.ggstudios.views.RearrangeableLinearLayout.OnItemDragListener;
 import com.ggstudios.views.RearrangeableLinearLayout.OnReorderListener;
+
+import java.text.DecimalFormat;
+
+import timber.log.Timber;
 
 public class CraftBasicFragment extends Fragment implements BuildObserver,
         AlertDialogFragment.AlertDialogFragmentListener, SaveAsDialogFragment.SaveAsDialogListener {
@@ -232,7 +229,7 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
 
 		build = StateManager.getInstance().getActiveBuild();
 
-		DebugLog.d(TAG, "onCreateView");
+		Timber.d("onCreateView");
 
 		rootView = inflater.inflate(R.layout.fragment_craft_basic, container, false);
 
@@ -304,7 +301,7 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
 
 			@Override
 			public void onEdgeDragLeft() {
-				DebugLog.d(TAG, "edgeScroll");
+				Timber.d("edgeScroll");
 				edgeDrag = true;
 
 				new Thread() {
@@ -887,7 +884,7 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
 
 				@Override
 				public void run() {
-					DebugLog.d(TAG, "Right: " + buildContainer.getChildAt(buildContainer.getChildCount() - 1).getRight());
+					Timber.d("Right: " + buildContainer.getChildAt(buildContainer.getChildCount() - 1).getRight());
 					seekBar.getLayoutParams().width = buildContainer.getChildAt(buildContainer.getChildCount() - 1).getRight() + seekBarPadding;
 					seekBar.requestLayout();
 				}

@@ -1,12 +1,11 @@
 package com.ggstudios.lolcraft;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import android.graphics.drawable.Drawable;
 
 import org.json.JSONObject;
 
-import android.graphics.drawable.Drawable;
+import java.util.List;
+import java.util.Set;
 
 // json file acquired via https://na.api.pvp.net/api/lol/static-data/na/v1.2/item?itemListData=all&api_key=0daeb2cf-a0d0-4a94-a7b2-8b282e1a4336
 

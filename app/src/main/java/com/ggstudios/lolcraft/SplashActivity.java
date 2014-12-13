@@ -1,10 +1,5 @@
 package com.ggstudios.lolcraft;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.ggstudios.dialogs.AlertDialogFragment;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -22,9 +17,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
 import android.view.animation.Animation.AnimationListener;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
+
+import com.ggstudios.dialogs.AlertDialogFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SplashActivity extends FragmentActivity implements AlertDialogFragment.AlertDialogFragmentListener {
 

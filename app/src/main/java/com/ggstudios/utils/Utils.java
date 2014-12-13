@@ -17,6 +17,8 @@ import android.os.Environment;
 import android.os.Parcelable;
 import android.util.DisplayMetrics;
 
+import timber.log.Timber;
+
 public class Utils {
 	private static final String TAG = Utils.class.getSimpleName();
 	
@@ -131,7 +133,7 @@ public class Utils {
 	        context.startActivity(Utils.createEmailOnlyChooserIntent(context, i, "Send via email"));
 			
 		} catch (NameNotFoundException e) {
-			DebugLog.e(TAG, e);
+			Timber.e("", e);
 		}
 	}
 	
@@ -160,7 +162,7 @@ public class Utils {
 	        context.startActivity(Utils.createEmailOnlyChooserIntent(context, i, "Send via email"));
 			
 		} catch (NameNotFoundException e) {
-			DebugLog.e(TAG, e);
+			Timber.e("", e);
 		}
 	}
 	

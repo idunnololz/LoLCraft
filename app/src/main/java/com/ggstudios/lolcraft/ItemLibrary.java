@@ -1,9 +1,9 @@
 package com.ggstudios.lolcraft;
 
+import android.util.SparseArray;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import android.util.SparseArray;
 
 public class ItemLibrary {
 	private SparseArray<ItemInfo> itemDictionary;

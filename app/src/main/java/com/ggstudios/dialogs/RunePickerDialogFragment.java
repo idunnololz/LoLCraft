@@ -12,7 +12,6 @@ import com.ggstudios.lolcraft.LibraryManager;
 import com.ggstudios.lolcraft.LibraryUtils;
 import com.ggstudios.lolcraft.R;
 import com.ggstudios.lolcraft.RuneInfo;
-import com.ggstudios.utils.DebugLog;
 
 import android.app.Activity;
 import android.content.Context;
@@ -38,9 +37,9 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
+import timber.log.Timber;
+
 public class RunePickerDialogFragment extends ItemPickerDialogFragment {
-	private static final String TAG = RunePickerDialogFragment.class.getSimpleName();
-	
 	private static final int ANIMATION_DURATION = 250;
 
 	private GridView content;
@@ -87,8 +86,7 @@ public class RunePickerDialogFragment extends ItemPickerDialogFragment {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
-
-				DebugLog.d(TAG, ((RuneInfo) parent.getItemAtPosition(position)).rawJson.toString());
+                Timber.d(((RuneInfo) parent.getItemAtPosition(position)).rawJson.toString());
 
 				return false;
 			}
@@ -135,9 +133,9 @@ public class RunePickerDialogFragment extends ItemPickerDialogFragment {
 					runes = LibraryUtils.getAllRuneInfo(getActivity());
 					LibraryManager.getInstance().getRuneLibrary().initialize(runes);
 				} catch (IOException e) {
-					DebugLog.e(TAG, e);
+                    Timber.e("", e);
 				} catch (JSONException e) {
-					DebugLog.e(TAG, e);
+                    Timber.e("", e);
 				}
 				return null;
 			}
@@ -269,7 +267,7 @@ public class RunePickerDialogFragment extends ItemPickerDialogFragment {
 						
 						publishProgress(rune);
 					} catch (IOException e) {
-						DebugLog.e(TAG, e);
+                        Timber.e("", e);
 					}
 				}
 			}

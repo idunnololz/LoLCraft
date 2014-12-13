@@ -1,5 +1,16 @@
 package com.ggstudios.lolcraft;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+
+import com.ggstudios.utils.DiskLruImageCache;
+import com.ggstudios.utils.Utils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
@@ -8,18 +19,7 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.concurrent.Executor;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.util.Log;
-
-import com.ggstudios.utils.DebugLog;
-import com.ggstudios.utils.DiskLruImageCache;
-import com.ggstudios.utils.Utils;
+import timber.log.Timber;
 
 public class SplashFetcher {
 	private static final String TAG = "SplashFetcher";
@@ -193,27 +193,27 @@ public class SplashFetcher {
                         return new BitmapDrawable(context.getResources(), bmp);
                     }
 				} catch (MalformedURLException e) {
-					DebugLog.e(TAG, e);
+					Timber.e("", e);
                     return -1;
 				} catch (InterruptedIOException e) {
-                    DebugLog.e(TAG, sanatizedKey, e);
+                    Timber.d("Handled InterruptedIOException");
                     return -1;
                 } catch (IOException e) {
-					DebugLog.e(TAG, e);
+					Timber.e("", e);
                     return -1;
 				} catch (OutOfMemoryError e) {
-                    DebugLog.e(TAG, e);
+                    Timber.e("", e);
                     return -1;
 
                     // free some memory...
                 } catch (Exception e) {
-                    DebugLog.e(TAG, e);
+                    Timber.e("", e);
                 } finally {
 					if (stream != null) {
 						try {
 							stream.close();
 						} catch (IOException e) {
-							DebugLog.e(TAG, e);
+							Timber.e("", e);
 						}
 					}
 				}

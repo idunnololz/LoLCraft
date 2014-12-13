@@ -1,8 +1,8 @@
 package com.ggstudios.lolcraft;
 
-import com.ggstudios.utils.DebugLog;
-
 import android.content.Context;
+
+import timber.log.Timber;
 
 public class MemoryManager {
 	private static final String TAG = MemoryManager.class.getSimpleName();
@@ -29,9 +29,9 @@ public class MemoryManager {
 		long tot = Runtime.getRuntime().totalMemory();
 		long free = Runtime.getRuntime().freeMemory();
 		
-		DebugLog.d(TAG, "Memory Available: " + mem);
-		DebugLog.d(TAG, "Memory Used:      " + tot);
-		DebugLog.d(TAG, "Memory Free:      " + free);
+		Timber.d("Memory Available: " + mem);
+		Timber.d("Memory Used:      " + tot);
+		Timber.d("Memory Free:      " + free);
 		
 		return (tot / (float)mem);
 	}

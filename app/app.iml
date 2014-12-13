@@ -86,6 +86,7 @@
     <orderEntry type="library" exported="" name="answers-1.0.2" level="project" />
     <orderEntry type="library" exported="" name="disklrucache-2.0.2" level="project" />
     <orderEntry type="library" exported="" name="fabric-1.0.2" level="project" />
+    <orderEntry type="library" exported="" name="timber-2.5.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.0" level="project" />
     <orderEntry type="library" exported="" name="gson-2.3" level="project" />
     <orderEntry type="library" exported="" name="crashlytics-2.1.0" level="project" />

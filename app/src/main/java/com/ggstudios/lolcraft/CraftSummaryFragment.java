@@ -1,15 +1,5 @@
 package com.ggstudios.lolcraft;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,12 +24,23 @@ import android.widget.TextView;
 import com.ggstudios.lolcraft.Build.BuildSkill;
 import com.ggstudios.lolcraft.ChampionInfo.Passive;
 import com.ggstudios.lolcraft.ChampionInfo.Skill;
-import com.ggstudios.utils.DebugLog;
 import com.ggstudios.views.AmazingPieChart;
 import com.ggstudios.views.AmazingPieChart.PieItem;
 import com.ggstudios.views.AnimatedExpandableListView;
 import com.ggstudios.views.AnimatedExpandableListView.AnimatedExpandableListAdapter;
 import com.ggstudios.views.SingleBarGraph;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+
+import timber.log.Timber;
 
 public class CraftSummaryFragment extends Fragment {
     private static final String TAG = CraftSummaryFragment.class.getSimpleName();
@@ -691,7 +692,7 @@ public class CraftSummaryFragment extends Fragment {
                     }
                 }
             } catch (JSONException e) {
-                DebugLog.e(TAG, e);
+                Timber.e("", e);
             }
 
 

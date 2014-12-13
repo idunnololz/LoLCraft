@@ -1,8 +1,5 @@
 package com.ggstudios.lolcraft;
 
-import java.io.IOException;
-import java.text.DecimalFormat;
-
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -23,7 +20,11 @@ import com.ggstudios.lolcraft.Build.BuildRune;
 import com.ggstudios.lolcraft.ChampionInfo.OnSkillsLoadedListener;
 import com.ggstudios.lolcraft.ChampionInfo.Passive;
 import com.ggstudios.lolcraft.ChampionInfo.Skill;
-import com.ggstudios.utils.DebugLog;
+
+import java.io.IOException;
+import java.text.DecimalFormat;
+
+import timber.log.Timber;
 
 public class CraftSkillsFragment extends Fragment {
 
@@ -188,7 +189,7 @@ public class CraftSkillsFragment extends Fragment {
 					try {
 						skill.icon = Drawable.createFromStream(context.getAssets().open("spells/" + skill.iconAssetName), null);
 					} catch (IOException e) {
-						DebugLog.e(TAG, e);
+						Timber.e("", e);
 					}
 				}
 
@@ -221,7 +222,7 @@ public class CraftSkillsFragment extends Fragment {
 					try {
 						skill.icon = Drawable.createFromStream(context.getAssets().open("passive/" + skill.iconAssetName), null);
 					} catch (IOException e) {
-						DebugLog.e(TAG, e);
+						Timber.e("", e);
 					}
 				}
 

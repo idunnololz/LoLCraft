@@ -15,9 +15,9 @@ import android.graphics.BitmapFactory;
 
 import com.jakewharton.disklrucache.DiskLruCache;
 
-public class DiskLruImageCache {
-	private static final String TAG = "DiskLruImageCache";
+import timber.log.Timber;
 
+public class DiskLruImageCache {
 	private static final int IO_BUFFER_SIZE = Utils.MB_BYTES * 2;
 
 	private DiskLruCache mDiskCache;
@@ -74,13 +74,13 @@ public class DiskLruImageCache {
 			if( writeBitmapToFile( data, editor ) ) {               
 				mDiskCache.flush();
 				editor.commit();
-				DebugLog.d(TAG, "image put on disk cache " + key );
+                Timber.d("image put on disk cache " + key );
 			} else {
 				editor.abort();
-				DebugLog.d(TAG, "ERROR on: image put on disk cache " + key );
+                Timber.d("ERROR on: image put on disk cache " + key );
 			}   
 		} catch (IOException e) {
-			DebugLog.d(TAG, "ERROR on: image put on disk cache " + key );
+            Timber.d("ERROR on: image put on disk cache " + key );
 			try {
 				if ( editor != null ) {
 					editor.abort();
@@ -115,7 +115,7 @@ public class DiskLruImageCache {
 			}
 		}
 
-		DebugLog.d(TAG, bitmap == null ? "" : "image read from disk " + key);
+		Timber.d(bitmap == null ? "" : "image read from disk " + key);
 
 		return bitmap;
 	}
@@ -148,7 +148,7 @@ public class DiskLruImageCache {
 	}
 
 	public void clearCache() {
-		DebugLog.d(TAG, "disk cache CLEARED");
+        Timber.d("disk cache CLEARED");
 		try {
 			mDiskCache.delete();
 		} catch ( IOException e ) {

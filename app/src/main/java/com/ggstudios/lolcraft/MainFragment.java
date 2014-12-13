@@ -1,27 +1,11 @@
 package com.ggstudios.lolcraft;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executor;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.json.JSONException;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Camera;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,11 +18,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
-import android.view.animation.Transformation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -50,8 +32,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ggstudios.lolcraft.LibraryUtils.OnChampionLoadListener;
-import com.ggstudios.utils.DebugLog;
 import com.ggstudios.utils.Utils;
+
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import timber.log.Timber;
 
 public class MainFragment extends Fragment implements SearchView.OnQueryTextListener {
 	private static final String TAG = "MainFragment";
@@ -262,9 +259,9 @@ public class MainFragment extends Fragment implements SearchView.OnQueryTextList
 						});
 					}
 				} catch (IOException e) {
-					DebugLog.e(TAG, e);
+					Timber.e("", e);
 				} catch (JSONException e) {
-					DebugLog.e(TAG, e);
+					Timber.e("", e);
 				}
 				return null;
 			}

@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class BuildManagerDialogFragment extends DialogFragment {
     private static final String TAG = BuildManagerDialogFragment.class.getSimpleName();
 
@@ -87,7 +89,7 @@ public class BuildManagerDialogFragment extends DialogFragment {
                 try {
                     buildManager.loadBuild(StateManager.getInstance().getActiveBuild(), o.buildName);
                 } catch (JSONException e) {
-                    Log.e(TAG, "", e);
+                    Timber.e("", e);
                 }
 
                 dismiss();

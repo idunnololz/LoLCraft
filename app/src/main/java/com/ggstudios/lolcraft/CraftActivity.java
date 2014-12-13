@@ -1,11 +1,5 @@
 package com.ggstudios.lolcraft;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONException;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -23,7 +17,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
-import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,19 +32,25 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ggstudios.animation.ResizeAnimation;
-import com.ggstudios.dialogs.StatSummaryDialogFragment;
-import com.ggstudios.lolcraft.ChampionInfo.OnFullyLoadedListener;
 import com.ggstudios.dialogs.ItemPickerDialogFragment.ItemPickerDialogListener;
 import com.ggstudios.dialogs.RunePickerDialogFragment.RunePickerDialogListener;
+import com.ggstudios.dialogs.StatSummaryDialogFragment;
+import com.ggstudios.lolcraft.ChampionInfo.OnFullyLoadedListener;
 import com.ggstudios.lolcraft.SplashFetcher.OnDrawableRetrievedListener;
-import com.ggstudios.utils.DebugLog;
 import com.ggstudios.utils.Utils;
 import com.ggstudios.views.LockableScrollView;
 import com.ggstudios.views.TabIndicator;
 import com.ggstudios.views.TabIndicator.TabItem;
+
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import timber.log.Timber;
 
 public class CraftActivity extends ActionBarActivity implements ItemPickerDialogListener,
         RunePickerDialogListener, CraftBasicFragment.BuildManagerProvider {
@@ -107,7 +106,7 @@ public class CraftActivity extends ActionBarActivity implements ItemPickerDialog
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		DebugLog.d(TAG, "onCreate");
+		Timber.d("onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_craft);
 
@@ -275,9 +274,9 @@ public class CraftActivity extends ActionBarActivity implements ItemPickerDialog
 					LibraryUtils.initItemLibrary(getApplicationContext());
 					LibraryUtils.initRuneLibrary(getApplicationContext());
 				} catch (JSONException e) {
-					DebugLog.e(TAG, e);
+					Timber.e("", e);
 				} catch (IOException e) {
-					DebugLog.e(TAG, e);
+					Timber.e("", e);
 				}
 				return null;
 			}
@@ -287,7 +286,7 @@ public class CraftActivity extends ActionBarActivity implements ItemPickerDialog
 				try {
                     buildManager.loadBuild(build, buildName);
 				} catch (JSONException e) {
-					DebugLog.e(TAG, e);
+					Timber.e("", e);
 				}
 			}
 			

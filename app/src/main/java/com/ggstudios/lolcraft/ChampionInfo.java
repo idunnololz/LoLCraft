@@ -1,5 +1,12 @@
 package com.ggstudios.lolcraft;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -9,15 +16,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.ggstudios.utils.DebugLog;
-
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
+import timber.log.Timber;
 
 // champion.json is acquired via https://na.api.pvp.net/api/lol/static-data/na/v1.2/champion?api_key=0daeb2cf-a0d0-4a94-a7b2-8b282e1a4336
 
@@ -164,7 +163,7 @@ public class ChampionInfo {
 				try {
 					icon = Drawable.createFromStream(context.getAssets().open("passive/" + iconAssetName), null);
 				} catch (IOException e) {
-					DebugLog.e(TAG, e);
+					Timber.e("", e);
 				}
 			}
 			return icon;
@@ -207,7 +206,7 @@ public class ChampionInfo {
 				try {
 					icon = Drawable.createFromStream(context.getAssets().open("spells/" + iconAssetName), null);
 				} catch (IOException e) {
-					DebugLog.e(TAG, e);
+					Timber.e("", e);
 				}
 			}
 			return icon;
@@ -254,7 +253,7 @@ public class ChampionInfo {
 					}
 
 				} catch (JSONException e) {
-					DebugLog.e(TAG, e);
+					Timber.e("", e);
 				}
 			}
 
@@ -281,7 +280,7 @@ public class ChampionInfo {
 						try {
 							matcher.appendReplacement(sb, rawEffectBurn.getString(i));
 						} catch (JSONException e) {
-							DebugLog.e(TAG, e);
+							Timber.e("", e);
 						}
 						break;
 					default:
@@ -313,7 +312,7 @@ public class ChampionInfo {
                                             ((JSONArray) sc.coeff).getDouble(
                                                     (int)build.getStat(Build.STAT_LEVEL_MINUS_ONE))));
                         } catch (JSONException e) {
-                            DebugLog.e(TAG, e);
+                            Timber.e("", e);
                         }
                     } else if (sc.link.startsWith("@")) {
                         matcher.appendReplacement(sb, build.getSpecialString(context, sc.link));
@@ -334,7 +333,7 @@ public class ChampionInfo {
 							matcher.appendReplacement(sb, sb2.toString());
 							
 						} catch (JSONException e) {
-							DebugLog.e(TAG, e);
+							Timber.e("", e);
 						}
 					}
 				}
@@ -399,7 +398,7 @@ public class ChampionInfo {
                         try {
                             matcher.appendReplacement(sb, statToString(context, sc.link, arr, format));
                         } catch (JSONException e) {
-                            DebugLog.e(TAG, e);
+                            Timber.e("", e);
                         }
                     } else if (sc.coeff instanceof JSONArray) {
                         JSONArray arr = (JSONArray) sc.coeff;
@@ -407,7 +406,7 @@ public class ChampionInfo {
                         try {
                             matcher.appendReplacement(sb, statToString(context, sc.link, arr, format));
                         } catch (JSONException e) {
-                            DebugLog.e(TAG, e);
+                            Timber.e("", e);
                         }
                     }
                 }

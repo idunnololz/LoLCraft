@@ -1,5 +1,17 @@
 package com.ggstudios.lolcraft;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.drawable.Drawable;
+
+import com.ggstudios.lolcraft.ChampionInfo.Passive;
+import com.ggstudios.lolcraft.ChampionInfo.Scaling;
+import com.ggstudios.lolcraft.ChampionInfo.Skill;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,19 +27,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.ggstudios.lolcraft.ChampionInfo.Passive;
-import com.ggstudios.lolcraft.ChampionInfo.Scaling;
-import com.ggstudios.lolcraft.ChampionInfo.Skill;
-import com.ggstudios.utils.DebugLog;
-
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
+import timber.log.Timber;
 
 public class LibraryUtils {
 
@@ -101,8 +101,8 @@ public class LibraryUtils {
 
 			JSONArray skillsJson = champData.getJSONArray("spells");
 
-			//DebugLog.d(TAG, "Data: " + champData.toString());
-			//DebugLog.d(TAG, "Data: " + skills.toString());
+			//Timber.d("Data: " + champData.toString());
+			//Timber.d("Data: " + skills.toString());
 
 			Skill[] skills = new Skill[skillsJson.length() + 1];
 
@@ -216,7 +216,7 @@ public class LibraryUtils {
 			Integer result = typeToEnum.get(champData.getString("partype"));
 			if (result == null) {
 				info.partype = ChampionInfo.TYPE_UNKNOWN;
-				DebugLog.w(TAG, "Warning: Partype " + champData.getString("partype") + " unrecongnized!");
+				Timber.w("Warning: Partype " + champData.getString("partype") + " unrecongnized!");
 			} else {
 				info.partype = result;
 			}
@@ -225,9 +225,9 @@ public class LibraryUtils {
 			info.fullyLoaded();
 
 		} catch (IOException e) {
-			DebugLog.e(TAG, e);
+			Timber.e("", e);
 		} catch (JSONException e) {
-			DebugLog.e(TAG, e);
+			Timber.e("", e);
 		}
 
 		return info;
@@ -272,7 +272,7 @@ public class LibraryUtils {
 
 				champs.add(info);
 			} catch (JSONException e) {
-				DebugLog.e(TAG, e);
+				Timber.e("", e);
 			}
 		}
 
@@ -399,7 +399,7 @@ public class LibraryUtils {
 
 				items.add(info);
 			} catch (JSONException e) {
-				DebugLog.e(TAG, "Error while digesting item with key " + key, e);
+				Timber.e("Error while digesting item with key " + key, e);
 			}
 		}
 
@@ -490,7 +490,7 @@ public class LibraryUtils {
 
 				runes.add(info);
 			} catch (JSONException e) {
-				DebugLog.e(TAG, "Error while digesting item with key " + key, e);
+				Timber.e("Error while digesting item with key " + key, e);
 			}
 		}
 

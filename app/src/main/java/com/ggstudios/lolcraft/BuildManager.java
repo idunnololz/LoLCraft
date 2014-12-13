@@ -1,25 +1,18 @@
 package com.ggstudios.lolcraft;
 
 import android.content.SharedPreferences;
-import android.util.Log;
 
-import com.ggstudios.utils.DebugLog;
 import com.ggstudios.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 public class BuildManager {
-    private static final String TAG = BuildManager.class.getSimpleName();
-
     private static final String JSON_KEY_LAST_BUILD = "unnamed";
 
     public static final String BUILD_DEFAULT = JSON_KEY_LAST_BUILD;
