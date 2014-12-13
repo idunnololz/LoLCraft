@@ -298,9 +298,8 @@ public class ChampionInfoFixer {
                     1,  METHOD_AOE_BURST|AD,1, 325, 663, 1001, 2.34, "attackdamage",
 
         "Fizz",     0,
-                    2,  METHOD_BURST|AD,    1, 0, 0, 0, 0, 0, 1, "attackdamage",
-                        METHOD_BURST|AP,    1, 10, 40, 70, 100, 130, 0.6, "spelldamage",
-                    1,  METHOD_DPS,         1, 1, 30, 40, 50, 60, 70, 0.35, "spelldamage", "FlatAaMagicDamageMod",
+                    1,  METHOD_BURST|AP,    1, 10, 40, 70, 100, 130, 0.6, "spelldamage",
+                    1,  METHOD_BURST|AP,    2, 40, 55, 70, 85, 100, 0.55, "spelldamage", 0.04, 0.05, 0.06, 0.07, 0.08, "enemymissinghealth",
                     2,  METHOD_AOE_BURST|AP,1, 70, 120, 170, 220, 270, 0.75, "spelldamage",
                         METHOD_CC,          0, CC_AOE_SLOW, 0.4, 2, 0.45, 2, 0.5, 2, 0.55, 2, 0.6, 2,
                     4,  METHOD_AOE_BURST|AP,1, 200, 325, 450, 1, "spelldamage",
