@@ -355,7 +355,7 @@ public class CraftSummaryFragment extends Fragment {
                     }
 
                     String damageMod = null;
-                    if (a.get(idx) instanceof String) {
+                    if (a.length() != idx && a.get(idx) instanceof String) {
                         damageMod = a.getString(idx++);
                     }
 
