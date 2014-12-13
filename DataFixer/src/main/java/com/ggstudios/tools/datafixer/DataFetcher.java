@@ -269,4 +269,44 @@ public class DataFetcher {
         pln("");
         pln("All passive thumbs fetched!");
     }
+
+    public static void fetchAllItemThumb() throws IOException, JSONException, URISyntaxException {
+        p("Fetching all item thumbnails ");
+
+        File dir = new File("res/item_thumb");
+        if (dir.exists() && dir.isDirectory()) {
+            FileUtils.deleteDirectory(dir);
+        }
+        dir.mkdir();
+
+        JSONObject itemJson = client.getAllItemJson();
+
+        JSONObject data = itemJson.getJSONObject("data");
+
+        String latestVersion = getLatestVersion();
+        Iterator<?> iter = data.keys();
+        while (iter.hasNext()) {
+            String key = (String) iter.next();
+
+            File imgFile = new File(dir, key + ".png");
+
+            OutputStream os = new FileOutputStream(imgFile);
+            InputStream is = client.getItemImage(latestVersion, key);
+
+            byte[] b = new byte[2048];
+            int length;
+
+            while ((length = is.read(b)) != -1) {
+                os.write(b, 0, length);
+            }
+
+            is.close();
+            os.close();
+
+            p("|");
+        }
+
+        pln("");
+        pln("All item thumbs fetched!");
+    }
 }

@@ -19,6 +19,8 @@ import java.util.regex.Pattern;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.xml.crypto.Data;
+
 
 public class Main {
 	public static void pln(String p) {
@@ -146,18 +148,20 @@ public class Main {
 
 	public static void main(String[] args) {
 		try {
+            //DataFetcher.listAllVersions();
+
             // Updates champion data... outputs to out/ and res/
             //DataFetcher.fetchAllChampionThumb();
-            //DataFetcher.listAllVersions();
-            DataFetcher.fetchAllChampionJson();
-            //DataFetcher.fetchAllItemInfo();
+            //DataFetcher.fetchAllChampionJson();
 
             //DataFetcher.fetchAllSpellThumb();
             //DataFetcher.fetchAllPassiveThumb();
 
-            ChampionInfoFixer.fixChampionInfo();
+            //ChampionInfoFixer.fixChampionInfo();
 
-			//fixItemJson();
+            DataFetcher.fetchAllItemInfo();
+            DataFetcher.fetchAllItemThumb();
+			fixItemJson();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

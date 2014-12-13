@@ -185,4 +185,10 @@ public class LolApiClient {
         InputStream is = url.openStream();
         return is;
     }
+
+    public InputStream getItemImage(String version, String itemId) throws IOException {
+        URL url = new URL(String.format("https://ddragon.leagueoflegends.com/cdn/%s/img/item/%s.png", version, itemId));
+        InputStream is = url.openStream();
+        return is;
+    }
 }
