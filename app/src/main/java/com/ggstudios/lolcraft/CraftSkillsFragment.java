@@ -197,7 +197,7 @@ public class CraftSkillsFragment extends Fragment {
                 if (showScaling[position]) {
                     holder.txtDesc.setText(Html.fromHtml(skill.getDescriptionWithScaling(context, scalingFormat)));
                 } else {
-                    holder.txtDesc.setText(Html.fromHtml(skill.calculateScaling(build, statFormat)));
+                    holder.txtDesc.setText(Html.fromHtml(skill.calculateScaling(context, build, statFormat)));
                 }
 				holder.txtDetails.setText(skill.details);
 				holder.txtKey.setText(skill.defaultKey);
@@ -227,7 +227,7 @@ public class CraftSkillsFragment extends Fragment {
 
 				holder.icon.setImageDrawable(skill.icon);
 				holder.txtName.setText(skill.name);
-				holder.txtDesc.setText(Html.fromHtml(skill.calculateScaling(build, statFormat)));
+				holder.txtDesc.setText(Html.fromHtml(skill.calculateScaling(context, build, statFormat)));
 				holder.txtKey.setText("");
 				holder.txtDetails.setText("");
 			}

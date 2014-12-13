@@ -215,6 +215,10 @@
     <string name="skill_stat_total_mp">MP</string>
     <string name="reveal_all_champions">Reveal All Champions</string>
     <string name="stealth">Stealth</string>
+    <string name="stat_desc_aa_magic_damage">bonus magic damage on basic attack</string>
+    <string name="special_value">\?</string>
+    <string name="base_value">base value</string>
+    <string name="level_dependent_base_damage">base damage is champion level dependent</string>
 
 
 </resources>

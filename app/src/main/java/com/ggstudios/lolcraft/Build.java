@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
 import android.util.SparseIntArray;
@@ -123,6 +124,8 @@ public class Build {
     public static final int STAT_VI_W     = 82;
     public static final int STAT_STACKS = 83;   // generic stat... could be used for Ashe/Nasus, etc
     public static final int STAT_SOULS = 84;
+    public static final int STAT_JAX_R_ARMOR_SCALING = 85;
+    public static final int STAT_JAX_R_MR_SCALING = 86;
 
     public static final int STAT_ENEMY_MISSING_HP = 100;
     public static final int STAT_ENEMY_CURRENT_HP = 101;
@@ -275,6 +278,8 @@ public class Build {
         statKeyToIndex.put("@special.BraumWArmor", 	STAT_NULL);
         statKeyToIndex.put("@special.BraumWMR", 	STAT_NULL);
         statKeyToIndex.put("@special.jaycew", 	    STAT_NULL);
+        statKeyToIndex.put("@special.jaxrarmor",    STAT_JAX_R_ARMOR_SCALING);
+        statKeyToIndex.put("@special.jaxrmr",       STAT_JAX_R_MR_SCALING);
 
         statKeyToIndex.put("@cooldownchampion", 	STAT_CD_MOD);
         statKeyToIndex.put("@stacks", STAT_STACKS);
@@ -361,6 +366,8 @@ public class Build {
         b.put(STAT_BONUS_HP,            R.string.skill_stat_bonus_hp);
         b.put(STAT_TOTAL_AR,            R.string.skill_stat_total_ar);
         b.put(STAT_TOTAL_MP,            R.string.skill_stat_total_mp);
+        b.put(STAT_JAX_R_ARMOR_SCALING, R.string.skill_stat_bonus_ad);
+        b.put(STAT_JAX_R_MR_SCALING,    R.string.skill_stat_ap);
 //        public static final int STAT_TOTAL_AR = 40;
 //        public static final int STAT_TOTAL_AD = 41;
 //        public static final int STAT_TOTAL_HP = 42;
@@ -1046,15 +1053,15 @@ public class Build {
 
     public double getStat(String key) {
         int statId = getStatIndex(key);
-        if (statId == STAT_NULL) return 0.0;
 
-        if (statId == STAT_RENGAR_Q_BASE_DAMAGE) {
-            // refresh rengar q base damage since it looks like we are going to be using it...
-            stats[STAT_RENGAR_Q_BASE_DAMAGE] = RENGAR_Q_BASE[champLevel - 1];
-        }
-
-        if (statId == STAT_VI_W) {
-            stats[STAT_VI_W] = 0.00081632653 * stats[STAT_BONUS_AD];
+        switch (statId) {
+            case STAT_NULL:
+                stats[STAT_NULL] = 0;
+                break;
+            case STAT_RENGAR_Q_BASE_DAMAGE:
+                // refresh rengar q base damage since it looks like we are going to be using it...
+                stats[STAT_RENGAR_Q_BASE_DAMAGE] = RENGAR_Q_BASE[champLevel - 1];
+                break;
         }
 
         return stats[statId];
@@ -1063,6 +1070,49 @@ public class Build {
     public double getStat(int statId) {
         if (statId == STAT_NULL) return 0.0;
         return stats[statId];
+    }
+
+    public String getSpecialString(Context context, String specialKey) {
+        int statId = getStatIndex(specialKey);
+
+        StringBuilder sb = new StringBuilder();
+
+        switch (statId) {
+            case STAT_RENGAR_Q_BASE_DAMAGE:
+                // refresh rengar q base damage since it looks like we are going to be using it...
+                sb.append("[");
+                sb.append(context.getString(R.string.level_dependent_base_damage));
+                sb.append(" ");
+                for (double val : RENGAR_Q_BASE) {
+                    sb.append(val);
+                    sb.append(" / ");
+                }
+                sb.setLength(sb.length() - 2);
+                sb.append("(+");
+                sb.append(0.5 * stats[STAT_AD]);
+                sb.append(")");
+                sb.append("]");
+                break;
+            case STAT_VI_W:
+                sb.append((int)( 0.028571428 * stats[STAT_BONUS_AD]));
+                break;
+            case STAT_JAX_R_ARMOR_SCALING:
+                sb.append(context.getString(R.string.base_value));
+                sb.append(" (+");
+                sb.append(((int)0.5 * stats[STAT_BONUS_AD]));
+                sb.append(")");
+                break;
+            case STAT_JAX_R_MR_SCALING:
+                sb.append(context.getString(R.string.base_value));
+                sb.append(" (+");
+                sb.append(((int)0.2 * stats[STAT_AP]));
+                sb.append(")");
+                break;
+            default:
+                throw new RuntimeException("Stat with name " + specialKey + " cannot be resolved.");
+        }
+
+        return sb.toString();
     }
 
     public void reorder(int itemOldPosition, int itemNewPosition) {
@@ -1245,21 +1295,21 @@ public class Build {
         return i;
     }
 
-    public static int getStatName(int statId) {
-        int i;
-        i = statIdToStringId.get(statId);
-        if (i == 0) {
-            throw new RuntimeException("Stat id does not have string resource: " + statId);
-        }
-
-        return i;
-    }
-
     public static int getSkillStatDesc(int statId) {
         int i;
         i = statIdToSkillStatDescStringId.get(statId);
         if (i == 0) {
             throw new RuntimeException("Stat id does not have a skill stat description: " + statId);
+        }
+
+        return i;
+    }
+
+    public static int getStatName(int statId) {
+        int i;
+        i = statIdToStringId.get(statId);
+        if (i == 0) {
+            throw new RuntimeException("Stat id does not have string resource: " + statId);
         }
 
         return i;

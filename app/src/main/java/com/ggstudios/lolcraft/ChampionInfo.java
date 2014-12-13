@@ -296,7 +296,7 @@ public class ChampionInfo {
 			return completedDesc;
 		}
 
-		public String calculateScaling(Build build, DecimalFormat format) {
+		public String calculateScaling(Context context, Build build, DecimalFormat format) {
 			Matcher matcher = argPattern.matcher(getCompletedDesc());
 
 			StringBuffer sb = new StringBuffer();
@@ -315,6 +315,8 @@ public class ChampionInfo {
                         } catch (JSONException e) {
                             DebugLog.e(TAG, e);
                         }
+                    } else if (sc.link.startsWith("@")) {
+                        matcher.appendReplacement(sb, build.getSpecialString(context, sc.link));
                     } else if (sc.coeff instanceof Double) {
 						double d = (build.getStat(sc.link) * (Double)sc.coeff);
 						matcher.appendReplacement(sb, format.format(d));
@@ -388,6 +390,8 @@ public class ChampionInfo {
                     if (sc.link.equals("@text")) {
                             matcher.appendReplacement(sb,
                                     context.getString(Build.getStatName(Build.STAT_LEVEL_MINUS_ONE)));
+                    } else if (sc.link.startsWith("@")) {
+                        matcher.appendReplacement(sb, context.getString(R.string.special_value));
                     } else if (sc.coeff instanceof Double) {
                         JSONArray arr = new JSONArray();
                         arr.put((Double) sc.coeff);
