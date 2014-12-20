@@ -1128,6 +1128,9 @@ public class Build {
                 sb.append(((int)0.2 * stats[STAT_AP]));
                 sb.append(")");
                 break;
+            case STAT_NAUTILUS_Q_CD:
+                sb.append("0.5");
+                break;
             default:
                 throw new RuntimeException("Stat with name " + specialKey + " cannot be resolved.");
         }
