@@ -2,6 +2,7 @@ package com.ggstudios.lolcraft;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.util.SparseIntArray;
 
 import com.ggstudios.lolcraft.ChampionInfo.Skill;
@@ -10,6 +11,7 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -410,6 +412,8 @@ public class Build {
     private boolean itemBuildDirty = false;
 
     private Gson gson;
+
+    private boolean buildLoading = false;
 
     private OnRuneCountChangedListener onRuneCountChangedListener = new OnRuneCountChangedListener() {
 
@@ -924,6 +928,24 @@ public class Build {
         observers.remove(observer);
     }
 
+    private void notifyBuildLoading() {
+        buildLoading = true;
+        for (BuildObserver o : observers) {
+            o.onBuildLoading();
+        }
+    }
+
+    private void notifyBuildLoadingComplete() {
+        buildLoading = false;
+        for (BuildObserver o : observers) {
+            o.onBuildLoadingComplete();
+        }
+    }
+
+    public boolean isBuildLoading() {
+        return buildLoading;
+    }
+
     private void notifyBuildChanged() {
         for (BuildObserver o : observers) {
             o.onBuildChanged(this);
@@ -1164,23 +1186,49 @@ public class Build {
         return o;
     }
 
-    public void fromSaveObject(BuildSaveObject o) {
-        clearItems();
-        clearRunes();
+    public void fromSaveObject(final Context context, final BuildSaveObject o) {
+        new AsyncTask<Void, Void, Void>() {
 
-        int count = o.runes.size();
-        for (int i = 0; i < count; i += 2) {
-            addRune(runeLibrary.getRuneInfo(o.runes.get(i)), o.runes.get(i + 1), i + 2 >= count);
-        }
+            @Override
+            protected void onPreExecute() {
+                notifyBuildLoading();
+            }
 
-        count = o.items.size();
-        for (int i = 0; i < count; i += 2) {
-            int itemId = o.items.get(i);
-            int c = o.items.get(i + 1);
-            addItem(itemLibrary.getItemInfo(itemId), c, i == count - 2);
-        }
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    LibraryUtils.initItemLibrary(context);
+                    LibraryUtils.initRuneLibrary(context);
+                } catch (JSONException e) {
+                    Timber.e("", e);
+                } catch (IOException e) {
+                    Timber.e("", e);
+                }
+                return null;
+            }
 
-        buildName = o.buildName;
+            @Override
+            protected void onPostExecute(Void result) {
+                notifyBuildLoadingComplete();
+                clearItems();
+                clearRunes();
+
+                int count = o.runes.size();
+                for (int i = 0; i < count; i += 2) {
+                    addRune(runeLibrary.getRuneInfo(o.runes.get(i)), o.runes.get(i + 1), i + 2 >= count);
+                }
+
+                count = o.items.size();
+                for (int i = 0; i < count; i += 2) {
+                    int itemId = o.items.get(i);
+                    int c = o.items.get(i + 1);
+                    addItem(itemLibrary.getItemInfo(itemId), c, i == count - 2);
+                }
+
+                buildName = o.buildName;
+            }
+
+        }.execute();
     }
 
     public static int getSuggestedColorForGroup(int groupId) {
@@ -1188,6 +1236,8 @@ public class Build {
     }
 
     public static interface BuildObserver {
+        public void onBuildLoading();
+        public void onBuildLoadingComplete();
         public void onBuildChanged(Build build);
         public void onItemAdded(Build build, BuildItem item, boolean isNewItem);
         public void onRuneAdded(Build build, BuildRune rune);

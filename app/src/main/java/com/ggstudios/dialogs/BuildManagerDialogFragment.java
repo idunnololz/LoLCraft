@@ -87,7 +87,7 @@ public class BuildManagerDialogFragment extends DialogFragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 BuildSaveObject o = adapter.getItem(i);
                 try {
-                    buildManager.loadBuild(StateManager.getInstance().getActiveBuild(), o.buildName);
+                    buildManager.loadBuild(getActivity(), StateManager.getInstance().getActiveBuild(), o.buildName);
                 } catch (JSONException e) {
                     Timber.e("", e);
                 }

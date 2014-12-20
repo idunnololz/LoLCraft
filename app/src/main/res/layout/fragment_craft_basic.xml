@@ -414,7 +414,8 @@
                     android:id="@+id/scrollView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scrollbars="horizontal" >
+                    android:scrollbars="horizontal"
+                    android:fillViewport="false">
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -439,6 +440,13 @@
                             android:visibility="invisible" />
                     </RelativeLayout>
                 </com.ggstudios.views.InterceptingHorizontalScrollView>
+
+                <ProgressBar
+                    android:id="@+id/item_build_pbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"/>
             </FrameLayout>
         </LinearLayout>
 
@@ -503,20 +511,33 @@
                     android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
 
-            <com.ggstudios.views.InterceptingHorizontalScrollView
-                android:id="@+id/runeScrollView"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/lightgrey"
-                android:scrollbars="horizontal" >
+                android:layout_height="wrap_content">
 
-                <LinearLayout
-                    android:id="@+id/runes"
+                <com.ggstudios.views.InterceptingHorizontalScrollView
+                    android:id="@+id/runeScrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/lightgrey"
+                    android:scrollbars="horizontal" >
+
+                    <LinearLayout
+                        android:id="@+id/runes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="90dp"
+                        android:orientation="horizontal" >
+                    </LinearLayout>
+                </com.ggstudios.views.InterceptingHorizontalScrollView>
+
+                <ProgressBar
+                    android:id="@+id/rune_build_pbar"
                     android:layout_width="wrap_content"
-                    android:layout_height="90dp"
-                    android:orientation="horizontal" >
-                </LinearLayout>
-            </com.ggstudios.views.InterceptingHorizontalScrollView>
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"/>
+            </FrameLayout>
+
         </LinearLayout>
 
         <LinearLayout

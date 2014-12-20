@@ -63,7 +63,13 @@ public class CraftSkillsFragment extends Fragment {
 
 						build.registerObserver(new BuildObserver() {
 
-							@Override
+                            @Override
+                            public void onBuildLoading() {}
+
+                            @Override
+                            public void onBuildLoadingComplete() {}
+
+                            @Override
 							public void onBuildChanged(Build build) {}
 
 							@Override

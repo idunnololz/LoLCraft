@@ -266,32 +266,12 @@ public class CraftActivity extends ActionBarActivity implements ItemPickerDialog
 	}
 	
 	public void loadBuild(final String buildName) {
-		new AsyncTask<Void, Void, Void>() {
-
-			@Override
-			protected Void doInBackground(Void... params) {
-				try {
-					LibraryUtils.initItemLibrary(getApplicationContext());
-					LibraryUtils.initRuneLibrary(getApplicationContext());
-				} catch (JSONException e) {
-					Timber.e("", e);
-				} catch (IOException e) {
-					Timber.e("", e);
-				}
-				return null;
-			}
-			
-			@Override
-			protected void onPostExecute(Void result) {
-				try {
-                    buildManager.loadBuild(build, buildName);
-				} catch (JSONException e) {
-					Timber.e("", e);
-				}
-			}
-			
-		}.execute();
-	}
+        try {
+            buildManager.loadBuild(this, build, buildName);
+        } catch (JSONException e) {
+            Timber.e("", e);
+        }
+    }
 	
 	private void bindPanelViews() {
 		if (champInfoPanel != null) return;

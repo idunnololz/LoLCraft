@@ -28,6 +28,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
@@ -102,6 +103,9 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
     private Button btnSave;
     private Button btnSaveAs;
     private Button btnLoad;
+
+    private ProgressBar pbarItemBuild;
+    private ProgressBar pbarRuneBuild;
 
     private View rootView;
 
@@ -259,6 +263,13 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
         btnSave = (Button) rootView.findViewById(R.id.btnSave);
         btnLoad = (Button) rootView.findViewById(R.id.btnLoad);
         btnSaveAs = (Button) rootView.findViewById(R.id.btnSaveAs);
+
+        pbarItemBuild = (ProgressBar) rootView.findViewById(R.id.rune_build_pbar);
+        pbarRuneBuild = (ProgressBar) rootView.findViewById(R.id.item_build_pbar);
+
+        if (build.isBuildLoading()) {
+            onBuildLoading();
+        }
 
         Button btnStatHelp = (Button) rootView.findViewById(R.id.btnAboutStats);
         Button btnClearItemBuild = (Button) rootView.findViewById(R.id.clearItemBuild);
@@ -705,6 +716,18 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
 		super.onPause();
 		build.unregisterObserver(this);
 	}
+
+    @Override
+    public void onBuildLoading() {
+        pbarRuneBuild.setVisibility(View.VISIBLE);
+        pbarItemBuild.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onBuildLoadingComplete() {
+        pbarRuneBuild.setVisibility(View.GONE);
+        pbarItemBuild.setVisibility(View.GONE);
+    }
 
 	@Override
 	public void onBuildChanged(Build build) {

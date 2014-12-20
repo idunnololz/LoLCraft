@@ -1,5 +1,6 @@
 package com.ggstudios.lolcraft;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.ggstudios.utils.Utils;
@@ -90,8 +91,8 @@ public class BuildManager {
         return RETURN_CODE_SUCCESS;
     }
 
-    public void loadBuild(Build build, String buildName) throws JSONException {
-        build.fromSaveObject(savedBuilds.get(buildName));
+    public void loadBuild(Context context, Build build, String buildName) throws JSONException {
+        build.fromSaveObject(context, savedBuilds.get(buildName));
     }
 
     public List<BuildSaveObject> getSaveObjects() {
