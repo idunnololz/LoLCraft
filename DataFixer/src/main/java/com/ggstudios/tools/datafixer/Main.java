@@ -53,8 +53,48 @@ public class Main {
 		3071, "rFlatArmorPenetrationMod",	10.0, null,
 		3072, "PercentLifeStealMod",		0.2, null,
 		3504, "PercentMovementSpeedMod",	0.08, null,
-	};
-	
+
+        3708, "FlatMagicDamageMod",         80,         //"Enchantment: Magus"
+              "FlatCoolDownRedMod",         0.2, null,
+        3716, "FlatMagicDamageMod",         80,
+              "FlatCoolDownRedMod",         0.2, null,
+        3720, "FlatMagicDamageMod",         80,
+              "FlatCoolDownRedMod",         0.2, null,
+        3724, "FlatMagicDamageMod",         80,
+              "FlatCoolDownRedMod",         0.2, null,
+
+        3707, "FlatPhysicalDamageMod",      45,         //"Enchantment: Warrior"
+              "FlatCoolDownRedMod",         0.1,
+              "rFlatArmorPenetrationMod",   10, null,
+        3719, "FlatPhysicalDamageMod",      45,
+              "FlatCoolDownRedMod",         0.1,
+              "rFlatArmorPenetrationMod",   10, null,
+        3714, "FlatPhysicalDamageMod",      45,
+              "FlatCoolDownRedMod",         0.1,
+              "rFlatArmorPenetrationMod",   10, null,
+        3723, "FlatPhysicalDamageMod",      45,
+              "FlatCoolDownRedMod",         0.1,
+              "rFlatArmorPenetrationMod",   10, null,
+
+        3709, "FlatHPPoolMod",              500,        //"Enchantment: Juggernaut"
+              "FlatCoolDownRedMod",         0.1, null,
+        3717, "FlatHPPoolMod",              500,
+              "FlatCoolDownRedMod",         0.1, null,
+        3721, "FlatHPPoolMod",              500,
+              "FlatCoolDownRedMod",         0.1, null,
+        3725, "FlatHPPoolMod",              500,
+              "FlatCoolDownRedMod",         0.1, null,
+
+        3710, "PercentAttackSpeedMod",      0.5,        //"Enchantment: Devourer"
+              "FlatAaMagicDamageMod",       25, null,
+        3718, "PercentAttackSpeedMod",      0.5,
+              "FlatAaMagicDamageMod",       25, null,
+        3726, "PercentAttackSpeedMod",      0.5,
+              "FlatAaMagicDamageMod",       25, null,
+        3722, "PercentAttackSpeedMod",      0.5,
+              "FlatAaMagicDamageMod",       25, null,
+    };
+
 	public static void saveJsonObj(String filename, JSONObject obj) throws JSONException, IOException {
 		File dir = new File("out/_item");
 		dir.mkdir();
@@ -134,7 +174,11 @@ public class Main {
 				JSONObject up = new JSONObject();
 				
 				for (int i = found + 1; PASSIVES[i] != null; i += 2) {
-					up.put((String) PASSIVES[i], (Double)PASSIVES[i+1]);
+                    if (PASSIVES[i+1] instanceof Double){
+                        up.put((String) PASSIVES[i], (Double) PASSIVES[i + 1]);
+                    } else {
+                        up.put((String) PASSIVES[i], (Integer) PASSIVES[i + 1]);
+                    }
 				}
 				
 				value.put("up", up);
@@ -160,7 +204,7 @@ public class Main {
             //ChampionInfoFixer.fixChampionInfo();
 
             DataFetcher.fetchAllItemInfo();
-            DataFetcher.fetchAllItemThumb();
+            //DataFetcher.fetchAllItemThumb();
 			fixItemJson();
 		} catch (Exception e) {
 			e.printStackTrace();

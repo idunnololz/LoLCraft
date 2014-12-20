@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.ggstudios.lolcraft.ChampionInfo;
 import com.ggstudios.lolcraft.ChampionLibrary;
@@ -123,7 +124,8 @@ public class ItemPickerDialogFragment extends DialogFragment {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
-                Timber.d(((ItemInfo) parent.getItemAtPosition(position)).rawJson.toString());
+                ItemInfo info = ((ItemInfo) parent.getItemAtPosition(position));
+                Timber.d(info.id + ": " + info.rawJson.toString());
 				
 				return false;
 			}
