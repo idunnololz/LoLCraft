@@ -7,11 +7,15 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.PopupMenuCompat;
+import android.support.v7.widget.PopupMenu;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,6 +43,7 @@ import com.ggstudios.animation.FlipAnimation;
 import com.ggstudios.dialogs.AlertDialogFragment;
 import com.ggstudios.dialogs.AlertDialogFragment.Builder;
 import com.ggstudios.dialogs.BuildManagerDialogFragment;
+import com.ggstudios.dialogs.ItemDetailDialogFragment;
 import com.ggstudios.dialogs.ItemPickerDialogFragment;
 import com.ggstudios.dialogs.RunePickerDialogFragment;
 import com.ggstudios.dialogs.SaveAsDialogFragment;
@@ -871,7 +876,7 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
 
 				icon.setImageDrawable(item.info.icon);
 
-				buildContainer.addView(v);
+                addItemToBuildView(v);
 			}
 
 			seekBar.setMax(build.getBuildSize());
@@ -882,7 +887,8 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
 
 			icon.setImageDrawable(item.info.icon);
 
-			buildContainer.addView(v);
+            addItemToBuildView(v);
+
 			buildScrollView.post(new Runnable() {
 
 				@Override
@@ -919,6 +925,34 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
 
 		refreshAllItemViews();
 	}
+
+    private void addItemToBuildView(View v) {
+        final int index = buildContainer.getChildCount();
+        buildContainer.addView(v);
+
+        v.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu menu = new PopupMenu(getActivity(), v);
+                menu.inflate(R.menu.item_info);
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id.action_show_info:
+                                ItemInfo item = build.getItem(index).info;
+                                ItemDetailDialogFragment frag = ItemDetailDialogFragment.newInstance(item);
+                                frag.show(getFragmentManager(), "dialog");
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
+                menu.show();
+            }
+        });
+    }
 
 	private void updateRunes() {
 		updateRunes(null);

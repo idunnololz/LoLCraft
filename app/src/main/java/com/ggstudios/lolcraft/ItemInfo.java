@@ -10,6 +10,8 @@ import java.util.Set;
 // json file acquired via https://na.api.pvp.net/api/lol/static-data/na/v1.2/item?itemListData=all&api_key=0daeb2cf-a0d0-4a94-a7b2-8b282e1a4336
 
 public class ItemInfo {
+    public static final String _RAW_KEY_DESC = "description";
+
     public Drawable icon;
 
     public int baseGold;

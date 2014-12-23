@@ -126,6 +126,9 @@ public class ItemPickerDialogFragment extends DialogFragment {
 					int position, long id) {
                 ItemInfo info = ((ItemInfo) parent.getItemAtPosition(position));
                 Timber.d(info.id + ": " + info.rawJson.toString());
+
+                ItemDetailDialogFragment frag = ItemDetailDialogFragment.newInstance(info);
+                frag.show(getFragmentManager(), "dialog");
 				
 				return false;
 			}
