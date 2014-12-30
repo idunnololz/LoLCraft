@@ -1133,8 +1133,11 @@ public class Build {
             case STAT_NAUTILUS_Q_CD:
                 sb.append("0.5");
                 break;
+            case STAT_STACKS:
+                sb.append(context.getString(R.string.stacks));
+                break;
             default:
-                throw new RuntimeException("Stat with name " + specialKey + " cannot be resolved.");
+                throw new RuntimeException("Stat with name " + specialKey + "and id " + statId + " cannot be resolved.");
         }
 
         return sb.toString();

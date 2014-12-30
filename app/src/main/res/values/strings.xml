@@ -195,15 +195,6 @@
 <b>LoL Craft</b> <small>by Gary Guo</small>
 <br>
 <b>Version %1$s</b>
-<br>
-<br>
-<b>Changelog</b>
-<br>
-<small>
-- Added ability to save and load builds<br>
-- New champion list design<br>
-- Fixed more crashes<br>
-</small>
 ]]></string>
     <string name="stat_desc_enemy_max_hp">enemy\'s max HP</string>
     <string name="stat_desc_level_minus_one">level - 1</string>
@@ -221,6 +212,7 @@
     <string name="level_dependent_base_damage">base damage is champion level dependent</string>
     <string name="item_cost_format_string">Total %1$dg (Base %2$dg)</string>
     <string name="action_show_info">Item info</string>
+    <string name="stacks">stacks</string>
 
 
 </resources>
