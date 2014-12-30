@@ -196,14 +196,14 @@ public class Main {
 
             // Updates champion data... outputs to out/ and res/
             //DataFetcher.fetchAllChampionThumb();
-            //DataFetcher.fetchAllChampionJson();
+            DataFetcher.fetchAllChampionJson();
 
             //DataFetcher.fetchAllSpellThumb();
             //DataFetcher.fetchAllPassiveThumb();
 
-            //ChampionInfoFixer.fixChampionInfo();
+            ChampionInfoFixer.fixChampionInfo();
 
-            DataFetcher.fetchAllItemInfo();
+            //DataFetcher.fetchAllItemInfo();
             //DataFetcher.fetchAllItemThumb();
 			fixItemJson();
 		} catch (Exception e) {
