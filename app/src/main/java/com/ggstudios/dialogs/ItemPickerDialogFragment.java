@@ -130,7 +130,7 @@ public class ItemPickerDialogFragment extends DialogFragment {
                 ItemDetailDialogFragment frag = ItemDetailDialogFragment.newInstance(info);
                 frag.show(getFragmentManager(), "dialog");
 				
-				return false;
+				return true;
 			}
 			
 		});
