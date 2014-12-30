@@ -890,7 +890,7 @@ public class ChampionInfoFixer {
                         METHOD_TANK,        0, 60, 90, 120, "FlatSpellBlockMod",
 
         "Varus",    0,
-                    1,  METHOD_AOE_BURST|AD,1, 15, 70, 125, 180, 235, 160, "attackdamage",
+                    1,  METHOD_AOE_BURST|AD,1, 15, 70, 125, 180, 235, 1.6, "attackdamage",
                     2,  METHOD_DPS,         1, 1, 10, 14, 18, 22, 26, 0.25, "spelldamage", "FlatAaMagicDamageMod",
                         METHOD_BURST|AP,    1,  6, 8.25, 10.5, 12.75, 15, "enemymaxhealth", 0.0006, "spelldamage",
                     2,  METHOD_AOE_BURST|AD,1, 65, 100, 135, 170, 205, 0.6, "bonusattackdamage",
@@ -901,7 +901,7 @@ public class ChampionInfoFixer {
         "Vayne",    1,  METHOD_MOBILITY,    0, MOBI_FLAT_MS, 0, 30,
                     2,  METHOD_BURST|AD,    1, 0, 0, 0, 0, 0, 0.3, 0.35, 0.4, 0.45, 0.5, "attackdamage",
                         METHOD_MOBILITY,    0, MOBI_DASH, 300, 300, 300, 300, 300,
-                    1,  METHOD_DPS,         1, 1, 20, 30, 40, 50, 60, 0.04, 0.05, 0.06, 0.07, 0.08, "enemymaxhealth", "FlatAaTrueDamageMod",
+                    1,  METHOD_DPS,         1, 1, 20/3, 30/3, 40/3, 50/3, 60/3, 0.04, 0.05, 0.06, 0.07, 0.08, "enemymaxhealth", "FlatAaTrueDamageMod",
                     3,  METHOD_CC,          0, CC_DISPLACE, 470, 470, 470, 470, 470,
                         METHOD_CC,          0, CC_STUN, 1.5, 1.5, 1.5, 1.5, 1.5,
                         METHOD_BURST|AD,    1, 90, 160, 230, 300, 370, 1, "bonusattackdamage",
