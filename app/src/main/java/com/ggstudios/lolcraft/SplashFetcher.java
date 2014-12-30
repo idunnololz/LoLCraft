@@ -26,6 +26,8 @@ public class SplashFetcher {
 
 	private static final String CACHE_NAME = "SplashCache";
 
+    private static final int IMAGE_CACHE_SIZE = Utils.MB_BYTES * 20;
+
 	private static SplashFetcher instance;
 
 	private DiskLruImageCache diskCache = null;
@@ -38,8 +40,8 @@ public class SplashFetcher {
 	}
 
 	private void initialize() {
-		diskCache = new DiskLruImageCache(context, CACHE_NAME, 
-				Utils.MB_BYTES * 10, CompressFormat.JPEG, 70);
+		diskCache = new DiskLruImageCache(context, CACHE_NAME,
+                IMAGE_CACHE_SIZE, CompressFormat.JPEG, 70);
 	}
 
 	public static void initInstance(Context context) {
