@@ -213,6 +213,7 @@
     <string name="item_cost_format_string">Total %1$dg (Base %2$dg)</string>
     <string name="action_show_info">Item info</string>
     <string name="stacks">stacks</string>
+    <string name="stat_desc_aa_true_damage">bonus true damage on basic attack</string>
 
 
 </resources>

@@ -318,6 +318,7 @@ public class Build {
         a.put(STAT_ENEMY_MAX_HP, R.string.stat_desc_enemy_max_hp);
         a.put(STAT_TOTAL_MP, R.string.stat_desc_total_mp);
         a.put(STAT_AA_MAGIC_DAMAGE, R.string.stat_desc_aa_magic_damage);
+        a.put(STAT_AA_TRUE_DAMAGE, R.string.stat_desc_aa_true_damage);
         //		public static final int STAT_CRIT = 11;
         //		public static final int STAT_AP = 12;
         //		public static final int STAT_LS = 13;
@@ -808,8 +809,8 @@ public class Build {
 
         if (r == null) {
             r = new BuildRune(rune, rune.id);
-            runeBuild.add(r);
             r.listener = onRuneCountChangedListener;
+            runeBuild.add(r);
             notifyRuneAdded(r);
         }
 
