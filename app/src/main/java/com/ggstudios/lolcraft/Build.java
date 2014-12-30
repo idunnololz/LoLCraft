@@ -129,6 +129,7 @@ public class Build {
     public static final int STAT_ENEMY_MISSING_HP = 100;
     public static final int STAT_ENEMY_CURRENT_HP = 101;
     public static final int STAT_ENEMY_MAX_HP = 102;
+    public static final int STAT_TARGET_AP = 103;
 
     public static final int STAT_ONE      = 120;
 
@@ -272,6 +273,7 @@ public class Build {
         statKeyToIndex.put("enemycurrenthealth",    STAT_ENEMY_CURRENT_HP);
         statKeyToIndex.put("enemymaxhealth",        STAT_ENEMY_MAX_HP);
         statKeyToIndex.put("movementspeed",         STAT_TOTAL_MS);
+        statKeyToIndex.put("targetspelldamage", 	STAT_TARGET_AP);
 
         // special keys...
         statKeyToIndex.put("@special.BraumWArmor", 	STAT_NULL);
