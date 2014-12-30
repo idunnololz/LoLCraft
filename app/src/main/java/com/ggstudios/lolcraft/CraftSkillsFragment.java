@@ -55,10 +55,14 @@ public class CraftSkillsFragment extends Fragment {
 
 					@Override
 					public void run() {
+                        Context con = getActivity();
+
+                        if (con == null) return;
+
 						ListView list = (ListView) rootView.findViewById(R.id.listView);
 						View footer = inflater.inflate(R.layout.item_skill_footer, list, false);
 						list.addFooterView(footer);
-						final SkillAdapter adapter = new SkillAdapter(getActivity(), skills, build);
+						final SkillAdapter adapter = new SkillAdapter(con, skills, build);
 						list.setAdapter(adapter);
 
 						build.registerObserver(new BuildObserver() {
