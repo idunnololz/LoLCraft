@@ -49,6 +49,11 @@ public class Build {
             0xfff1c40f,	// sun flower
     };
 
+    private static final int CHAMPION_ID_AKALI = 84;
+    private static final int CHAMPION_ID_CORKI = 42;
+    private static final int CHAMPION_ID_HEIM = 74;
+    private static final int CHAMPION_ID_TEEMO = 17;
+
     private static final int FLAG_SCALING = 0x80000000;
 
     public static final String SN_NULL = "null";
@@ -1137,8 +1142,26 @@ public class Build {
             case STAT_STACKS:
                 sb.append(context.getString(R.string.stacks));
                 break;
+            case STAT_CD_MOD:
+                switch (champ.id) {
+                    case CHAMPION_ID_AKALI:
+                        sb.append("30 / 22.5 / 15");
+                        break;
+                    case CHAMPION_ID_CORKI:
+                        sb.append("12 / 10 / 8");
+                        break;
+                    case CHAMPION_ID_HEIM:
+                        sb.append("24 / 23 / 22 / 21 / 20");
+                        break;
+                    case CHAMPION_ID_TEEMO:
+                        sb.append("35 / 31 / 27");
+                        break;
+                    default:
+                        throw new RuntimeException("Cooldown for champion " + champ.name + " cannot be found.");
+                }
+                break;
             default:
-                throw new RuntimeException("Stat with name " + specialKey + "and id " + statId + " cannot be resolved.");
+                throw new RuntimeException("Stat with name " + specialKey + " and id " + statId + " cannot be resolved.");
         }
 
         return sb.toString();

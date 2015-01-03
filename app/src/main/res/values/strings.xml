@@ -214,6 +214,7 @@
     <string name="action_show_info">Item info</string>
     <string name="stacks">stacks</string>
     <string name="stat_desc_aa_true_damage">bonus true damage on basic attack</string>
+    <string name="cooldown">cooldown</string>
 
 
 </resources>
