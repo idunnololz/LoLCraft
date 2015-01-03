@@ -24,9 +24,9 @@ public class ChampionInfoFixer {
 	private static final int METHOD_AOE = 0x80000000,
 			METHOD_AMP = 0x40000000,
 			METHOD_DOT = 0x20000000,
-			AP = 0x10000000,
-			AD = 0x0F000000,
-            TR = 0x08000000,
+            AP = 0x10000000,
+            AD = 0x08000000,
+            TR = 0x04000000,
 			METHOD_COOP = 0x08000000,
             BASE_METHOD_MASK = 0x00FFFFFF,
 
