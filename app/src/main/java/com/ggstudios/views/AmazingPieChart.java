@@ -74,10 +74,10 @@ public class AmazingPieChart extends View {
 	}
 	
 	public SliceToken addSlice(double percent, int color) {
-		return addSlice(percent, color, null);
+		return addSlice(percent, color, null, percent);
 	}
 	
-	public SliceToken addSlice(double percent, int color, String name) {
+	public SliceToken addSlice(double percent, int color, String name, double value) {
 		PieItem item = new PieItem();
 		SliceToken token = new SliceToken();
 		token.id = lastSliceId++;
@@ -86,6 +86,7 @@ public class AmazingPieChart extends View {
 		item.color = color;
 		item.token = token;
 		item.name = name;
+        item.value = value;
 		
 		slices.put(token.id, item);
 		items.add(item);
@@ -107,6 +108,7 @@ public class AmazingPieChart extends View {
 		public double percent;
 		public int color;
 		public String name;
+        public double value;
 	}
 	
 	public static class SliceToken {

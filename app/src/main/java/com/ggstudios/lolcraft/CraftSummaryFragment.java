@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
@@ -46,6 +48,8 @@ public class CraftSummaryFragment extends Fragment {
     private static final String TAG = CraftSummaryFragment.class.getSimpleName();
 
     public static final String EXTRA_CHAMPION_ID = "champId";
+
+    private static final int ANIMATION_DURATION = 250;
 
     private static final int PHYSICAL_COLOR = 0xFFFF8800;
     private static final int MAGICAL_COLOR = 0xFF669900;
@@ -895,7 +899,7 @@ public class CraftSummaryFragment extends Fragment {
                     int index = 0;
                     for (StatBonus b : bonuses) {
                         if (graphOverall) {
-                            holder.pieChart.addSlice((float) (b.value / a.totalDamage), Build.getSuggestedColorForGroup(index++), b.name);
+                            holder.pieChart.addSlice((float) (b.value / a.totalDamage), Build.getSuggestedColorForGroup(index++), b.name, b.value);
                         } else if (graphType) {
                             if ((b.statTypeId & Method.AD) != 0) {
                                 phys += b.value;
@@ -908,9 +912,9 @@ public class CraftSummaryFragment extends Fragment {
                     }
 
                     if (graphType) {
-                        holder.pieChart.addSlice((float) (phys / a.totalDamage), PHYSICAL_COLOR, "Physical damage");
-                        holder.pieChart.addSlice((float) (mag / a.totalDamage), MAGICAL_COLOR, "Magical damage");
-                        holder.pieChart.addSlice((float) (trueDmg / a.totalDamage), TRUE_COLOR, "True damage");
+                        holder.pieChart.addSlice((float) (phys / a.totalDamage), PHYSICAL_COLOR, "Physical damage", phys);
+                        holder.pieChart.addSlice((float) (mag / a.totalDamage), MAGICAL_COLOR, "Magical damage", mag);
+                        holder.pieChart.addSlice((float) (trueDmg / a.totalDamage), TRUE_COLOR, "True damage", trueDmg);
 
                     }
 
@@ -1104,6 +1108,7 @@ public class CraftSummaryFragment extends Fragment {
         private View color;
         private TextView txtItemName;
         private TextView txtValue;
+        private int position;
     }
 
     private static class PieLegendAdapter extends BaseAdapter {
@@ -1147,10 +1152,49 @@ public class CraftSummaryFragment extends Fragment {
                 h.txtItemName = (TextView) convertView.findViewById(R.id.txtItemName);
                 h.txtValue = (TextView) convertView.findViewById(R.id.txtValue);
                 convertView.setTag(h);
+
+                convertView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final PieLegendViewHolder holder = (PieLegendViewHolder) v.getTag();
+                        PieItem slice = getItem(((PieLegendViewHolder)v.getTag()).position);
+                        String s = holder.txtValue.getText().toString();
+                        final String newString;
+
+                        if (s.charAt(s.length() - 1) == '%') {
+                            newString = percentFormat.format(slice.value);
+                        } else {
+                            newString = intFormat.format(slice.percent * 100) + "%";
+                        }
+
+                        Animation fadeOut = new AlphaAnimation(1f, 0f);
+                        fadeOut.setDuration(ANIMATION_DURATION);
+
+                        final Animation fadeIn = new AlphaAnimation(0f, 1f);
+                        fadeIn.setDuration(ANIMATION_DURATION);
+
+                        fadeOut.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {}
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                holder.txtValue.setText(newString);
+                                holder.txtValue.startAnimation(fadeIn);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {}
+                        });
+
+                        holder.txtValue.startAnimation(fadeOut);
+                    }
+                });
             } else {
                 h = (PieLegendViewHolder) convertView.getTag();
             }
 
+            h.position = position;
             h.color.setBackgroundColor(slice.color);
             h.txtItemName.setText(slice.name);
             h.txtValue.setText(percentFormat.format(slice.percent * 100) + "%");
