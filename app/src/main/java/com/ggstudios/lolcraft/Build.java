@@ -130,6 +130,7 @@ public class Build {
     public static final int STAT_SOULS = 84;
     public static final int STAT_JAX_R_ARMOR_SCALING = 85;
     public static final int STAT_JAX_R_MR_SCALING = 86;
+    public static final int STAT_DARIUS_R_MAX_DAMAGE = 87;
 
     public static final int STAT_ENEMY_MISSING_HP = 100;
     public static final int STAT_ENEMY_CURRENT_HP = 101;
@@ -303,7 +304,7 @@ public class Build {
         statKeyToIndex.put("@special.viw",          STAT_VI_W);
 
         // darius
-        statKeyToIndex.put("@special.dariusr3",     STAT_ONE);
+        statKeyToIndex.put("@special.dariusr3",     STAT_DARIUS_R_MAX_DAMAGE);
 
         statKeyToIndex.put("null", 	STAT_NULL);
 
@@ -1159,6 +1160,9 @@ public class Build {
                     default:
                         throw new RuntimeException("Cooldown for champion " + champ.name + " cannot be found.");
                 }
+                break;
+            case STAT_DARIUS_R_MAX_DAMAGE:
+                sb.append("320 / 500 / 680 (+1.5 per bonus attack damage)");
                 break;
             default:
                 throw new RuntimeException("Stat with name " + specialKey + " and id " + statId + " cannot be resolved.");
