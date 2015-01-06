@@ -49,6 +49,10 @@ public class Build {
             0xfff1c40f,	// sun flower
     };
 
+    private static final double[] SCALINGS_JAYCE_W = new double[] {
+            0.7, 0.85, 1, 1.15, 1.3
+    };
+
     private static final int CHAMPION_ID_AKALI = 84;
     private static final int CHAMPION_ID_CORKI = 42;
     private static final int CHAMPION_ID_HEIM = 74;
@@ -131,6 +135,8 @@ public class Build {
     public static final int STAT_JAX_R_ARMOR_SCALING = 85;
     public static final int STAT_JAX_R_MR_SCALING = 86;
     public static final int STAT_DARIUS_R_MAX_DAMAGE = 87;
+    public static final int STAT_JAYCE_W_SCALING = 88;
+    public static final int STAT_DYNAMIC_AP = 89;
 
     public static final int STAT_ENEMY_MISSING_HP = 100;
     public static final int STAT_ENEMY_CURRENT_HP = 101;
@@ -293,7 +299,7 @@ public class Build {
         statKeyToIndex.put("@souls", STAT_SOULS);
 
         // heim
-        statKeyToIndex.put("@dynamic.abilitypower", STAT_AP);
+        statKeyToIndex.put("@dynamic.abilitypower", STAT_DYNAMIC_AP);
 
         // rengar
         statKeyToIndex.put("@dynamic.attackdamage", STAT_RENGAR_Q_BASE_DAMAGE);
@@ -305,6 +311,8 @@ public class Build {
 
         // darius
         statKeyToIndex.put("@special.dariusr3",     STAT_DARIUS_R_MAX_DAMAGE);
+
+        statKeyToIndex.put("@special.jaycew",       STAT_JAYCE_W_SCALING);
 
         statKeyToIndex.put("null", 	STAT_NULL);
 
@@ -1163,6 +1171,31 @@ public class Build {
                 break;
             case STAT_DARIUS_R_MAX_DAMAGE:
                 sb.append("320 / 500 / 680 (+1.5 per bonus attack damage)");
+                break;
+            case STAT_JAYCE_W_SCALING:
+                for (int i = 0; i < SCALINGS_JAYCE_W.length; i++) {
+                    sb.append((int)(SCALINGS_JAYCE_W[i] * stats[STAT_TOTAL_AD]));
+                    sb.append(" / ");
+                }
+                sb.setLength(sb.length() - 3);
+                break;
+            case STAT_DYNAMIC_AP:
+                switch (champ.id) {
+                    case CHAMPION_ID_HEIM:
+                        final double W_SCALING = 0.45;
+                        final double MISSILE_COUNT = 5;
+                        final double DAMAGE_REDUCTION_AFTER_FIRST = 0.8;
+                        final double TOTAL_SCALING = W_SCALING + W_SCALING *
+                                (1 - DAMAGE_REDUCTION_AFTER_FIRST) * (MISSILE_COUNT - 1);
+
+                        sb.append("(+");
+                        sb.append((int)(TOTAL_SCALING * stats[STAT_TOTAL_AP]));
+                        sb.append(')');
+                        break;
+                    default:
+                        throw new RuntimeException("Dynamic AP stat not available for champion: " + champ.name);
+                }
+
                 break;
             default:
                 throw new RuntimeException("Stat with name " + specialKey + " and id " + statId + " cannot be resolved.");
