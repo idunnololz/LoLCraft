@@ -9,6 +9,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.DoubleSummaryStatistics;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,6 +23,10 @@ import org.json.JSONObject;
 
 import com.ggstudios.tools.datafixer.ChampionInfo.Passive;
 import com.ggstudios.tools.datafixer.ChampionInfo.Skill;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 import static com.ggstudios.tools.datafixer.Main.pln;
 
@@ -99,821 +110,71 @@ public class ChampionInfoFixer {
 		// METHOD_DPS has a second field which defines the number of stats that will be modified by the skill
 
 		//			0  	1 			 		2  3	
-		"Aatrox", 	1, 	METHOD_DPS, 		0, 1, 6, 1, 0.3, 4, 0.35, 7, 0.4, 10, 0.45, 13, 0.5, 16, 0.55, "PercentAttackSpeedMod",
-					2, 	METHOD_BURST|AD, 	1, 70, 115, 160, 205, 250, 0.6, "bonusattackdamage",
-						METHOD_CC,			0, CC_KNOCKUP, 1, 1, 1, 1, 1,
-					3, 	METHOD_BURST|AD, 	1, 60, 95, 130, 165, 200, 1, "bonusattackdamage",
-						METHOD_DPS, 		1, 1, 20, 31.66, 43.33, 55, 66.66, 0.33, "bonusattackdamage", "FlatPhysicalDamageMod",
-						METHOD_SUSTAIN, 	1, 20, 25, 30, 35, 40, 0.75, "bonusattackdamage",
-					2, 	METHOD_AOE_BURST|AP,2, 75, 110, 145, 180, 215, 0.6, "spelldamage", 0.6, "bonusattackdamage",
-						METHOD_CC,			0, CC_SLOW, 0.4, 1.75, 0.4, 2, 0.4, 2.25, 0.4, 2.5, 0.4, 2.75,
-					2, 	METHOD_AOE_BURST|AP,1, 200, 300, 400, 1, "spelldamage",
-						METHOD_DPS,			0, 2, 0.4, 0.5, 0.6, "PercentAttackSpeedMod", 175, 175, 175, "RangeMod", 
 
-		"Ahri",		1, 	METHOD_SUSTAIN, 	2, 0, 2, 1, "level", 0.09, "spelldamage",
-					1,	METHOD_AOE_BURST|AP,1, 80, 130, 180, 230, 280, 0.7, "spelldamage",
-					1,	METHOD_BURST|AP,	1, 64, 104, 144, 184, 224, 0.64, "spelldamage",
-					3,	METHOD_BURST|AP,    1, 60, 90, 120, 150, 180, 0.35, "spelldamage",
-                        METHOD_BURST_AMP,   0, 0.2, 0.2, 0.2, 0.2, 0.2, AMP_MAGIC,
-						METHOD_CC,			0, CC_CHARM, 1, 1.25, 1.5, 1.75, 2,
-					2,	METHOD_BURST|AP,	1, 210, 330, 450, 0.9, "spelldamage",
-						METHOD_MOBILITY,	0, MOBI_DASH, 450, 450, 450,
-
-        "Akali",    1,  METHOD_DPS,         1, 1, 0, 0.06, 0.01/6, "spelldamage", "PercentPhysicalDamageMod",
-                    1,  METHOD_BURST|AP,    1, 80, 125, 170, 215, 260, 0.9, "spelldamage",
-                    3,  METHOD_CC,          0, CC_SLOW, 0.14, 8, 0.18, 8, 0.22, 8, 0.26, 8, 0.3, 8,
-                        METHOD_TANK,        0, 10, 20, 30, 40, 50, "FlatArmorMod",
-                        METHOD_TANK,        0, 10, 20, 30, 40, 50, "FlatSpellBlockMod",
-                    1,  METHOD_AOE_BURST|AD,2, 30, 55, 80, 105, 130, 0.3, "spelldamage", 0.6, "attackdamage",
-                    2,  METHOD_BURST|AP,    1, 100, 175, 250, 0.5, "spelldamage",
-                        METHOD_MOBILITY,    0, MOBI_DASH, 800, 800, 800,
-
-        "Alistar",  1,  METHOD_DOT_BURST|AP,2, 0, 6, 1, "level", 0.1, "spelldamage",
-                    3,  METHOD_BURST|AP,    1, 60, 105, 150, 195, 240, 0.5, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_KNOCKUP, 1, 1, 1, 1, 1,
-                        METHOD_CC,          0, CC_AOE_STUN, 0.5, 0.5, 0.5, 0.5, 0.5,
-                    2,  METHOD_BURST|AP,    1, 55, 110, 165, 220, 275, 0.7, "spelldamage",
-                        METHOD_CC,          0, CC_STUN, 1, 1, 1, 1, 1,
-                    2,  METHOD_SUSTAIN,     1, 30, 45, 60, 75, 90, 0.1, "spelldamage",
-                        METHOD_AOE_SUSTAIN, 1, 30, 45, 60, 75, 90, 0.1, "spelldamage",
-                    2,  METHOD_DPS,         0, 1, 60, 75, 90, "FlatPhysicalDamageMod",
-                        METHOD_TANK,        0, 0.7, 0.7, 0.7, "damagereduction",
-
-        "Amumu",    0,
-                    3,  METHOD_BURST|AP,    1, 80, 130, 180, 230, 280, 0.7, "spelldamage",
-                        METHOD_CC,          0, CC_STUN, 1, 1, 1, 1, 1,
-                        METHOD_MOBILITY,    0, MOBI_DASH, 1100, 1100, 1100, 1100, 1100,
-                    0,
-                    1,  METHOD_AOE_BURST|AP,1, 75, 100, 125, 150, 175, 0.5, "spelldamage",
-                    2,  METHOD_AOE_BURST|AP,1, 150, 250, 350, 0.8, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_STUN, 2, 2, 2,
-
-        "Anivia",   3,  METHOD_TANK,        1, 0, 0, 1, "health", "FlatHPPoolMod",
-                        METHOD_TANK,        0, 5, 1, -40, 5, -25, 8, -10, 12, 5, 15, 20, "FlatArmorMod",
-                        METHOD_TANK,        0, 5, 1, -40, 5, -25, 8, -10, 12, 5, 15, 20, "FlatSpellBlockMod",
-                    3,  METHOD_AOE_BURST|AP,1, 120, 180, 240, 300, 360, 1, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_STUN, 1, 1, 1, 1, 1,
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.2, 3, 0.2, 3, 0.2, 3, 0.2, 3, 0.2, 3,
-                    1,  METHOD_CC,          0, CC_WALL, 5, 5, 5, 5, 5,
-                    1,  METHOD_BURST|AP,    1, 110, 170, 230, 290, 350, 1, "spelldamage",
-                    2,  METHOD_AOE_BURST|AP,1, 80, 120, 160, 0.25, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.2, 1, 0.2, 1, 0.2, 1,
-
-        "Annie",    1,  METHOD_CC,          0, CC_AOE_STUN, 3, 1, 1.25, 6, 1.5, 11, 1.75,
-                    1,  METHOD_BURST|AP,    1, 80, 115, 150, 185, 220, 0.8, "spelldamage",
-                    1,  METHOD_AOE_BURST|AP,1, 70, 115, 160, 205, 250, 0.85, "spelldamage",
-                    3,  METHOD_BURST|AP,    1, 20, 30, 40, 50, 60, 0.2, "spelldamage",
-                        METHOD_TANK,        0, 20, 30, 40, 50, 60, "FlatArmorMod",
-                        METHOD_TANK,        0, 20, 30, 40, 50, 60, "FlatSpellBlockMod",
-                    1,  METHOD_AOE_BURST|AP,1, 210, 335, 460, 1, "spelldamage",
-
-        "Ashe",     1,  METHOD_BURST|AD,    1, 0, 0, 1, "critdamage",
-                    1,  METHOD_CC,          0, CC_SLOW, 0.15, 2, 0.2, 2, 0.25, 2, 0.3, 2, 0.35, 2,
-                    2,  METHOD_AOE_BURST|AD,1, 40, 50, 60, 70, 80, 1, "attackdamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.35, 2, 0.35, 2, 0.35, 2, 0.35, 2, 0.35, 2,
-                    0,
-                    4,  METHOD_BURST|AP,    1, 125, 212.5, 300, 0.5, "spelldamage",
-                        METHOD_AOE_BURST|AP,1, 125, 212.5, 300, 0.5, "spelldamage",
-                        METHOD_CC,          0, CC_STUN, 3.5, 3.5, 3.5,
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.5, 3, 0.5, 3, 0.5, 3,
-
-        "Blitzcrank",1,  METHOD_TANK,        1, 0, 0, 0.5, "mana", "FlatHPPoolMod",
-                    3,  METHOD_BURST|AP,    1, 80, 135, 190, 245, 300, 1, "spelldamage",
-                        METHOD_CC,          0, CC_STUN, 1, 1, 1, 1, 1,
-                        METHOD_CC,          0, CC_PULL, 925, 925, 925, 925, 925,
-                    2,  METHOD_DPS,         0, 1, 0.3, 0.38, 0.46, 0.54, 0.62, "PercentAttackSpeedMod",
-                        METHOD_MOBILITY,    0, MOBI_MSP, 0.16, 0.2, 0.24, 0.28, 0.32,
-                    2,  METHOD_BURST|AD,    1, 0, 0, 0, 0, 0, 1, "attackdamage",
-                        METHOD_CC,          0, CC_KNOCKUP, 1, 1, 1, 1, 1,
-                    2,  METHOD_AOE_BURST|AP,1, 250, 375, 500, 1, "spelldamage",
-                        METHOD_CC,          0, CC_SILENCE, 0.5, 0.5, 0.5,
-
-        "Brand",    0,
-                    2,  METHOD_BURST|AP,    1, 80, 120, 160, 200, 240, 0.65, "spelldamage",
-                        METHOD_CC,          0, CC_STUN, 2, 2, 2, 2, 2,
-                    1,  METHOD_AOE_BURST|AP,1, 93.75, 150, 206.25, 262.50, 318.75, 0.75, "spelldamage",
-                    1,  METHOD_AOE_BURST|AP,1, 70, 105, 140, 175, 210, 0.55, "spelldamage",
-                    1,  METHOD_AOE_BURST|AP,1, 450, 750, 1050, 1.5, "spelldamage",
-
-        "Braum",    2,  METHOD_CC,          0, CC_AOE_STUN, 3, 1, 1.25, 7, 1.5, 13, 1.75,
-                        METHOD_AOE_BURST|AP,1, 0, 32, 8, "level",
-                    2,  METHOD_BURST|AP,    1, 60, 105, 150, 195, 240, 0.025, "health",
-                        METHOD_CC,          0, CC_SLOW, 0.7, 2, 0.7, 2, 0.7, 2, 0.7, 2, 0.7, 2,
-                    2,  METHOD_TANK,        1, 15, 17.5, 20, 22.5, 25, 0.1, 0.115, 0.13, 0.145, 0.16, "bonusarmor", "FlatArmorMod",
-                        METHOD_TANK,        1, 15, 17.5, 20, 22.5, 25, 0.1, 0.115, 0.13, 0.145, 0.16, "bonusspellblock", "FlatSpellBlockMod",
-                    1,  METHOD_TANK,        0, 0.3, 0.325, 0.35, 0.375, 0.4, "damagereduction",
-                    3,  METHOD_AOE_BURST|AP,1, 150, 250, 350, 0.6, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.4, 4, 0.5, 4, 0.6, 4,
-                        METHOD_CC,          0, CC_AOE_KNOCKUP, 1, 1.25, 1.5,
-
-        "Caitlyn",  1,  METHOD_BURST|AD,    1, 0, 0, 0.5, "attackdamage",
-                    1,  METHOD_AOE_BURST|AD,1, 20, 60, 100, 140, 180, 1.3, "attackdamage",
-                    2,  METHOD_CC,          0, CC_ROOT, 1.5, 1.5, 1.5, 1.5, 1.5,
-                        METHOD_DOT_BURST|AP,1, 80, 130, 180, 230, 280, 0.6, "spelldamage",
-                    3,  METHOD_BURST|AP,    1, 80, 130, 180, 230, 280, 0.8, "spelldamage",
-                        METHOD_CC,          0, CC_SLOW, 0.5, 1, 0.5, 1.25, 0.5, 1.5, 0.5, 1.75, 0.5, 2,
-                        METHOD_MOBILITY,    0, MOBI_DASH, 400, 400, 400, 400, 400,
-                    1,  METHOD_BURST|AD,    1, 250, 475, 700, 2, "attackdamage",
-
-        "Chogath",  1,  METHOD_SUSTAIN,     1, 0, 17, 3, "level",
-                    2,  METHOD_AOE_BURST|AP,1, 80, 135, 190, 245, 305, 1, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.6, 1.5, 0.6, 1.5, 0.6, 1.5, 0.6, 1.5, 0.6, 1.5,
-                    2,  METHOD_AOE_BURST|AP,1, 75, 125, 175, 225, 275, 0.7, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SILENCE, 1.5, 1.75, 2, 2.25, 2.5,
-                    1,  METHOD_DPS,         1, 1, 20,35, 50, 65, 80, 0.3, "spelldamage", "FlatPhysicalDamageMod",
-                    3,  METHOD_BURST|TR,    1, 300, 475, 650, 0.7, "spelldamage",
-                        METHOD_DPS,         0, 1, 23, 37, 50, "RangeMod",
-                        METHOD_TANK,        0, 540, 720, 900, "FlatHPPoolMod",
-
-        "Corki",    1,  METHOD_DPS,         1, 1, 0, 0, 0.1, "attackdamage", "FlatPhysicalDamageMod",
-                    1,  METHOD_AOE_BURST|AP,2, 80, 130, 180, 230, 280, 0.5, "attackdamage", 0.5, "spelldamage",
-                    2,  METHOD_AOE_BURST|AP,1, 150, 225, 300, 375, 450, 1, "spelldamage",
-                        METHOD_MOBILITY,    0, MOBI_DASH, 800, 800, 800, 800, 800,
-                    1,  METHOD_AOE_BURST|AD,1, 80, 128, 176, 224, 272, 1.6, "attackdamage",
-                    1,  METHOD_AOE_BURST|AP,2, 150, 270, 390, 0.45, "spelldamage", 0.3, 0.45, 0.6, "attackdamage",
-
-        "Darius",   1,  METHOD_DOT_BURST|AD,1, 9, 1, 60, 3, 75, 5, 90, 7, 105, 9, 120, 11, 135, 13, 150, 15, 165, 17, 180, 1.5, "attackdamage",
-                    1,  METHOD_AOE_BURST|AD,1, 105,157.5, 210, 262.5, 315, 1.05, "attackdamage",
-                    2,  METHOD_BURST|AD,    1, 0, 0, 0, 0, 0, 0.2, 0.4, 0.6, 0.8, 1, "attackdamage",
-                        METHOD_CC,          0, CC_SLOW, 0.2, 2, 0.25, 2, 0.3, 2, 0.35, 2, 0.4, 2,
-                    1,  METHOD_CC,          0, CC_AOE_PULL, 540, 540, 540, 540, 540,
-                    1,  METHOD_BURST|TR,    1, 320, 500, 680, 1.5, "attackdamage",
-
-        "Diana",    2,  METHOD_DPS,         0, 1, 0, 0.2, "PercentAttackSpeedMod",
-                        METHOD_AOE_BURST|AP,1, 18, 1, 20, 2, 25, 3, 30, 4, 35, 5, 40, 6, 50, 7, 60, 8, 70, 9, 80, 10, 90, 11, 105, 12, 120, 13, 135, 14, 155, 15, 175, 16, 200, 17, 225, 18, 250, 0.8, "spelldamage",
-                    1,  METHOD_AOE_BURST|AP,1, 60, 95, 130, 165, 200, 0.7, "spelldamage",
-                    2,  METHOD_BURST|AP,    1, 66, 102, 138, 174, 210, 0.6, "spelldamage",
-                        METHOD_TANK,        1, 80, 110, 140, 170, 200, 0.6, "spelldamage", "FlatHPPoolMod",
-                    2,  METHOD_CC,          0, CC_AOE_PULL, 350, 350, 350, 350, 350,
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.35, 2, 0.4, 2, 0.45, 2, 0.5, 2, 0.55, 2,
-                    2,  METHOD_BURST|AP,    1, 100, 160, 220, 0.6, "spelldamage",
-                        METHOD_MOBILITY,    0, MOBI_BLINK, 825, 825, 825,
-
-        "DrMundo",  1,  METHOD_SUSTAIN,     0, 0, 0,
-                    2,  METHOD_BURST|AP,    0, 80, 130, 180, 230, 280,
-                        METHOD_SUSTAIN,     0, 0, 0, 0, 0, 0,
-                    2,  METHOD_DPS,         1, 1, 35, 50, 65, 80, 95, 0.2, "spelldamage", "magic_aoe_dps",
-                        METHOD_TANK,        0, 0.1, 0.15, 0.2, 0.25, 0.3, "CCRed",
-                    1,  METHOD_DPS,         1, 1, 40, 55, 70, 85, 100, 0.4, 0.55, 0.7, 0.85, 1, "perpercenthpmissing", "FlatPhysicalDamageMod",
-                    2,  METHOD_SUSTAIN,     1, 0, 0, 0, 0.4, 0.5, 0.6, "health",
-                        METHOD_MOBILITY,    0, MOBI_MSP, 0.15, 0.25, 0.35,
-
-        "Draven",   0,
-                    1,  METHOD_BURST|AD,    1, 0, 0, 0, 0, 0, 0.45, 0.55, 0.65, 0.75, 0.85, "attackdamage",
-                    2,  METHOD_MOBILITY,    0, MOBI_MSP, 0.4, 0.45, 0.5, 0.55, 0.6,
-                        METHOD_DPS,         0, 1, 0.2, 0.25, 0.3, 0.35, 0.4, "PercentAttackSpeedMod",
-                    3,  METHOD_AOE_BURST|AD,1, 70, 105, 140, 175, 210, 0.5, "bonusattackdamage",
-                        METHOD_CC,          0, CC_AOE_DISPLACE, 0, 0, 0, 0, 0,
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.2, 2, 0.25, 2, 0.3, 2, 0.35, 2, 0.4, 2,
-                    1,  METHOD_AOE_BURST|AD,1, 350, 550, 750, 2.2, "attackdamage",
-
-        "Evelynn",  0,
-                    1,  METHOD_AOE_BURST|AP,2, 30, 45, 60, 75, 90, 0.35, 0.4, 0.45, 0.5, 0.55, "spelldamage", 0.5, 0.55, 0.6, 0.65, 0.7, "attackdamage",
-                    1,  METHOD_MOBILITY,    0, MOBI_MSP, 0.3, 0.4, 0.5, 0.6, 0.7,
-                    2,  METHOD_BURST|AD,    2, 70, 110, 150, 190, 230, 1, "spelldamage", 1, "attackdamage",
-                        METHOD_DPS,         0, 1, 0.6, 0.75, 0.9, 1.05, 1.2, "PercentAttackSpeedMod",
-                    2,  METHOD_CC,          0, CC_AOE_SLOW, 0.3, 2, 0.5, 2, 0.7, 2,
-                        METHOD_TANK,        0, 750, 1125, 1500, "FlatHPPoolMod",
-
-        "Ezreal",   1,  METHOD_DPS,         0, 1, 0, 0.5, "PercentAttackSpeedMod",
-                    1,  METHOD_BURST|AD,    2, 35, 55, 75, 95, 115, 1.1, "attackdamage", 0.4, "spelldamage",
-                    1,  METHOD_AOE_BURST|AP,1, 70, 115, 160, 205, 250, 0.8, "spelldamage",
-                    2,  METHOD_BURST|AP,    1, 75, 125, 175, 225, 275, 0.75, "spelldamage",
-                        METHOD_MOBILITY,    0, MOBI_BLINK, 475, 475, 475, 475, 475,
-                    1,  METHOD_AOE_BURST|AP,2, 350, 500, 650, 1, "attackdamage", 0.9, "spelldamage",
-
-        "FiddleSticks",0,
-                    1,  METHOD_CC,          0, CC_KNOCKUP, 1.25, 1.5, 1.75, 2, 2.25,
-                    2,  METHOD_DOT_BURST|AP,1, 300, 450, 600, 750, 900, 2.25, "spelldamage",
-                        METHOD_SUSTAIN,     0, 0, 0, 0, 0, 0,
-                    2,  METHOD_AOE_BURST|AP,1, 195, 255, 315, 375, 435, 1.35, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SILENCE, 1.25, 1.25, 1.25, 1.25, 1.25,
-                    2,  METHOD_AOE_BURST|AP,1, 625, 1125, 1625, 2.25, "spelldamage",
-                        METHOD_MOBILITY,    0, MOBI_BLINK, 800, 800, 800,
-
-        "Fiora",    1,  METHOD_SUSTAIN,     1, 0, 28, 4, "level",
-                    2,  METHOD_BURST|AD,    1, 80, 130, 180, 230, 280, 1.2, "bonusattackdamage",
-                        METHOD_MOBILITY,    0, MOBI_DASH, 600, 600, 600, 600, 600,
-                    2,  METHOD_DPS,         0, 1, 15, 20, 25, 30, 35, "FlatPhysicalDamageMod",
-                        METHOD_BURST|AP,    1, 60, 110, 160, 210, 260, 1, "spelldamage",
-                    2,  METHOD_DPS,         0, 1, 0.6, 0.75, 0.9, 1.05, 1.2, "PercentAttackSpeedMod",
-                        METHOD_MOBILITY,    0, MOBI_MSP, 0.21, 0.27, 0.33, 0.39, 0.45,
-                    1,  METHOD_AOE_BURST|AD,1, 325, 663, 1001, 2.34, "attackdamage",
-
-        "Fizz",     0,
-                    1,  METHOD_BURST|AP,    1, 10, 40, 70, 100, 130, 0.6, "spelldamage",
-                    1,  METHOD_BURST|AP,    2, 40, 55, 70, 85, 100, 0.55, "spelldamage", 0.04, 0.05, 0.06, 0.07, 0.08, "enemymissinghealth",
-                    2,  METHOD_AOE_BURST|AP,1, 70, 120, 170, 220, 270, 0.75, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.4, 2, 0.45, 2, 0.5, 2, 0.55, 2, 0.6, 2,
-                    4,  METHOD_AOE_BURST|AP,1, 200, 325, 450, 1, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.5, 1.5, 0.6, 1.5, 0.7, 1.5,
-                        METHOD_CC,          0, CC_KNOCKUP, 1, 1, 1,
-                        METHOD_CC,          0, CC_AOE_DISPLACE, 1, 1, 1,
-
-        "Galio",    0,
-                    2,  METHOD_AOE_BURST|AP,1, 80, 135, 190, 245, 300, 0.6, "spelldamage",
-                        METHOD_CC,          0, CC_SLOW, 0.24, 2.5, 0.28, 2.5, 0.32, 2.5, 0.36, 2.5, 0.4, 2.5,
-                    3,  METHOD_TANK,        0, 30, 45, 60, 75, 90, "FlatArmorMod",
-                        METHOD_TANK,        0, 30, 45, 60, 75, 90, "FlatSpellBlockMod",
-                        METHOD_SUSTAIN,     0, 0, 0, 0, 0, 0,
-                    2,  METHOD_AOE_BURST|AP,1, 60, 105, 150, 195, 240, 0.5, "spelldamage",
-                        METHOD_MOBILITY,    0, MOBI_MSP, 0.2, 0.28, 0.36, 0.44, 0.52,
-                    2,  METHOD_TANK,        0, 0.5, 0.5, 0.5, "damagereduction",
-                        METHOD_AOE_BURST|AP,1, 308, 462, 616, 0.84, "spelldamage",
-
-        "Gangplank",2,  METHOD_DOT_BURST|AP,1, 0, 9, 3, "level",
-                        METHOD_CC,          0, CC_SLOW, 0, 0.07, 3,
-                    1,  METHOD_BURST|AD,    1, 20, 45, 70, 95, 120, 1, "attackdamage",
-                    1,  METHOD_SUSTAIN,     0, 0, 0, 0, 0, 0,
-                    2,  METHOD_DPS,         0, 1, 12, 19, 26, 33, 40, "FlatPhysicalDamageMod",
-                        METHOD_MOBILITY,    0, MOBI_MSP, 0.08, 0.11, 0.14, 0.17, 0.2,
-                    2,  METHOD_AOE_BURST|AP,1, 525, 840, 1155, 1.4, "spelldamage",
-                        METHOD_CC,          0, CC_SLOW, 0.25, 7, 0.25, 7, 0.25, 7,
-
-        "Garen",    1,  METHOD_SUSTAIN,     0, 0, 0,
-                    3,  METHOD_BURST|AD,    1, 30, 55, 80, 105, 130, 1.4, "attackdamage",
-                        METHOD_MOBILITY,    0, MOBI_MSP, 0.35, 0.35, 0.35, 0.35, 0.35,
-                        METHOD_CC,          0, CC_SILENCE, 1.5, 1.75, 2, 2.25, 2.5,
-                    2,  METHOD_TANK,        0, 0.3, 0.3, 0.3, 0.3, 0.3, "damagereduction",
-                        METHOD_TANK,        0, 0.3, 0.3, 0.3, 0.3, 0.3, "CCRed",
-                    1,  METHOD_AOE_BURST|AD,1, 60, 135, 210, 285, 360, 2.1, 2.4, 2.7, 3, 3.3, "attackdamage",
-                    1,  METHOD_BURST|AP,    1, 175, 350, 525, 0.2857, 0.3333, 0.40, "enemymissinghealth",
-
-        "Gragas",   0,
-                    2,  METHOD_AOE_BURST|AP,1, 120, 180, 240, 300, 360, 0.9, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.45, 2, 0.525, 2, 0.6, 2, 0.675, 2, 0.75, 2,
-                    1,  METHOD_BURST|AP,    1, 20, 50, 80, 110, 140, 0.3, "spelldamage",
-                    3,  METHOD_AOE_BURST|AP,1, 80, 130, 180, 230, 280, 0.6, "spelldamage",
-                        METHOD_MOBILITY,    0, MOBI_DASH, 600, 600, 600, 600, 600,
-                        METHOD_CC,          0, CC_AOE_STUN, 1, 1, 1, 1, 1,
-                    2,  METHOD_AOE_BURST|AP,1, 200, 300, 400, 0.7, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_DISPLACE, 600, 600, 600,
-
-        "Graves",   2,  METHOD_TANK,        0, 3, 1, 10, 7, 20, 13, 30, "FlatArmorMod",
-                        METHOD_TANK,        0, 3, 1, 10, 7, 20, 13, 30, "FlatSpellBlockMod",
-                    1,  METHOD_AOE_BURST|AD,1, 60, 95, 130, 165, 200, 0.8, "attackdamage",
-                    2,  METHOD_AOE_BURST|AP,1, 60, 110, 160, 210, 260, 0.6, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.15, 4, 0.2, 4, 0.25, 4, 0.3, 4, 0.35, 4,
-                    2,  METHOD_DPS,         0, 1, 0.3, 0.4, 0.5, 0.6, 0.7, "PercentAttackSpeedMod",
-                        METHOD_MOBILITY,    0, MOBI_DASH, 425, 425, 425, 425, 425,
-                    1,  METHOD_AOE_BURST|AD,1, 200, 320, 440, 1.2, "attackdamage",
-
-        "Hecarim",  1,  METHOD_DPS,         1, 1, 7, 1, 0.15, 3, 0.175, 6, 0.2, 9, 0.225, 12, 0.25, 15, 0.275, 18, 0.3, SPECIAL_USE_BASE_AS_SCALING, "movementspeed", "FlatPhysicalDamageMod",
-                    1,  METHOD_AOE_BURST|AD,1, 60, 95, 130, 165, 200, 0.6, "bonusattackdamage",
-                    1,  METHOD_AOE_BURST|AP,1, 80, 120, 160, 200, 240, 0.8, "spelldamage",
-                    3,  METHOD_DPS,         0, 1, 150, 150, 150, 150, 150, "RangeMod",
-                        METHOD_MOBILITY,    0, MOBI_MSP, 0.75, 0.75, 0.75, 0.75, 0.75,
-                        METHOD_BURST|AD,    1, 80, 150, 220, 290, 360, 1, "bonusattackdamage",
-                    3,  METHOD_CC,          0, CC_AOE_FEAR, 1, 1, 1,
-                        METHOD_MOBILITY,    0, MOBI_DASH, 1000, 1000, 1000,
-                        METHOD_AOE_BURST|AP,1, 150, 250, 350, 1, "spelldamage",
-
-        "Irelia",   1,  METHOD_TANK,        0, 0, 0.4, "CCRed",
-                    2,  METHOD_BURST|AP,    1, 20, 50, 80, 110, 140, 1, "attackdamage",
-                        METHOD_MOBILITY,    0, MOBI_DASH, 650, 650, 650, 650, 650,
-                    1,  METHOD_DPS,         0, 1, 15, 30, 45, 60, 75, "FlatAaTrueDamageMod",
-                    2,  METHOD_BURST|AP,    1, 80, 130, 180, 230, 280, 0.5, "spelldamage",
-                        METHOD_CC,          0, CC_STUN, 1, 1.25, 1.5, 1.75, 2,
-                    1,  METHOD_AOE_BURST|AD,2, 320, 480, 640, 2, "spelldamage", 2.4, "attackdamage",
-
-        "Janna",    1,  METHOD_MOBILITY,    0, MOBI_MSP, 0, 0.05,
-                    2,  METHOD_AOE_BURST|AP,1, 105, 145, 185, 225, 265, 0.65, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_KNOCKUP, 1.25, 1.25, 1.25, 1.25, 1.25,
-                    3,  METHOD_MOBILITY,    1, MOBI_MSP, 0.04, 0.06, 0.08, 0.1, 0.12, 0.02, "spelldamage",
-                        METHOD_CC,          1, CC_SLOW, 0.24, 3, 0.28, 3, 0.32, 3, 0.36, 3, 0.4, 3, 0.06, "spelldamage",
-                        METHOD_BURST|AP,    1, 60, 115, 170, 225, 280, 0.5, "spelldamage",
-                    2,  METHOD_TANK,        1, 80, 120, 160, 200, 240, 0.7, "spelldamage", "FlatHPPoolMod",
-                        METHOD_DPS,         1, 1, 14, 23, 32, 41, 50, 0.1, "spelldamage", "FlatPhysicalDamageMod",
-                    2,  METHOD_CC,          0, CC_AOE_DISPLACE, 875, 875, 875,
-                        METHOD_SUSTAIN,     0, 0, 0, 0,
-
-        "JarvanIV", 1,  METHOD_BURST|AD,    0, 0, 0,
-                    3,  METHOD_AOE_BURST|AD,1, 70, 115, 160, 205, 250, 1.2, "bonusattackdamage",
-                        METHOD_CC,          0, CC_AOE_KNOCKUP, 0.75, 0.75, 0.75, 0.75, 0.75,
-                        METHOD_MOBILITY,    0, MOBI_DASH, 770, 770, 770, 770, 770,
-                    2,  METHOD_TANK,        0, 150, 240, 330, 420, 510, "FlatHPPoolMod",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.15, 2, 0.2, 2, 0.25, 2, 0.3, 2, 0.35, 2,
-                    3,  METHOD_TANK,        0, 10, 13, 16, 19, 22, "FlatArmorMod",
-                        METHOD_DPS,         0, 1, 0.1, 0.13, 0.16, 0.19, 0.22, "PercentAttackSpeedMod",
-                        METHOD_AOE_BURST|AP,1, 60, 105, 150, 195, 240, 0.8, "spelldamage",
-                    2,  METHOD_BURST|AD,    1, 200, 325, 450, 1.5, "bonusattackdamage",
-                        METHOD_CC,          0, CC_WALL, 325, 325, 325,
-
-        "Jax",      1,  METHOD_DPS,         0, 1, 6, 1, 0.24, 4, 0.36, 7, 0.48, 10, 0.6, 13, 0.72, 16, 0.84, "PercentAttackSpeedMod",
-                    2,  METHOD_BURST|AD,    2, 70, 110, 150, 190, 230, 0.6, "spelldamage", 1, "attackdamage",
-                        METHOD_MOBILITY,    0, MOBI_DASH, 700, 700, 700, 700, 700,
-                    1,  METHOD_BURST|AP,    1, 40, 75, 110, 145, 180, 0.6, "spelldamage",
-                    2,  METHOD_CC,          0, CC_AOE_STUN, 1, 1, 1, 1, 1,
-                        METHOD_AOE_BURST|AD,1, 100, 150, 200, 250, 300, 1, "attackdamage",
-                    3,  METHOD_TANK,        1, 20, 35, 50, 0.5, "bonusattackdamage", "FlatArmorMod",
-                        METHOD_TANK,        1, 20, 35, 50, 0.2, "spelldamage", "FlatSpellBlockMod",
-                        METHOD_DPS,         1, 1, 33.33, 53.33, 73.33, 0.2333, "spelldamage", "FlatAaMagicDamageMod",
-
-        "Jinx",     1,  METHOD_MOBILITY,    0, MOBI_MSP, 0, 1.75,
-                    1,  METHOD_DPS,         0, 1, 0.3, 0.55, 0.8, 1.05, 1.3, "PercentAttackSpeedMod",
-                    2,  METHOD_BURST|AD,    1, 10, 60, 110, 160, 210, 1.4, "attackdamage",
-                        METHOD_CC,          0, CC_SLOW, 0.3, 2, 0.4, 2, 0.5, 2, 0.6, 2, 0.7, 2,
-                    2,  METHOD_AOE_BURST|AP,1, 80, 135, 190, 245, 300, 1, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_ROOT, 1.5, 1.5, 1.5, 1.5, 1.5,
-                    1,  METHOD_AOE_BURST|AD,2, 250, 350, 450, 1, "attackdamage", 0.25, 0.3, 0.35, "enemymissinghealth",
-
-        "Karthus",  0,
-                    1,  METHOD_DPS,         1, 1, 40, 60, 80, 100, 120, 0.3, "spelldamage", "magic_aoe_dps",
-                    1,  METHOD_CC,          0, CC_AOE_SLOW, 0.4, 5, 0.5, 5, 0.6, 5, 0.7, 5, 0.8, 5,
-                    1,  METHOD_DPS,         1, 1, 30, 50, 70, 90, 110, 0.2, "spelldamage", "magic_aoe_dps",
-                    1,  METHOD_AOE_BURST|AP,1, 250, 400, 550, 0.6, "spelldamage",
-
-        "Kassadin", 1,  METHOD_TANK,        0, 0, 0.15, "magicaldamagereduction",
-                    2,  METHOD_TANK,        1, 40, 70, 100, 130, 160, 0.3, "spelldamage", "FlatMagicHp",
-                        METHOD_BURST|AP,    1, 80, 105, 130, 155, 180, 0.7, "spelldamage",
-                    2,  METHOD_DPS,         1, 1, 20, 20, 20, 20, 20, 0.1, "spelldamage", "FlatAaMagicDamageMod",
-                        METHOD_BURST|AP,    1, 40, 65, 90, 115, 140, 0.6, "spelldamage",
-                    2,  METHOD_AOE_BURST|AP,1, 80, 105, 130, 155, 180, 0.7, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.5, 1, 0.6, 1, 0.7, 1, 0.8, 1, 0.9, 1,
-                    2,  METHOD_AOE_BURST|AP,1, 240, 300, 360, 0.06, "mana",
-                        METHOD_MOBILITY,    0, MOBI_BLINK, 700, 700, 700,
-
-        "Katarina", 0,
-                    1,  METHOD_AOE_BURST|AP,1, 75, 115, 155, 195, 235, 0.6, "spelldamage",
-                    2,  METHOD_AOE_BURST|AP,2, 40, 75, 110, 145, 180, 0.25, "spelldamage", 0.6, "bonusattackdamage",
-                        METHOD_MOBILITY,    0, MOBI_MSP, 0.15, 0.2, 0.25, 0.3, 0.35,
-                    2,  METHOD_BURST|AP,    1, 60, 85, 110, 135, 160, 0.4, "spelldamage",
-                        METHOD_MOBILITY,    0, MOBI_BLINK, 700, 700, 700, 700, 700,
-                    1,  METHOD_AOE_BURST|AP,2, 350, 550, 750, 2.5, "spelldamage", 3.75, "bonusattackdamage",
-
-        "Kayle",    0,
-                    2,  METHOD_BURST|AP,    2, 60, 110, 160, 210, 260, 0.6, "spelldamage", 1, "bonusattackdamage",
-                        METHOD_CC,          0, CC_SLOW, 0.35, 3, 0.4, 3, 0.45, 3, 0.5, 3, 0.55, 3,
-                    2,  METHOD_SUSTAIN,     0, 0, 0, 0, 0, 0,
-                        METHOD_MOBILITY,    1, MOBI_MSP, 0.18, 0.21, 0.24, 0.27, 0.3, 0.0007, "spelldamage",
-                    2,  METHOD_DPS,         1, 1, 20, 30, 40, 50, 60, 0.25, "spelldamage", "FlatAaMagicDamageMod",
-                        METHOD_DPS,         0, 1, 400, 400, 400, 400, 400, "RangeMod",
-                    1,  METHOD_TANK,        0, 2, 2.5, 3, "Invulnerability",
-
-        "Kennen",   1,  METHOD_CC,          0, CC_STUN, 0, 1,
-                    1,  METHOD_BURST|AP,    1, 75, 115, 155, 195, 235, 0.75, "spelldamage",
-                    2,  METHOD_DPS,         1, 1, 0, 0, 0, 0, 0, 0.08, 0.1, 0.12, 0.14, 0.16, "attackdamage", "FlatAaMagicDamageMod",
-                        METHOD_AOE_BURST|AP,1, 65, 95, 125, 155, 185, 0.55, "spelldamage",
-                    2,  METHOD_AOE_BURST|AP,1, 85, 125, 165, 205, 245, 0.6, "spelldamage",
-                        METHOD_MOBILITY,    0, MOBI_MSP, 1, 1, 1, 1, 1,
-                    1,  METHOD_AOE_BURST|AP,1, 240, 435, 630, 1.2, "spelldamage",
-
-        "KogMaw",   1,  METHOD_AOE_BURST|TR,0, 0, 100,
-                    2,  METHOD_DPS,         0, 1, 0.1, 0.15, 0.2, 0.25, 0.3, "PercentAttackSpeedMod",
-                        METHOD_BURST|AP,    1, 80, 130, 180, 230, 280, 0.5, "spelldamage",
-                    2,  METHOD_DPS,         0, 1, 130, 150, 170, 190, 210, "RangeMod",
-                        METHOD_DPS,         1, 1, 0.02, 0.03, 0.04, 0.05, 0.06, 0.0001, "spelldamage", "enemymaxhealth",
-                    2,  METHOD_AOE_BURST|AP,1, 60, 110, 160, 210, 260, 0.7, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.2, 4, 0.28, 4, 0.36, 4, 0.44, 4, 0.52, 4,
-                    1,  METHOD_BURST|AP,    2, 160, 240, 320, 0.3, "spelldamage", 0.5, "bonusattackdamage",
-
-        "Leblanc",  0,
-                    1,  METHOD_BURST|AP,    1, 110, 160, 210, 260, 310, 0.8, "spelldamage",
-                    2,  METHOD_AOE_BURST|AP,1, 85, 125, 165, 205, 245, 0.6, "spelldamage",
-                        METHOD_MOBILITY,    0, MOBI_BLINK, 600, 600, 600, 600, 600,
-                    3,  METHOD_BURST|AP,    1, 80, 130, 180, 230, 280, 1, "spelldamage",
-                        METHOD_CC,          0, CC_SLOW, 0.25, 1.5, 0.25, 1.5, 0.25, 1.5, 0.25, 1.5, 0.25, 1.5,
-                        METHOD_CC,          0, CC_ROOT, 1.5, 1.5, 1.5, 1.5, 1.5,
-                    1,  METHOD_BURST|AP,    1, 200, 400, 600, 1.3, "spelldamage",
-
-        "LeeSin",   1,  METHOD_DPS,         0, 1, 0, 0.4, "PercentAttackSpeedMod",
-                    2,  METHOD_BURST|AD,    2, 100, 160, 220, 280, 340, 1.8, "bonusattackdamage", 0.08, "enemymissinghealth",
-                        METHOD_MOBILITY,    0, MOBI_DASH, 1300, 1300, 1300, 1300, 1300,
-                    2,  METHOD_TANK,        1, 40, 80, 120, 160, 200, 0.8, "spelldamage", "FlatHPPoolMod",
-                        METHOD_SUSTAIN,     0, 0, 0, 0, 0, 0,
-                    2,  METHOD_AOE_BURST|AP,1, 60, 95, 130, 165, 200, 1, "bonusattackdamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.2, 4, 0.3, 4, 0.4, 4, 0.5, 4, 0.6, 4,
-                    2,  METHOD_BURST|AD,    1, 200, 400, 600, 2, "bonusattackdamage",
-                        METHOD_CC,          0, CC_DISPLACE, 1200, 1200, 1200,
-
-        "Leona",    1,	METHOD_CO_BURST|AP,	0, 9, 1, 20, 3, 35, 5, 50, 7, 65, 9, 80, 11, 95, 13, 110, 15, 125, 17, 140,
-					2,	METHOD_BURST|AP,	1, 40, 70, 100, 130, 160, 0.3, "spelldamage",
-						METHOD_CC,			0, CC_STUN, 1.25, 1.25, 1.25, 1.25, 1.25,
-					3,	METHOD_AOE_BURST|AP,1, 60, 110, 160, 210, 260, 0.4, "spelldamage",
-						METHOD_TANK,		1, 20, 30, 40, 50, 60, 0.2, "bonusarmor", "FlatArmorMod",
-						METHOD_TANK,		1, 20, 30, 40, 50, 60, 0.2, "bonusspellblock", "FlatSpellBlockMod",
-					1, 	METHOD_AOE_BURST|AP,1, 60, 100, 140, 180, 220, 0.4, "spelldamage",
-					2,	METHOD_AOE_BURST|AP,1, 150, 250, 350, 0.8, "spelldamage",
-						METHOD_CC,			0, CC_AOE_STUN, 1.5, 1.5, 1.5,
-
-        "Lissandra",0,
-                    2,  METHOD_AOE_BURST|AP,1, 75, 110, 145, 180, 215, 0.65, "spelldamage",
-                        METHOD_CC,          0, CC_SLOW, 0.16, 1.5, 0.19, 1.5, 0.22, 1.5, 0.25, 1.5, 0.28, 1.5,
-                    2,  METHOD_AOE_BURST|AP,1, 70, 110, 150, 190, 230, 0.4, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_ROOT, 1.1, 1.2, 1.3, 1.4, 1.5,
-                    2,  METHOD_AOE_BURST|AP,1, 70, 115, 160, 205, 250, 0.6, "spelldamage",
-                        METHOD_MOBILITY,    0, MOBI_BLINK, 1050, 1050, 1050, 1050, 1050,
-                    2,  METHOD_AOE_BURST|AP,1, 150, 250, 350, 0.7, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.3, 3, 0.45, 3, 0.75, 3,
-
-        // we count lucian's passive at 150% because normally he can cast 3 spells thus procing it 3 times
-        "Lucian",   1,  METHOD_BURST|AD,    1, 3, 1, 0.3, 7, 0.4, 13, 0.5, SPECIAL_USE_BASE_AS_SCALING, "attackdamage",
-                    1,  METHOD_AOE_BURST|AD,1, 80, 110, 140, 170, 200, 0.6, 0.75, 0.9, 1.05, 1.2, "bonusattackdamage",
-                    1,  METHOD_AOE_BURST|AP,1, 60, 100, 140, 180, 220, 0.9, "spelldamage",
-                    1,  METHOD_MOBILITY,    0, MOBI_DASH, 425, 425, 425, 425, 425,
-                    1,  METHOD_BURST|AD,    2, 1040, 1500, 1980, 6.5, 7.5, 8.25, "bonusattackdamage", 2.6, 3, 3.3, "spelldamage",
-
-        "Lulu",     1,  METHOD_DPS,         1, 1, 9, 1, 9, 3, 21, 5, 33, 7, 45, 9, 57, 11, 69, 13, 81, 15, 93, 17, 105, 0.15, "spelldamage", "FlatAaMagicDamageMod",
-                    2,  METHOD_AOE_BURST|AP,1, 80, 125, 170, 215, 260, 0.5, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.8, 1, 0.8, 1.25, 0.8, 1.5, 0.8, 1.75, 0.8, 2,
-                    1,  METHOD_MOBILITY,    1, MOBI_MSP, 0.3, 0.3, 0.3, 0.3, 0.3, 0.001, "spelldamage",
-                    2,  METHOD_TANK,        1, 80, 120, 160, 200, 240, 0.6, "spelldamage", "FlatHPPoolMod",
-                        METHOD_BURST|AP,    1, 80, 110, 140, 170, 200, 0.4, "spelldamage",
-                    3,  METHOD_CC,          0, CC_AOE_KNOCKUP, 0.5, 0.5, 0.5,
-                        METHOD_TANK,        1, 300, 450, 600, 0.5, "spelldamage", "FlatHPPoolMod",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.3, 7, 0.45, 7, 0.6, 7,
-
-        "Lux",      1,  METHOD_BURST|AD,    2, 0, 30, 24, "level", 0.6, "spelldamage",
-                    2,  METHOD_BURST|AP,    1, 60, 110, 160, 210, 260, 0.7, "spelldamage",
-                        METHOD_CC,          0, CC_ROOT, 2, 2, 2, 2, 2,
-                    1,  METHOD_TANK,        1, 80, 105, 130, 155, 180, 0.35, "spelldamage", "FlatHPPoolMod",
-                    2,  METHOD_AOE_BURST|AP,1, 60, 105, 150, 195, 240, 0.6, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.2, 5, 0.24, 5, 0.28, 5, 0.32, 5, 0.36, 5,
-                    1,  METHOD_AOE_BURST|AP,1, 300, 400, 500, 0.75, "spelldamage",
-
-        "Malphite", 1,  METHOD_TANK,        1, 0, 0, 0.1, "health", "FlatHPPoolMod",
-                    2,  METHOD_BURST|AP,    1, 70, 120, 170, 220, 270, 0.6, "spelldamage",
-                        METHOD_CC,          0, CC_SLOW, 0.14, 4, 0.17, 4, 0.2, 4, 0.23, 4, 0.26, 4,
-                    2,  METHOD_DPS,         1, 1, 0, 0, 0, 0, 0, 0.2, 0.25, 0.3, 0.35, 0.4, "attackdamage", "FlatPhysicalDamageMod",
-                        METHOD_TANK,        1, 0, 0, 0, 0, 0, 0.2, 0.25, 0.3, 0.35, 0.4, "bonusarmor", "FlatArmorMod",
-                    1,  METHOD_AOE_BURST|AP,2, 60, 100, 140, 180, 220, 0.3, "bonusarmor", 0.2, "spelldamage",
-                    2,  METHOD_AOE_BURST|AP,1, 200, 300, 400, 1, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_KNOCKUP, 1.5, 1.5, 1.5,
-
-        "Maokai",   1,  METHOD_SUSTAIN,     0, 0, 0,
-                    3,  METHOD_AOE_BURST|AP,1, 70, 115, 160, 205, 250, 0.4, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.2, 1.5, 0.27, 1.5, 0.34, 1.5, 0.41, 1.5, 0.48, 1.5,
-                        METHOD_CC,          0, CC_AOE_DISPLACE, 1, 1, 1, 1, 1,
-                    1,  METHOD_CC,          0, CC_ROOT, 1, 1.25, 1.5, 1.75, 2,
-                    2,  METHOD_AOE_BURST|AP,1, 120, 180, 240, 300, 360, 1, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.5, 1, 0.5, 1, 0.5, 1, 0.5, 1, 0.5, 1,
-                    2,  METHOD_AOE_BURST|AP,1, 200, 300, 400, 0.5, "spelldamage",
-                        METHOD_TANK,        0, 0.2, 0.2, 0.2, "damagereduction",
-
-        "MasterYi", 1,  METHOD_DPS,         1, 1, 0, 0, 0.125, "attackdamage", "FlatPhysicalDamageMod",
-                    1,  METHOD_AOE_BURST|AD,1, 25, 60, 95, 130, 165, 1, "attackdamage",
-                    2,  METHOD_SUSTAIN,     0, 0, 0, 0, 0, 0,
-                        METHOD_TANK,        0, 0.5, 0.55, 0.6, 0.65, 0.7, "damagereduction",
-                    1,  METHOD_DPS,         1, 1, 10, 15, 20, 25, 30, 0.1, 0.125, 0.15, 0.175, 0.2, "attackdamage", "FlatAaTrueDamageMod",
-                    2,  METHOD_MOBILITY,    0, MOBI_MSP, 0.25, 0.35, 0.45,
-                        METHOD_DPS,         0, 1, 0.3, 0.55, 0.8, "PercentAttackSpeedMod",
-
-        "MissFortune",1,  METHOD_MOBILITY,  0, MOBI_FLAT_MS, 0, 70,
-                    1,  METHOD_BURST|AD,    2, 20, 35, 50, 65, 80, 0.85, "attackdamage", 0.35, "spelldamage",
-                    2,  METHOD_DPS,         1, 1, 0, 0, 0, 0, 0, 0.6, "attackdamage", "FlatPhysicalDamageMod",
-                        METHOD_DPS,         0, 1, 0.2, 0.3, 0.4, 0.5, 0.6, "PercentAttackSpeedMod",
-                    2,  METHOD_AOE_BURST|AP,1, 90, 145, 200, 255, 310, 0.8, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.25, 3, 0.35, 3, 0.45, 3, 0.55, 3, 0.65, 3,
-                    1,  METHOD_AOE_BURST|AD,1, 400, 600, 1000, 1.6, "spelldamage",
-
-        "Morgana",  0,
-                    2,  METHOD_BURST|AP,    1, 80, 135, 190, 245, 300, 0.9, "spelldamage",
-                        METHOD_CC,          0, CC_ROOT, 2, 2.25, 2.5, 2.75, 3,
-                    1,  METHOD_DOT_BURST|AP,1, 180, 285, 390, 495, 600, 1.65, "spelldamage",
-                    1,  METHOD_TANK,        1, 70, 140, 210, 280, 350, 0.7, "spelldamage", "FlatMagicHp",
-                    2,  METHOD_AOE_BURST|AP,1, 300, 450, 600, 1.4, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.2, 3, 0.2, 3, 0.2, 3,
-
-        "Nami",     1,  METHOD_MOBILITY,    1, MOBI_FLAT_MS, 0, 40, 0.1, "spelldamage",
-                    2,  METHOD_AOE_BURST|AP,1, 75, 130, 185, 240, 295, 0.5, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_KNOCKUP, 1.5, 1.5, 1.5, 1.5, 1.5,
-                    2,  METHOD_BURST|AP,    1, 70, 110, 150, 190, 230, 0.5, "spelldamage",
-                        METHOD_SUSTAIN,     0, 0, 0, 0, 0, 0,
-                    2,  METHOD_DPS,         1, 1, 25, 40, 55, 70, 85, 0.2, "spelldamage", "FlatAaMagicDamageMod",
-                        METHOD_CC,          1, CC_SLOW, 0.15, 1, 0.2, 1, 0.25, 1, 0.3, 1, 0.35, 1, 0.0005, "spelldamage",
-                    3,  METHOD_AOE_BURST|AP,1, 150, 250, 350, 0.6, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_KNOCKUP, 0.5, 0.5, 0.5,
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.5, 4, 0.6, 4, 0.7, 4,
-
-        "Nasus",    0,
-                    1,  METHOD_BURST|AD,    1, 30, 50, 70, 90, 110, 1, "@stacks",
-                    1,  METHOD_CC,          0, CC_SLOW, 0.47, 5, 0.59, 5, 0.71, 5, 0.83, 5, 0.95, 5,
-                    1,  METHOD_AOE_DOT_BURST|AP,1, 110, 190, 270, 350, 430, 1.2, "spelldamage",
-                    2,  METHOD_TANK,        0, 300, 450, 600, "FlatHPPoolMod",
-                        METHOD_AOE_DOT_BURST|AP,1, 0, 0, 0, 0.45, 0.6, 0.75, "enemymaxhealth",
-
-        "Nautilus", 2,  METHOD_BURST|AD,    1, 0, 2, 6, "level",
-                        METHOD_CC,          0, CC_STUN, 5, 1, 0.5, 6, 0.75, 11, 1, 16, 1.25, 18, 1.5,
-                    3,  METHOD_AOE_BURST|AP,1, 60, 105, 150, 195, 240, 0.75, "spelldamage",
-                        METHOD_CC,          0, CC_DISPLACE, 550, 550, 550, 550, 550,
-                        METHOD_MOBILITY,    0, MOBI_DASH, 1100, 1100, 1100, 1100, 1100,
-                    2,  METHOD_TANK,        1, 100, 150, 200, 250, 300, 0.15, "bonushealth", "FlatHPPoolMod",
-                        METHOD_DOT_BURST|AP,1, 40, 55, 70, 85, 100, 0.4, "spelldamage",
-                    2,  METHOD_AOE_BURST|AP,1, 60, 100, 140, 180, 220, 0.5, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.3, 2, 0.35, 2, 0.4, 2, 0.45, 2, 0.5, 2,
-                    4,  METHOD_CC,          0, CC_AOE_KNOCKUP, 0.5, 0.5, 0.5,
-                        METHOD_CC,          0, CC_STUN, 1, 1.5, 2,
-                        METHOD_AOE_BURST|AP,1, 125, 175, 225, 0.4, "spelldamage",
-                        METHOD_BURST|AP,    1, 75, 150, 225, 0.4, "spelldamage",
-
-        "Nocturne", 1,  METHOD_AOE_BURST|AD,1, 0, 0, 1.2, "attackdamage",
-                    3,  METHOD_AOE_BURST|AD,1, 60, 105, 150, 195, 240, 0.75, "bonusattackdamage",
-                        METHOD_MOBILITY,    0, MOBI_MSP, 0.15, 0.2, 0.25, 0.3, 0.35,
-                        METHOD_DPS,         0, 1, 15, 25, 35, 45, 55, "FlatPhysicalDamageMod",
-                    2,  METHOD_DPS,         0, 1, 0.2, 0.25, 0.3, 0.35, 0.4, "PercentAttackSpeedMod",
-                        METHOD_TANK,        0, 0, 0, 0, 0, 0, "SpellBlock",
-                    2,  METHOD_DOT_BURST|AP,1, 50, 100, 150, 200, 250, 1, "spelldamage",
-                        METHOD_CC,          0, CC_FEAR, 1, 1.25, 1.5, 1.75, 2,
-                    3,  METHOD_MOBILITY,    0, MOBI_DASH, 2000, 2750, 3500,
-                        METHOD_BURST|AD,    1, 150, 250, 350, 1.2, "attackdamage",
-                        METHOD_CC,          0, CC_PARANOIA, 4, 4, 4,
-
-        "Nunu",     0,
-                    1,  METHOD_SUSTAIN,     0, 0, 0, 0, 0, 0,
-                    2,  METHOD_DPS,         0, 1, 0.25, 0.3, 0.35, 0.4, 0.45, "PercentAttackSpeedMod",
-                        METHOD_MOBILITY,    0, MOBI_MSP, 0.8, 0.9, 0.10, 0.11, 0.12,
-                    2,  METHOD_BURST|AD,    1, 85, 130, 175, 225, 275, 1, "spelldamage",
-                        METHOD_CC,          0, CC_SLOW, 0.2, 3, 0.3, 3, 0.4, 3, 0.5, 3, 0.6, 3,
-                    1,  METHOD_AOE_BURST|AD,1, 625, 875, 1125, 2.5, "spelldamage",
-
-        "Olaf",     0,
-                    2,  METHOD_AOE_BURST|AD,1, 70, 115, 160, 205, 250, 1, "bonusattackdamage",
-                        METHOD_CC,          0, CC_SLOW, 0.29, 2, 0.33, 2, 0.37, 2, 0.41, 2, 0.45, 2,
-                    2,  METHOD_DPS,         0, 1, 0.4, 0.5, 0.6, 0.7, 0.8, "PercentAttackSpeedMod",
-                        METHOD_SUSTAIN,     0, 0, 0, 0, 0, 0,
-                    1,  METHOD_BURST|TR,    1, 70, 115, 160, 205, 250, 0.4, "attackdamage",
-                    4,  METHOD_TANK,        0, 10, 20, 30, "FlatArmorMod",
-                        METHOD_TANK,        0, 10, 20, 30, "FlatSpellBlockMod",
-                        METHOD_DPS,         0, 1, 40, 60, 80, "FlatPhysicalDamageMod",
-                        METHOD_TANK,        0, 6, 6, 6, "CcImmune",
-
-        "Orianna",  1,  METHOD_DPS,         1, 1, 6, 1, 10, 4, 18, 7, 26, 10, 34, 13, 42, 16, 50, 0.15, "spelldamage", "FlatAaMagicDamageMod",
-                    1,  METHOD_AOE_BURST|AP,1, 60, 90, 120, 150, 180, 0.5, "spelldamage",
-                    3,  METHOD_AOE_BURST|AP,1, 70, 115, 160, 205, 250, 0.7, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.2, 3, 0.25, 3, 0.3, 3, 0.35, 3, 0.4, 3,
-                        METHOD_MOBILITY,    0, MOBI_MSP, 0.2, 0.25, 0.3, 0.35, 0.4,
-                    4,  METHOD_TANK,        0, 10, 15, 20, 25, 30, "FlatArmorMod",
-                        METHOD_TANK,        0, 10, 15, 20, 25, 30, "FlatSpellBlockMod",
-                        METHOD_TANK,        1,  80, 120, 160, 200, 240, 0.4, "spelldamage", "FlatHPPoolMod",
-                        METHOD_AOE_BURST|AP,1,  60, 90, 120, 150, 180, 0.3, "spelldamage",
-                    2,  METHOD_AOE_BURST|AP,1, 150, 225, 300, 0.7, "spelldamage",
-                        METHOD_CC,          0, CC_DISPLACE, 350, 350, 350,
-
-        "Pantheon", 0,
-                    1,  METHOD_BURST|AD,    1, 65, 105, 145, 185, 225, 1.4, "bonusattackdamage",
-                    2,  METHOD_CC,          0, CC_STUN, 1, 1, 1, 1, 1,
-                        METHOD_BURST|AP,    1, 50, 75, 100, 125, 150, 1, "spelldamage",
-                    1,  METHOD_AOE_DOT_BURST|AD,1, 80, 140, 200, 260, 320, 3.6, "bonusattackdamage",
-                    2,  METHOD_CC,          0, CC_AOE_SLOW, 0.35, 1, 0.35, 1, 0.35, 1,
-                        METHOD_AOE_BURST|AP,1, 400, 700, 1000, 1, "spelldamage",
-
-        "Poppy",    0,
-                    1,  METHOD_BURST|AP,    3, 20, 40, 60, 80, 100, 1, "attackdamage", 0.6, "spelldamage", 0.08, "enemymaxhealth",
-                    3,  METHOD_TANK,        0, 15, 20, 25, 30, 35, "FlatArmorMod",
-                        METHOD_TANK,        0, 15, 20, 25, 30, 35, "FlatSpellBlockMod",
-                        METHOD_MOBILITY,    0, MOBI_MSP, 0.17, 0.19, 0.21, 0.23, 0.25,
-                    1,  METHOD_BURST|AP,    0, 125, 200, 275, 350, 425,
-                    2,  METHOD_TANK,        0, 6, 7, 8, "InvulnerabilityButOne",
-                        METHOD_BURST_AMP,   0, 0.2, 0.3, 0.4, AMP_ALL,
-
-        "Quinn",    1,  METHOD_BURST|AD,    1, 18, 1, 25, 2, 35, 3, 45, 4, 55, 5, 65, 6, 75, 7, 85, 8, 95, 9, 105, 10, 115, 11, 125, 12, 135, 13, 145, 14, 155, 15, 170, 16, 185, 17, 200, 18, 215, 0.5, "bonusattackdamage",
-                    0,
-                    0,
-                    0,
-                    0,
-
-        "Rammus",   1,  METHOD_DPS,         1, 1, 0, 0, 0.25, "armor", "FlatPhysicalDamageMod",
-                    4,  METHOD_MOBILITY,    0, MOBI_MSP, 1.65, 1.65, 1.65, 1.65, 1.65,
-                        METHOD_AOE_BURST|AP,1, 100, 150, 200, 250, 300, 1, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_DISPLACE, 100, 100, 100, 100, 100,
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.2, 3, 0.25, 3, 0.3, 3, 0.35, 3, 0.4, 3,
-                    2,  METHOD_TANK,        0, 40, 60, 80, 100, 120, "FlatArmorMod",
-                        METHOD_TANK,        0, 40, 60, 80, 100, 120, "FlatSpellBlockMod",
-                    1,  METHOD_CC,          0, CC_TAUNT, 1.25, 1.5, 1.75, 2, 2.25,
-                    1,  METHOD_AOE_DOT_BURST|AP,1, 520, 1040, 1560, 2.4, "spelldamage",
-
-        "Riven",    1,  METHOD_DPS,         1, 1, 7,  1, 0.20, 3, 0.25, 6, 0.30, 9, 0.35, 12, 0.40, 15, 0.45, 18, 0.50, SPECIAL_USE_BASE_AS_SCALING, "attackdamage", "FlatPhysicalDamageMod",
-                    3,  METHOD_DOT_BURST|AD,1, 30, 90, 150, 210, 270, 1.2, 1.35, 1.50, 1.65, 1.80, "attackdamage",
-                        METHOD_MOBILITY,    0, MOBI_DASH, 260, 260, 260, 260, 260,
-                        METHOD_CC,          0, CC_AOE_KNOCKUP, 0.5, 0.5, 0.5, 0.5, 0.5,
-                    2,  METHOD_AOE_BURST|AD,1,  50, 80, 110, 140, 170, 1, "bonusattackdamage",
-                        METHOD_CC,          0, CC_AOE_STUN, 0.75, 0.75, 0.75, 0.75, 0.75,
-                    2,  METHOD_TANK,        1, 90, 120, 150, 180, 210, 1, "bonusattackdamage", "FlatHPPoolMod",
-                        METHOD_MOBILITY,    0, MOBI_DASH, 325, 325, 325, 325, 325,
-                    3,  METHOD_DPS,         1, 1, 0, 0, 0, 0.2, "attackdamage", "FlatPhysicalDamageMod",
-                        METHOD_DPS,         0, 1, 75, 75, 75, "RangeMod",
-                        METHOD_AOE_BURST|AD,1, 80, 120, 160, 0.6, "bonusattackdamage",
-
-        "Rumble",   0,
-                    1,  METHOD_AOE_DOT_BURST|AP,1, 112.5, 202.5, 292.5, 382.5, 472.5, 1.5, "spelldamage",
-                    2,  METHOD_TANK,        1, 75, 120, 165, 210, 255, 0.6, "spelldamage", "FlatHPPoolMod",
-                        METHOD_MOBILITY,    0, MOBI_MSP, 0.15, 0.225, 0.3, 0.375, 0.45,
-                    2,  METHOD_BURST|AP,    1, 135, 210, 285, 360, 435, 1.2, "spelldamage",
-                        METHOD_CC,          0, CC_SLOW, 0.45, 3, 0.6, 3, 0.75, 3, 0.9, 3, 1.05, 3,
-                    1,  METHOD_AOE_DOT_BURST|AP,1, 650, 925, 1200, 1.5, "spelldamage",
-
-        "Ryze",     0,
-                    1,  METHOD_AOE_BURST|AP,2, 40, 60, 80, 100, 120, 0.4, "spelldamage", 0.065, "mana",
-                    2,  METHOD_AOE_BURST|AP,0, 60, 95, 130, 165, 200,
-                        METHOD_CC,          0, CC_ROOT, 0.75, 1, 1.25, 1.5, 1.75,
-                    1,  METHOD_AOE_BURST|AP,2, 150, 210, 270, 330, 390, 1.05, "spelldamage", 0.03, "mana",
-                    1,  METHOD_MOBILITY,    0, MOBI_FLAT_MS, 80, 80, 80,
-
-        "Sejuani",  1,  METHOD_TANK,        0, 4, 1, 10, 7, 15, 12, 20, 17, 25, "FlatArmorMod",
-                    3,  METHOD_BURST|AP,    1, 80, 125, 170, 215, 260, 0.4, "spelldamage",
-                        METHOD_CC,          0, CC_KNOCKUP, 0.5, 0.5, 0.5, 0.5, 0.5,
-                        METHOD_MOBILITY,    0, MOBI_DASH, 650, 650, 650, 650, 650,
-                    2,  METHOD_AOE_DOT_BURST|AP,2, 40, 70, 100, 130, 160, 0.04, 0.06, 0.08, 0.1, 0.12, "health", 0.6, "spelldamage",
-                        METHOD_BURST|AP,    1, 0.04, 0.06, 0.08, 0.1, 0.12, "enemymaxhealth", 0.0003, "spelldamage",
-                    2,  METHOD_CC,          0, CC_AOE_SLOW, 0.5, 1.5, 0.55, 1.5, 0.6, 1.5, 0.65, 1.5, 0.7, 1.5,
-                        METHOD_AOE_BURST|AP,1, 60, 110, 160, 210, 260, 0.5, "spelldamage",
-                    2,  METHOD_AOE_BURST|AP,1, 150, 250, 350, 0.8, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_STUN, 1.25, 1.5, 1.75,
-
-        "Shaco",    1,  METHOD_BURST|AD,    1, 0, 0, 0.2, "attackdamage",
-                    2,  METHOD_BURST|AD,    1, 0, 0, 0, 0, 0, 0.4, 0.6, 0.8, 1, 1.2, "attackdamage",
-                        METHOD_MOBILITY,    0, MOBI_BLINK, 400, 400, 400, 400, 400,
-                    2,  METHOD_CC,          0, CC_FEAR, 0.5, 0.75, 1, 1.25, 1.5,
-                        METHOD_DOT_BURST|AP,1, 315, 450, 585, 720, 855, 1.8, "spelldamage",
-                    2,  METHOD_CC,          0, CC_SLOW, 0.1, 2, 0.15, 2, 0.2, 2, 0.25, 2, 0.3, 2,
-                        METHOD_BURST|AP,    2, 50, 90, 130, 170, 210, 1, "spelldamage", 1, "bonusattackdamage",
-                    2,  METHOD_AOE_BURST|AP,1, 300, 450, 600, 1, "spelldamage",
-                        METHOD_DPS,         1, 1, 0, 0, 0, 0.75, 0.75, 0.75, "attackdamage", "FlatPhysicalDamageMod",
-
-        "Shen",     1,  METHOD_BURST|AP,    2, 0, 4, 4, "level", 0.1, "bonushealth",
-                    2,  METHOD_BURST|AP,    1, 60, 100, 140, 180, 220, 0.6, "spelldamage",
-                        METHOD_SUSTAIN,     0, 0,0,0,0,0,
-                    1,  METHOD_TANK,        1, 60, 100, 140, 180, 220, 0.6, "spelldamage", "FlatHPPoolMod",
-                    2,  METHOD_AOE_BURST|AP,1, 50, 85, 120, 155, 190, 0.5, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_TAUNT, 1.5, 1.5, 1.5, 1.5, 1.5,
-                    1,  METHOD_MOBILITY,    0, MOBI_GLOBAL_TELEPORT, 0, 0, 0,
-
-        "Singed",   1,  METHOD_TANK,        1, 0, 0, 0.25, "mana", "FlatHPPoolMod",
-                    1,  METHOD_AOE_DOT_BURST|AP,1, 66, 102, 138, 174, 210, 0.9, "spelldamage",
-                    1,  METHOD_CC,          0, CC_AOE_SLOW, 0.35, 5, 0.45, 5, 0.55, 5, 0.65, 5, 0.75, 5,
-                    2,  METHOD_BURST|AP,    1, 80, 125, 170, 215, 260, 0.75, "spelldamage",
-                        METHOD_CC,          0, CC_DISPLACE, 550, 550, 550, 550, 550,
-                    3,  METHOD_TANK,        0, 35, 50, 80, "FlatArmorMod",
-                        METHOD_TANK,        0, 35, 50, 80, "FlatSpellBlockMod",
-                        METHOD_MOBILITY,    0, MOBI_FLAT_MS, 35, 50, 80,
-
-		"Sivir",	1, 	METHOD_MOBILITY,	0, MOBI_FLAT_MS, 5, 1, 30, 6, 35, 11, 40, 16, 45, 18, 50,
-					1,	METHOD_BURST|AD,	2, 46.25, 83.25, 120.25, 159.1, 194.25, 0.925, "spelldamage", 1.295, 1.48, 1.665, 1.85, 2.035, "attackdamage",
-					0,
-					0,
-					2,	METHOD_MOBILITY,	0, MOBI_MSP, 0.6, 0.6, 0.6,
-						METHOD_DPS,			0, 1, 0.4, 0.6, 0.8, "PercentAttackSpeedMod",
-
-        "Skarner",  2,  METHOD_BURST|AP,    2, 0, 15, 5, "level", 1, "attackdamage",
-                        METHOD_CC,          0, CC_STUN, 3, 1, 0.5, 7, 0.75, 13, 1,
-                    1,  METHOD_AOE_BURST|AP,1, 18, 28, 38, 48, 58, 0.4, "bonusattackdamage",
-                    2,  METHOD_TANK,        1, 80, 135, 190, 245, 300, 0.8, "spelldamage", "FlatHPPoolMod",
-                        METHOD_MOBILITY,    0, MOBI_MSP, 0.16, 0.2, 0.24, 0.28, 0.32,
-                    2,  METHOD_AOE_BURST|AP,1, 40, 60, 80, 100, 120, 0.4, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.45, 2.5, 0.50, 2.5, 0.55, 2.5, 0.60, 2.5, 0.65, 2.5,
-                    2,  METHOD_CC,          0, CC_SUPPRESS, 1.75, 1.75, 1.75,
-                        METHOD_BURST|AP,    1, 350, 525, 700, 1, "spelldamage",
-
-        "Soraka",   1,  METHOD_MOBILITY,    0, MOBI_MSP, 0, 0.4,
-                    3,  METHOD_AOE_BURST|AP,1, 70, 110, 150, 190, 230, 0.35, "spelldamage",
-                        METHOD_CC,          0, CC_SLOW, 0.3, 2, 0.35, 2, 0.4, 2, 0.45, 2, 0.5, 2,
-                        METHOD_BURST|AP,    1, 35, 55, 75, 95, 115, 17.5, "spelldamage",
-                    1,  METHOD_SUSTAIN,     0, 0, 0, 0, 0, 0,
-                    3,  METHOD_AOE_DOT_BURST|AP,1, 140, 220, 300, 380, 460, 0.8, "spelldamage",
-                        METHOD_CC,          0, CC_ROOT, 1, 1.25, 1.5, 1.75, 2,
-                        METHOD_CC,          0, CC_AOE_SILENCE, 1.5, 1.5, 1.5, 1.5, 1.5,
-                    1,  METHOD_TANK,        0,  225, 375, 525, "FlatHPPoolMod",
-
-        "Swain",    0,
-                    2,  METHOD_DOT_BURST|AP,1,  75, 120, 165, 210, 255, 0.9, "spelldamage",
-                        METHOD_CC,          0, CC_SLOW, 0.2, 3, 0.25, 3, 0.3, 3, 0.35, 3, 0.4, 3,
-                    2,  METHOD_AOE_BURST|AP,1, 80, 120, 160, 200, 240, 0.7, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_ROOT, 2, 2, 2, 2, 2,
-                    2,  METHOD_DOT_BURST|AD,1, 75, 115, 155, 195, 235, 0.8, "spelldamage",
-                        METHOD_BURST_AMP|AP,0, 0.08, 0.11, 0.14, 0.17, 0.2, AMP_ALL,
-                    1,  METHOD_DPS,         1, 1, 50, 70, 90, 0.2, "spelldamage", "magic_aoe_dps",
-
-        "Syndra",   0,
-                    1,  METHOD_AOE_BURST|AP,1, 70, 110, 150, 190, 264.5, 0.6, 0.6, 0.6, 0.6, 0.69, "spelldamage",
-                    2,  METHOD_AOE_BURST|AP,1,  80, 120, 160, 200, 240, 0.7, "spelldamage",
-                        METHOD_CC,          0, CC_SLOW, 0.25, 1.5, 0.3, 1.5, 0.35, 1.5, 0.4, 1.5, 0.45, 2,
-                    2,  METHOD_AOE_BURST|AP,1, 70, 115, 160, 205, 250, 0.4, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_STUN, 1.5, 1.5, 1.5, 1.5, 1.5,
-                    1,  METHOD_BURST|AP,    1,  630, 975, 1260, 1.4, "spelldamage",
-
-        "Talon",    1,  METHOD_DPS,         1, 1, 0, 0, 0.1, "attackdamage", "FlatPhysicalDamageMod",
-                    1,  METHOD_DOT_BURST|AD,1, 40, 80, 120, 160, 200, 1.3, "bonusattackdamage",
-                    2,  METHOD_AOE_BURST|AD,1,  60, 110, 160, 210, 260, 1.2, "bonusattackdamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.2, 2, 0.25, 2, 0.3, 2, 0.35, 2, 0.4, 2,
-                    2,  METHOD_BURST_AMP|AD,0, 0.03, 0.06, 0.09, 0.12, 0.15, AMP_ALL,
-                        METHOD_MOBILITY,    0, MOBI_BLINK, 700, 700, 700, 700, 700,
-                    2,  METHOD_AOE_BURST|AD,1, 240, 340, 440, 1.5, "bonusattackdamage",
-                        METHOD_MOBILITY,    0, MOBI_MSP, 0.4, 0.4, 0.4,
-
-        "Taric",    1,  METHOD_BURST|AP,    1, 0, 0, 0.2, "armor",
-                    1,  METHOD_TANK,        2, 84, 140, 196, 252, 308, 0.42, "spelldamage", 0.07, "bonushealth", "FlatHPPoolMod",
-                    2,  METHOD_TANK,        1,  10, 15, 20, 25, 30, 0.12, "armor", "FlatArmorMod",
-                        METHOD_AOE_BURST|AP,1, 40, 80, 120, 160, 200, 0.2, "armor",
-                    2,  METHOD_CC,          0, CC_STUN, 1.2, 1.3, 1.4, 1.5, 1.6,
-                        METHOD_BURST|AP,    1, 80, 140, 200, 260, 320, 0.4, "spelldamage",
-                    2,  METHOD_AOE_BURST|AP,1, 150, 250, 350, 0.5, "spelldamage",
-                        METHOD_DPS,         0, 1, 30, 50, 70, "FlatPhysicalDamageMod",
-
-        "Teemo",    0,
-                    2,  METHOD_BURST|AP,    1, 80, 125, 170, 215, 260, 0.8, "spelldamage",
-                        METHOD_CC,          0, CC_BLIND, 1.5, 1.75, 2, 2.25, 2.5,
-                    1,  METHOD_MOBILITY,    0, MOBI_MSP, 0.20, 0.28, 0.36, 0.44, 0.52,
-                    1,  METHOD_DPS,         1, 1, 34, 68, 102, 136, 170, 0.7, "spelldamage", "FlatAaMagicDamageMod",
-                    2,  METHOD_CC,          0, CC_AOE_SLOW, 0.3, 4, 0.4, 4, 0.5, 4,
-                        METHOD_AOE_DOT_BURST|AP,1, 200, 325, 450, 0.5, "spelldamage",
-
-        "Thresh",   0,
-                    3,  METHOD_BURST|AP,    1, 80, 120, 160, 200, 240, 0.5, "spelldamage",
-                        METHOD_CC,          0, CC_STUN, 1.5, 1.5, 1.5, 1.5, 1.5,
-                        METHOD_MOBILITY,    0, MOBI_DASH, 1100, 1100, 1100, 1100, 1100,
-                    1,  METHOD_TANK,        1, 60, 100, 140, 180, 220, 0.4, "spelldamage", "FlatHPPoolMod",
-                    4,  METHOD_BURST|AP,    2, 0, 0, 0, 0, 0, 1, "@souls", 0.8, 1.1, 1.4, 1.7, 2, "attackdamage",
-                        METHOD_BURST|AP,    1, 65, 95, 125, 155, 185, 0.4, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.2, 1, 0.25, 1, 0.3, 1, 0.35, 1, 0.4, 1,
-                        METHOD_CC,          0, CC_AOE_DISPLACE, 50, 50, 50, 50, 50,
-                    2,  METHOD_CC,          0, CC_AOE_SLOW, 0.99, 2, 0.99, 2, 0.99, 2,
-                        METHOD_AOE_BURST|AP,1, 250, 400, 550, 1, "spelldamage",
-
-        // this is read as: Passive with 1 stat mod, giving bonus to 1 stat which has 0 level segments. The stat is 0 (base) + (9*(level-1)).
-		//					And the stat is award to range
-		"Tristana",	1,	METHOD_DPS,			1, 1, 0, 0, 9, "levelMinusOne", "RangeMod",
-					1,	METHOD_DPS,			0, 1, 0.3, 0.45, 0.6, 0.75, 0.9, "PercentAttackSpeedMod",
-					3,	METHOD_AOE_BURST|AP,1, 70, 115, 160, 205, 250, 0.8, "spelldamage",
-						METHOD_MOBILITY,	0, MOBI_DASH, 900, 900, 900, 900, 900,
-						METHOD_CC,			0, CC_SLOW, 0.6, 1, 0.6, 1.5, 0.6, 2, 0.6, 2.5, 0.6, 3,
-					1,	METHOD_DOT_BURST|AP,1, 80, 125, 170, 215, 260, 1, "spelldamage",
-					1,	METHOD_BURST|AP,	1, 300, 400, 500, 1.5, "spelldamage",
-
-        "Trundle",  0,
-                    2,  METHOD_BURST|AD,    1, 20, 40, 60, 80, 100, 0, 0.05, 0.1, 0.15, 0.2, "attackdamage",
-                        METHOD_DPS,         0, 1, 20, 25, 30, 35, 40, "FlatPhysicalDamageMod",
-                    3,  METHOD_MOBILITY,    0, MOBI_MSP, 0.2, 0.25, 0.3, 0.35, 0.4,
-                        METHOD_DPS,         0, 1, 0.2, 0.35, 0.5, 0.65, 0.8, "PercentAttackSpeedMod",
-                        METHOD_SUSTAIN,     0, 0, 0, 0, 0, 0,
-                    3,  METHOD_CC,          0, CC_WALL, 6, 6, 6, 6, 6,
-                        METHOD_CC,          0, CC_AOE_DISPLACE, 50, 50, 50, 50, 50,
-                        METHOD_CC,          0, CC_SLOW, 0.25, 6, 0.3, 6, 0.35, 6, 0.4, 6, 0.45, 6,
-                    1,  METHOD_DOT_BURST|AP,1, 0, 0, 0, 0.2, 0.24, 0.28, "enemymaxhealth",
-
-        "Tryndamere",1,  METHOD_DPS,         0, 1, 0, 0.35, "FlatCritChanceMod",
-                    2,  METHOD_DPS,         0, 1, 20, 30, 40, 50, 60, "FlatPhysicalDamageMod",
-                        METHOD_SUSTAIN,     0, 0, 0, 0, 0, 0,
-                    1,  METHOD_CC,          0, CC_AOE_SLOW, 0.3, 4, 0.375, 4, 0.45, 4, 0.525, 4, 0.6, 4,
-                    2,  METHOD_AOE_BURST|AD,2, 70, 100, 130, 160, 190, 1, "spelldamage", 1.2, "bonusattackdamage",
-                        METHOD_MOBILITY,    0, MOBI_DASH, 660, 660, 660, 660, 660,
-                    1,  METHOD_TANK,        0, 5, 5, 5, "Undying",
-
-        "TwistedFate",0,
-                    1,  METHOD_AOE_BURST|AP,1, 60, 110, 160, 210, 260, 0.65, "spelldamage",
-                    5,  METHOD_BURST|AP,    2, 40, 60, 80, 100, 120, 1, "attackdamage", 0.5, "spelldamage", METHOD_OR,
-                        METHOD_AOE_BURST|AP,2,  30, 45, 60, 75, 90, 1, "attackdamage", 0.5, "spelldamage", METHOD_OR,
-                        METHOD_BURST|AP,    2, 15, 22.5, 30, 37.5, 45, 1, "attackdamage", 0.5, "spelldamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.3, 2.5, 0.35, 2.5, 0.4, 2.5, 0.45, 2.5, 0.5, 2.5,
-                        METHOD_CC,          0, CC_STUN, 1, 1.25, 1.5, 1.75, 2,
-                    2,  METHOD_DPS,         0, 1, 0.1, 0.15, 0.2, 0.25, 0.3, "PercentAttackSpeedMod",
-                        METHOD_BURST|AP,    1, 55, 80, 105, 130, 155, 0.5, "spelldamage",
-                    2,  METHOD_MOBILITY,    0, MOBI_BLINK, RANGE_GLOBAL, RANGE_GLOBAL, RANGE_GLOBAL,
-                        METHOD_CC,          0, CC_REVEAL_ALL_CHAMPIONS, 6, 8, 10,
-
-        "Twitch",   1,  METHOD_DOT_BURST|TR,0, 6, 1, 36, 4, 72, 7, 108, 10,144, 13, 180, 16, 216,
-                    3,  METHOD_MOBILITY,    0, MOBI_MSP, 0.2, 0.2, 0.2, 0.2, 0.2,
-                        METHOD_MOBILITY,    0, MOBI_STEALTH, 4, 5, 6, 7, 8,
-                        METHOD_DPS,         0, 1, 0.3, 0.4, 0.5, 0.6, 0.7, "PercentAttackSpeedMod",
-                    1,  METHOD_CC,          0, CC_AOE_SLOW, 0.25, 3, 0.3, 3, 0.35, 3, 0.4, 3, 0.45, 3,
-                    1,  METHOD_AOE_BURST|AD,2, 110, 155, 200, 245, 290, 1.2, "spelldamage", 1.5, "bonusattackdamage",
-                    2,  METHOD_DPS,         0, 1, 20, 28, 36, "FlatPhysicalDamageMod",
-                        METHOD_DPS,         0, 1, 300, 300, 300, "RangeMod",
-
-        "Urgot",    0,
-                    1,  METHOD_BURST|AD,    1, 10, 40, 70, 100, 130, 0.85, "attackdamage",
-                    2,  METHOD_TANK,        1, 80, 130, 180, 230, 280, 0.8, "spelldamage", "FlatHPPoolMod",
-                        METHOD_CC,          0, CC_SLOW, 0.2, 1.5, 0.25, 1.5, 0.3, 1.5, 0.35, 1.5, 0.4, 1.5,
-                    1,  METHOD_AOE_DOT_BURST|AD,1, 75, 130, 185, 240, 295, 0.6, "bonusattackdamage",
-                    4,  METHOD_CC,          0, CC_SUPPRESS, 1, 1, 1,
-                        METHOD_CC,          0, CC_SLOW, 0.4, 3, 0.4, 3, 0.4, 3,
-                        METHOD_TANK,        0, 60, 90, 120, "FlatArmorMod",
-                        METHOD_TANK,        0, 60, 90, 120, "FlatSpellBlockMod",
-
-        "Varus",    0,
-                    1,  METHOD_AOE_BURST|AD,1, 15, 70, 125, 180, 235, 1.6, "attackdamage",
-                    2,  METHOD_DPS,         1, 1, 10, 14, 18, 22, 26, 0.25, "spelldamage", "FlatAaMagicDamageMod",
-                        METHOD_BURST|AP,    1,  6, 8.25, 10.5, 12.75, 15, "enemymaxhealth", 0.0006, "spelldamage",
-                    2,  METHOD_AOE_BURST|AD,1, 65, 100, 135, 170, 205, 0.6, "bonusattackdamage",
-                        METHOD_CC,          0, CC_AOE_SLOW, 0.25, 4, 0.3, 4, 0.35, 4, 0.4, 4, 0.45, 4,
-                    2,  METHOD_CC,          0, CC_ROOT, 2, 2, 2,
-                        METHOD_BURST|AP,    1, 150, 250, 350, 1, "spelldamage",
-
-        "Vayne",    1,  METHOD_MOBILITY,    0, MOBI_FLAT_MS, 0, 30,
-                    2,  METHOD_BURST|AD,    1, 0, 0, 0, 0, 0, 0.3, 0.35, 0.4, 0.45, 0.5, "attackdamage",
-                        METHOD_MOBILITY,    0, MOBI_DASH, 300, 300, 300, 300, 300,
-                    1,  METHOD_DPS,         1, 1, 20/3, 30/3, 40/3, 50/3, 60/3, 0.04, 0.05, 0.06, 0.07, 0.08, "enemymaxhealth", "FlatAaTrueDamageMod",
-                    3,  METHOD_CC,          0, CC_DISPLACE, 470, 470, 470, 470, 470,
-                        METHOD_CC,          0, CC_STUN, 1.5, 1.5, 1.5, 1.5, 1.5,
-                        METHOD_BURST|AD,    1, 90, 160, 230, 300, 370, 1, "bonusattackdamage",
-                    1,  METHOD_DPS,         0, 1, 30, 50, 70, "FlatPhysicalDamageMod",
-
-        "Veigar",   0,
-                    1,  METHOD_BURST|AP,    1, 80, 125, 170, 215, 260, 0.6, "spelldamage",
-                    1,  METHOD_AOE_BURST|AP,1, 120, 170, 220, 270, 320, 1, "spelldamage",
-                    1,  METHOD_CC,          0, CC_AOE_STUN, 1.5, 1.75, 2, 2.25, 2.5,
-                    1,  METHOD_BURST|AD,    2, 250, 375, 500, 1.2, "spelldamage", 0.8, "targetspelldamage",
 
 	};
+
+    private static final Map<String, Integer> stringToEnum = new HashMap<String, Integer>();
+
+    static {
+        Map<String, Integer> a = stringToEnum;
+
+        a.put("METHOD_AOE",         METHOD_AOE);
+        a.put("METHOD_AMP",         METHOD_AMP);
+        a.put("METHOD_DOT",         METHOD_DOT);
+        a.put("AP",                 AP);
+        a.put("AD",                 AD);
+        a.put("TR",                 TR);
+        a.put("METHOD_DPS",         METHOD_DPS);
+        a.put("METHOD_SUSTAIN",     METHOD_SUSTAIN);
+        a.put("METHOD_BURST",       METHOD_BURST);
+        a.put("METHOD_CC",          METHOD_CC);
+        a.put("METHOD_TANK",        METHOD_TANK);
+        a.put("METHOD_MOBILITY",    METHOD_MOBILITY);
+        a.put("METHOD_OR",          METHOD_OR);
+        a.put("METHOD_AOE_BURST",   METHOD_AOE_BURST);
+        a.put("METHOD_AOE_DOT_BURST", METHOD_AOE_DOT_BURST);
+        a.put("METHOD_BURST_AMP",   METHOD_BURST_AMP);
+        a.put("METHOD_DOT_BURST",   METHOD_DOT_BURST);
+        a.put("METHOD_CO_BURST",    METHOD_CO_BURST);
+        a.put("METHOD_AOE_SUSTAIN", METHOD_AOE_SUSTAIN);
+
+        a.put("CC_KNOCKUP",         CC_KNOCKUP);
+        a.put("CC_AOE_KNOCKUP",     CC_AOE_KNOCKUP);
+        a.put("CC_SLOW",            CC_SLOW);
+        a.put("CC_AOE_SLOW",        CC_AOE_SLOW);
+        a.put("CC_CHARM",           CC_CHARM);
+        a.put("CC_STUN",            CC_STUN);
+        a.put("CC_AOE_STUN",        CC_AOE_STUN);
+        a.put("CC_WALL",            CC_WALL);
+        a.put("CC_SILENCE",         CC_SILENCE);
+        a.put("CC_AOE_SILENCE",     CC_AOE_SILENCE);
+        a.put("CC_ROOT",            CC_ROOT);
+        a.put("CC_AOE_ROOT",        CC_AOE_ROOT);
+        a.put("CC_PULL",            CC_PULL);
+        a.put("CC_AOE_PULL",        CC_AOE_PULL);
+        a.put("CC_DISPLACE",        CC_DISPLACE);
+        a.put("CC_AOE_DISPLACE",    CC_AOE_DISPLACE);
+        a.put("CC_FEAR",            CC_FEAR);
+        a.put("CC_AOE_FEAR",        CC_AOE_FEAR);
+        a.put("CC_PARANOIA",        CC_PARANOIA);
+        a.put("CC_TAUNT",           CC_TAUNT);
+        a.put("CC_AOE_TAUNT",       CC_AOE_TAUNT);
+        a.put("CC_SUPPRESS",        CC_SUPPRESS);
+        a.put("CC_BLIND",           CC_BLIND);
+        a.put("CC_REVEAL_ALL_CHAMPIONS", CC_REVEAL_ALL_CHAMPIONS);
+        a.put("AMP_MAGIC",          AMP_MAGIC);
+        a.put("AMP_ALL",            AMP_ALL);
+        a.put("SPECIAL_USE_BASE_AS_SCALING",           SPECIAL_USE_BASE_AS_SCALING);
+        a.put("MOBI_BLINK",         MOBI_BLINK);
+        a.put("MOBI_DASH",          MOBI_DASH);
+        a.put("MOBI_FLAT_MS",       MOBI_FLAT_MS);
+        a.put("MOBI_MSP",           MOBI_MSP);
+        a.put("MOBI_GAP_CLOSE",     MOBI_GAP_CLOSE);
+        a.put("MOBI_GLOBAL_TELEPORT", MOBI_GLOBAL_TELEPORT);
+        a.put("MOBI_STEALTH",       MOBI_STEALTH);
+        a.put("RANGE_GLOBAL",       RANGE_GLOBAL);
+    }
 	
 	private static final String ANALYSIS_KEY = "analysis";
 
@@ -1049,21 +310,134 @@ public class ChampionInfoFixer {
 		return info;
 	}
 
-	public static double toDouble(Object o) {
-		if (o instanceof Double) {
-			return (Double) o;
-		} else {
-			return (Integer) o;
-		}
+    public static boolean isNumeric(String s) {
+        try {
+            Double.valueOf(s);
+        } catch(NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
+	public static double toDouble(String o) {
+        return getNumeric(o);
 	}
 
+    private static final Map<String, Integer> stringToSpecialVal = new HashMap<String, Integer>();
+    private static final ScriptEngineManager mgr = new ScriptEngineManager();
+    private static final ScriptEngine engine = mgr.getEngineByName("JavaScript");
+
+    static {
+        stringToSpecialVal.put("SPECIAL_USE_BASE_AS_SCALING",   SPECIAL_USE_BASE_AS_SCALING);
+        stringToSpecialVal.put("RANGE_GLOBAL",                  RANGE_GLOBAL);
+    }
+
+    public static double getNumeric(String s) {
+        if (s.contains("/")) {
+            try {
+                Object o = engine.eval(s);
+                if (o instanceof Integer) {
+                    return (Integer) o;
+                } else {
+                    return (Double) o;
+                }
+            } catch (ScriptException e) {
+                e.printStackTrace();
+            }
+        } else if (stringToSpecialVal.containsKey(s)) {
+            return stringToSpecialVal.get(s);
+        } else {
+            return Double.valueOf(s);
+        }
+
+        throw new RuntimeException(String.format("Parsing numeric failed. Given: %s", s));
+    }
+
+    public static String getString(String s) {
+        if (s.charAt(0) == s.charAt(s.length() - 1) && s.charAt(0) == '"') {
+            return s.substring(1, s.length() - 1);
+        } else {
+            throw new RuntimeException(String.format("Argument is not a wrapped string. Got: %s", s));
+        }
+    }
+
+    public static boolean isString(String s) {
+        return s.charAt(0) == '"';
+    }
+
+    public static boolean isEnum(String s) {
+        char c = s.charAt(0);
+        return c >= 'A' && c <='Z';
+    }
+
+    public static int getEnumFromString(String s) {
+        String[] toks = s.split("\\|");
+
+        int result = 0;
+        for (String tok : toks) {
+            if (stringToEnum.containsKey(tok)) {
+                result |= stringToEnum.get(tok);
+            } else {
+                throw new RuntimeException(String.format("No enum found that matches key: %s. Token: %s", s, tok));
+            }
+        }
+
+        return result;
+    }
+
+    private static void validateJson(JSONArray arr) {
+        for (int i = 0; i < arr.length(); i++) {
+            Object o = null;
+            try {
+                o = arr.get(i);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            if (o instanceof String) {
+                String s = (String) o;
+
+                if (s.charAt(0) == '"') {
+                    try {
+                        arr.put(i, s.substring(1, s.length() - 1));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else if (o instanceof JSONArray) {
+                validateJson((JSONArray) o);
+            }
+
+        }
+    }
+
 	public static void fixChampionInfo() throws IOException, JSONException {
-		Object[] a = CHAMPION_SPELL_DAMAGE;
+        InputStream is = new FileInputStream("DataFixer\\src\\main\\resources\\a.b");
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+        List<String> tokens = new ArrayList<String>();
+        String s;
+        while ((s = br.readLine()) != null) {
+            if (!s.startsWith("//")) {
+                tokens.addAll(Arrays.asList(s.split(",")));
+            }
+        }
+
+        {
+            List<String> t = new ArrayList<>();
+            for (String str : tokens) {
+                String cleaned = str.trim();
+                if (cleaned.length() > 0) {
+                    t.add(cleaned);
+                }
+            }
+            tokens = t;
+        }
 
         int i = 0;
         try {
-            for (; i < a.length; ) {
-                String champKey = (String) a[i++];
+            for (; i < tokens.size(); ) {
+                String champKey = getString(tokens.get(i++));
 
                 JSONObject o = loadJsonObj("champions/" + champKey + ".json");
                 JSONObject champData = o.getJSONObject("data");
@@ -1073,29 +447,31 @@ public class ChampionInfoFixer {
 
                 // this is a passive!
                 JSONArray methods = new JSONArray();
-                int methodCount = (Integer) a[i++];
+                int methodCount = Integer.valueOf(tokens.get(i++));//(Integer) a[i++];
                 for (int j = 0; j < methodCount; j++) {
                     JSONArray method = new JSONArray();
-                    i = makeMethod(null, a, i, method, true);
+                    i = makeMethod(null, tokens, i, method, true);
 
                     methods.put(method);
                 }
+                validateJson(methods);
 
                 info.getPassive().raw.put(ANALYSIS_KEY, methods);
 
                 // process other 4 skills
                 for (int j = 0; j < 4; j++) {
                     methods = new JSONArray();
-                    methodCount = (Integer) a[i++];
+                    methodCount = Integer.valueOf(tokens.get(i++));
 
                     for (int k = 0; k < methodCount; k++) {
                         JSONArray method = new JSONArray();
-                        i = makeMethod(info.getSkill(j), a, i, method, false);
+                        i = makeMethod(info.getSkill(j), tokens, i, method, false);
 
                         methods.put(method);
                     }
 
                     info.getSkill(j).raw.put(ANALYSIS_KEY, methods);
+                    validateJson(methods);
                 }
 
                 saveJsonObj(champKey + ".json", o);
@@ -1103,19 +479,19 @@ public class ChampionInfoFixer {
         } catch (Exception e) {
             pln("i = " + i);
 
-            for (int j = Math.max(0, i - 5); j < Math.min(a.length, i + 5); j++) {
-                pln("a[" + j + "] = " + a[j]);
+            for (int j = Math.max(0, i - 5); j < Math.min(tokens.size(), i + 5); j++) {
+                pln("a[" + j + "] = " + tokens.get(j));
             }
             e.printStackTrace();
         }
 	}
 	
-	private static int parseScaling(Object[] a, int i, JSONArray method, int ranks) throws JSONException {
-		double scaling = toDouble(a[i++]);
-		Object next = a[i++];
+	private static int parseScaling(List<String> a, int i, JSONArray method, int ranks) throws JSONException {
+		double scaling = toDouble(a.get(i++));
+		String next = a.get(i++);
 		method.put(scaling);
 		
-		if (next instanceof String) {
+		if (!isNumeric(next)) {
 			String type = (String) next;
 			method.put(type);
 		} else {
@@ -1123,20 +499,20 @@ public class ChampionInfoFixer {
 			method.put(scaling);
 			for (int j = 2; j < ranks; j++) {
 				// this is a ranked based scaling 
-				scaling = toDouble(a[i++]);
+				scaling = toDouble(a.get(i++));
 				method.put(scaling);
 			}
 			
-			String type = (String) a[i++];
+			String type = a.get(i++);
 			method.put(type);
 		}
 		return i;
 	}
 
-	private static int makeMethod(Skill s, Object[] a, int i, JSONArray method, boolean passive) throws JSONException {
+	private static int makeMethod(Skill s, List<String> a, int i, JSONArray method, boolean passive) throws JSONException {
 		try {
-			int methodType = (Integer) a[i++];
-			int scalings = (Integer) a[i++];
+			int methodType = Integer.valueOf(getEnumFromString(a.get(i++)));//(Integer) a[i++];
+			int scalings = Integer.valueOf(a.get(i++));//(Integer) a[i++];
 
 			method.put(methodType);
 			method.put(scalings);
@@ -1147,10 +523,10 @@ public class ChampionInfoFixer {
 			int ccType = 0;
             int mobiType = 0;
             if (baseMethod == METHOD_DPS) {
-				bonusStats = (Integer) a[i++];
+				bonusStats = Integer.valueOf(a.get(i++));//(Integer) a[i++];
 				method.put(bonusStats);
 			} else if (baseMethod == METHOD_CC || baseMethod == METHOD_MOBILITY) {
-                mobiType = ccType = (Integer) a[i++];
+                mobiType = ccType = getEnumFromString(a.get(i++));//(Integer) a[i++];
                 method.put(ccType);
             }
 
@@ -1158,7 +534,7 @@ public class ChampionInfoFixer {
 			int skillRanks = 0;
 			boolean levelDivided = false;
 			if (passive) {
-				levelSegs = (Integer) a[i++];
+				levelSegs = Integer.valueOf(a.get(i++));//(Integer) a[i++];
 				method.put(levelSegs);
 				if (levelSegs == 0) {
 					skillRanks = 1;
@@ -1175,27 +551,27 @@ public class ChampionInfoFixer {
 				for (int j = 0; j < bonusStats; j++) {
 					for (int k = 0; k < skillRanks; k++) {
 						if (levelDivided) {
-							int level = (Integer) a[i++];
+							int level = Integer.valueOf(a.get(i++));
 							method.put(level);
 						}
 
-						double bonus = toDouble(a[i++]);
+						double bonus = toDouble(a.get(i++));
 						method.put(bonus);
 					}
                     for (int k = 0; k < scalings; k++) {
                         i = parseScaling(a, i, method, skillRanks);
                     }
-					String statType = (String) a[i++];
+					String statType = a.get(i++);//(String) a[i++];
 					method.put(statType);
 				}
 				break;
 			case METHOD_SUSTAIN:
 				for (int k = 0; k < skillRanks; k++) {
 					if (levelDivided) {
-						int level = (Integer) a[i++];
+						int level = Integer.valueOf(a.get(i++));
 						method.put(level);
 					}
-					double bonus = toDouble(a[i++]);
+					double bonus = toDouble(a.get(i++));
 					method.put(bonus);
 				}
 
@@ -1206,27 +582,28 @@ public class ChampionInfoFixer {
 			case METHOD_BURST:
 				for (int k = 0; k < skillRanks; k++) {
 					if (levelDivided) {
-						int level = (Integer) a[i++];
+						int level = Integer.valueOf(a.get(i++));//(Integer) a[i++];
 						method.put(level);
 					}
-					double bonus = toDouble(a[i++]);
+					double bonus = toDouble(a.get(i++));
 					method.put(bonus);
 				}
 
-                if (a[i] instanceof String) {
-                    method.put(a[i++]);
+                if (isString(a.get(i))) {
+                    method.put(a.get(i++));
                 }
 
 				for (int k = 0; k < scalings; k++) {
 					i = parseScaling(a, i, method, skillRanks);
 				}
 				if ((methodType & METHOD_AMP) != 0) {
-					int ampType = (Integer) a[i++];
+					int ampType = getEnumFromString(a.get(i++));
 					method.put(ampType);
 				}
 
-                if (a.length != i && a[i] instanceof Integer && (int)a[i] == METHOD_OR) {
-                    method.put(a[i++]);
+                if (a.size() != i && isEnum(a.get(i)) && getEnumFromString(a.get(i)) == METHOD_OR) {
+                    method.put(METHOD_OR);
+                    i++;
                 }
 				break;
 			case METHOD_CC:
@@ -1236,11 +613,11 @@ public class ChampionInfoFixer {
 				}
 				for (int k = 0; k < skillRanks; k++) {
 					if (levelDivided) {
-						int level = (Integer) a[i++];
+						int level = Integer.parseInt(a.get(i++));//(Integer) a[i++];
 						method.put(level);
 					}
 					for (int m = 0; m < vals; m++) {
-						double v = toDouble(a[i++]);
+						double v = toDouble(a.get(i++));
 						method.put(v);
 					}
 				}
@@ -1252,26 +629,26 @@ public class ChampionInfoFixer {
 			case METHOD_TANK:
                 for (int k = 0; k < skillRanks; k++) {
                     if (levelDivided) {
-                        int level = (Integer) a[i++];
+                        int level = Integer.parseInt(a.get(i++));
                         method.put(level);
                     }
 
-                    double bonus = toDouble(a[i++]);
+                    double bonus = toDouble(a.get(i++));
                     method.put(bonus);
                 }
                 for (int k = 0; k < scalings; k++) {
                     i = parseScaling(a, i, method, skillRanks);
                 }
-                String statType = (String) a[i++];
+                String statType = a.get(i++);
                 method.put(statType);
 				break;
 			case METHOD_MOBILITY:
 				for (int k = 0; k < skillRanks; k++) {
 					if (levelDivided) {
-						int level = (Integer) a[i++];
+						int level = Integer.parseInt(a.get(i++));;
 						method.put(level);
 					}
-					double bonus = toDouble(a[i++]);
+					double bonus = toDouble(a.get(i++));
 					method.put(bonus);
 				}
 
@@ -1282,7 +659,7 @@ public class ChampionInfoFixer {
 			}
 			return i;
 		} catch (ClassCastException e) {
-			pln("i=" + i + "; a[i]=" + a[i]);
+			pln("i=" + i + "; a[i]=" + a.get(i));
 			e.printStackTrace();
 			throw e;
 		}
