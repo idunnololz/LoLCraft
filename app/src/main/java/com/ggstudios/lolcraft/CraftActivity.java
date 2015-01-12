@@ -33,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.ggstudios.animation.ResizeAnimation;
 import com.ggstudios.dialogs.ItemPickerDialogFragment.ItemPickerDialogListener;
 import com.ggstudios.dialogs.RunePickerDialogFragment.RunePickerDialogListener;
@@ -57,6 +58,8 @@ public class CraftActivity extends ActionBarActivity implements ItemPickerDialog
 	private static final String TAG = "CraftActivity";
 
 	public static final String EXTRA_CHAMPION_ID = "champId";
+
+    private static final String TAG_CHAMPION_ID = "champId";
 	
 	private static final int PARALLAX_WIDTH_DP = 10;
 	private static final int RESIZE_DURATION = 200;
@@ -112,6 +115,8 @@ public class CraftActivity extends ActionBarActivity implements ItemPickerDialog
 
 		int champId = getIntent().getExtras().getInt(EXTRA_CHAMPION_ID);
 		info = LibraryManager.getInstance().getChampionLibrary().getChampionInfo(champId);
+
+        Crashlytics.setInt(TAG_CHAMPION_ID, champId);
 
 		build = new Build();
 		build.setChampion(info);
@@ -263,6 +268,8 @@ public class CraftActivity extends ActionBarActivity implements ItemPickerDialog
 		splash.setImageDrawable(null);
 		
 		MemoryManager.getMemoryUsage();
+
+        Crashlytics.setInt(TAG_CHAMPION_ID, -1);
 	}
 	
 	public void loadBuild(final String buildName) {
