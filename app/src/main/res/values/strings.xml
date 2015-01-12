@@ -215,6 +215,8 @@
     <string name="stacks">stacks</string>
     <string name="stat_desc_aa_true_damage">bonus true damage on basic attack</string>
     <string name="cooldown">cooldown</string>
+    <string name="stat_desc_cc_red">crowd control duration reduction</string>
+    <string name="stat_desc_aoe_dps_magic">AoE magical damage per second</string>
 
 
 </resources>

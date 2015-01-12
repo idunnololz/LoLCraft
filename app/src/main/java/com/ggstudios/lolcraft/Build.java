@@ -333,6 +333,8 @@ public class Build {
         a.put(STAT_TOTAL_MP, R.string.stat_desc_total_mp);
         a.put(STAT_AA_MAGIC_DAMAGE, R.string.stat_desc_aa_magic_damage);
         a.put(STAT_AA_TRUE_DAMAGE, R.string.stat_desc_aa_true_damage);
+        a.put(STAT_CC_RED, R.string.stat_desc_cc_red);
+        a.put(STAT_AOE_DPS_MAGIC, R.string.stat_desc_aoe_dps_magic);
         //		public static final int STAT_CRIT = 11;
         //		public static final int STAT_AP = 12;
         //		public static final int STAT_LS = 13;
@@ -1438,6 +1440,7 @@ public class Build {
             case STAT_ENEMY_MAX_HP:
             case STAT_ENEMY_CURRENT_HP:
             case STAT_ENEMY_MISSING_HP:
+            case STAT_CC_RED:
                 return STAT_TYPE_PERCENT;
             default:
                 return STAT_TYPE_DEFAULT;
