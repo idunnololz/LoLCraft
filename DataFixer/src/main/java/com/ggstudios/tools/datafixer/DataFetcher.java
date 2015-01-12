@@ -72,7 +72,7 @@ public class DataFetcher {
         }
 
         pln("Champion data version incorrect. Re-fetching data...");
-        pln(String.format("Switching data version [v%s -> v%s]", curVer, getLatestVersion()));
+        pln(String.format("Switching data version [v%s -> v%s]", curVer, version));
 
         File dir = new File("res/champions");
         dir.mkdir();
