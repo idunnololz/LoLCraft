@@ -217,6 +217,7 @@
     <string name="cooldown">cooldown</string>
     <string name="stat_desc_cc_red">crowd control duration reduction</string>
     <string name="stat_desc_aoe_dps_magic">AoE magical damage per second</string>
+    <string name="skill_stat_total_hp">HP</string>
 
 
 </resources>

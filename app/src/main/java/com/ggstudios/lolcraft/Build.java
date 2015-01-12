@@ -137,6 +137,8 @@ public class Build {
     public static final int STAT_DARIUS_R_MAX_DAMAGE = 87;
     public static final int STAT_JAYCE_W_SCALING = 88;
     public static final int STAT_DYNAMIC_AP = 89;
+    public static final int STAT_BRAUM_W_ARMOR = 90;
+    public static final int STAT_BRAUM_W_MR = 91;
 
     public static final int STAT_ENEMY_MISSING_HP = 100;
     public static final int STAT_ENEMY_CURRENT_HP = 101;
@@ -288,8 +290,8 @@ public class Build {
         statKeyToIndex.put("targetspelldamage", 	STAT_TARGET_AP);
 
         // special keys...
-        statKeyToIndex.put("@special.BraumWArmor", 	STAT_NULL);
-        statKeyToIndex.put("@special.BraumWMR", 	STAT_NULL);
+        statKeyToIndex.put("@special.BraumWArmor", 	STAT_BRAUM_W_ARMOR);
+        statKeyToIndex.put("@special.BraumWMR", 	STAT_BRAUM_W_MR);
         statKeyToIndex.put("@special.jaycew", 	    STAT_NULL);
         statKeyToIndex.put("@special.jaxrarmor",    STAT_JAX_R_ARMOR_SCALING);
         statKeyToIndex.put("@special.jaxrmr",       STAT_JAX_R_MR_SCALING);
@@ -387,6 +389,7 @@ public class Build {
         b.put(STAT_TOTAL_MP,            R.string.skill_stat_total_mp);
         b.put(STAT_JAX_R_ARMOR_SCALING, R.string.skill_stat_bonus_ad);
         b.put(STAT_JAX_R_MR_SCALING,    R.string.skill_stat_ap);
+        b.put(STAT_TOTAL_HP,            R.string.skill_stat_total_hp);
 //        public static final int STAT_TOTAL_AR = 40;
 //        public static final int STAT_TOTAL_AD = 41;
 //        public static final int STAT_TOTAL_HP = 42;
@@ -1198,6 +1201,23 @@ public class Build {
                         throw new RuntimeException("Dynamic AP stat not available for champion: " + champ.name);
                 }
 
+                break;
+            case STAT_BRAUM_W_ARMOR:
+            case STAT_BRAUM_W_MR:
+                final double[] scaling = {0.1, 0.115, 0.13, 0.145, 0.16};
+
+                sb.append("(+");
+                for (double d : scaling) {
+                    if (statId == STAT_BRAUM_W_ARMOR) {
+                        sb.append((int)(d * stats[STAT_TOTAL_AR]));
+                    } else {
+                        sb.append((int)(d * stats[STAT_TOTAL_MR]));
+                    }
+
+                    sb.append(" / ");
+                }
+                sb.setLength(sb.length() - 3);
+                sb.append(')');
                 break;
             default:
                 throw new RuntimeException("Stat with name " + specialKey + " and id " + statId + " cannot be resolved.");
