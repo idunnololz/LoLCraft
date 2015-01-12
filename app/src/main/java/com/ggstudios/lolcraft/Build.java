@@ -1461,6 +1461,7 @@ public class Build {
             case STAT_ENEMY_CURRENT_HP:
             case STAT_ENEMY_MISSING_HP:
             case STAT_CC_RED:
+            case STAT_ASP:
                 return STAT_TYPE_PERCENT;
             default:
                 return STAT_TYPE_DEFAULT;
