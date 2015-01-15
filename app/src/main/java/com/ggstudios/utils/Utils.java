@@ -13,9 +13,12 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.util.DisplayMetrics;
+
+import com.ggstudios.lolcraft.ChampionInfo;
 
 import timber.log.Timber;
 
@@ -178,13 +181,17 @@ public class Utils {
 	}
 	
 	public static void applyPreferences(final SharedPreferences.Editor editor) {
-		executeInBackground(new Runnable() {
+        if (Build.VERSION.SDK_INT >= 9) {
+            editor.apply();
+        } else {
+            executeInBackground(new Runnable() {
 
-			@Override
-			public void run() {
-				editor.commit();
-			}
-			
-		});
+                @Override
+                public void run() {
+                    editor.commit();
+                }
+
+            });
+        }
 	}
 }

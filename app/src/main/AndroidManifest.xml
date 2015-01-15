@@ -30,6 +30,16 @@
             android:theme="@style/AppThemeNoAb"/>
 
         <activity
+            android:name="com.ggstudios.lolcraft.SettingsActivity"
+            android:parentActivityName="com.ggstudios.lolcraft.MainActivity">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ggstudios.lolcraft.MainActivity" />
+        </activity>
+
+        <activity
             android:name="com.ggstudios.lolcraft.MainActivity"
             android:label="@string/app_name" >
         </activity>

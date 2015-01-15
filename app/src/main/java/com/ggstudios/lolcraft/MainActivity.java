@@ -64,11 +64,17 @@ public class MainActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_report_bug) {
-        	Utils.startBugReportIntent(this);
-            return true;
-        } else if (id == R.id.action_about) {
-            AboutDialogFragment.newInstance().show(getSupportFragmentManager(), "dialog");
+        switch(id) {
+            case R.id.action_report_bug:
+        	    Utils.startBugReportIntent(this);
+                return true;
+            case R.id.action_about:
+                AboutDialogFragment.newInstance().show(getSupportFragmentManager(), "dialog");
+                return true;
+            case R.id.action_settings:
+                Intent i = new Intent(this, SettingsActivity.class);
+                startActivity(i);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

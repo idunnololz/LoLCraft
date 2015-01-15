@@ -236,6 +236,10 @@
 [!] Fixed more bugs
 </small>
 ]]></string>
+    <string name="key_show_changelog">show_changelog</string>
+    <string name="pref_show_changelog">Show \"What\'s new\" dialog</string>
+    <string name="pref_sum_show_changelog">Show \"What\'s new\" dialog at the first launch of the application after every update</string>
+    <string name="settings">Settings</string>
 
 
 </resources>
