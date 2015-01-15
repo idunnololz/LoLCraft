@@ -195,6 +195,8 @@
 <b>LoL Craft</b> <small>by Gary Guo</small>
 <br>
 <b>Version %1$s</b>
+<br><br>
+%2$s
 ]]></string>
     <string name="stat_desc_enemy_max_hp">enemy\'s max HP</string>
     <string name="stat_desc_level_minus_one">level - 1</string>
@@ -218,6 +220,22 @@
     <string name="stat_desc_cc_red">crowd control duration reduction</string>
     <string name="stat_desc_aoe_dps_magic">AoE magical damage per second</string>
     <string name="skill_stat_total_hp">HP</string>
+    <string name="changelog">What\'s new</string>
+    <string name="changelog_text"><![CDATA[
+<b>0.2.9</b>
+<br>
+<small>
+[+] "What's new" dialog that will appear per update (can be disabled in the Settings screen)
+<br>
+[+] Settings screen
+<br>
+[+] Useful links
+<br>
+[+] Updated data to match LoL version 5.1
+<br>
+[!] Fixed more bugs
+</small>
+]]></string>
 
 
 </resources>

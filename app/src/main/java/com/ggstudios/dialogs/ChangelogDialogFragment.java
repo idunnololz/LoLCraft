@@ -9,10 +9,10 @@ import android.text.Html;
 
 import com.ggstudios.lolcraft.R;
 
-public class AboutDialogFragment extends DialogFragment {
+public class ChangelogDialogFragment extends DialogFragment {
 
-    public static AboutDialogFragment newInstance() {
-        AboutDialogFragment frag = new AboutDialogFragment();
+    public static ChangelogDialogFragment newInstance() {
+        ChangelogDialogFragment frag = new ChangelogDialogFragment();
         return frag;
     }
     @Override
@@ -25,9 +25,9 @@ public class AboutDialogFragment extends DialogFragment {
         }
 
         return new AlertDialog.Builder(getActivity())
-                .setTitle(R.string.about)
+                .setTitle(R.string.changelog)
                 .setPositiveButton(android.R.string.ok, null)
-                .setMessage(Html.fromHtml(getString(R.string.about_text, versionName, getString(R.string.changelog_text))))
+                .setMessage(Html.fromHtml(getString(R.string.changelog_text, versionName)))
                 .create();
     }
 
