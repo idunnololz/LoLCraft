@@ -91,12 +91,15 @@ public class DiskLruImageCache {
 
 	}
 
-	public Bitmap getBitmap( String key ) {
+    public Bitmap getBitmap( String key ) {
+        return getBitmap(key, true);
+    }
+
+	public Bitmap getBitmap(String key, boolean retry) {
 
 		Bitmap bitmap = null;
 		DiskLruCache.Snapshot snapshot = null;
 		try {
-
 			snapshot = mDiskCache.get( key );
 			if ( snapshot == null ) {
 				return null;
@@ -106,10 +109,17 @@ public class DiskLruImageCache {
 				final BufferedInputStream buffIn = 
 						new BufferedInputStream( in, IO_BUFFER_SIZE );
 				bitmap = BitmapFactory.decodeStream( buffIn );              
-			}   
+			}
 		} catch ( IOException e ) {
 			e.printStackTrace();
-		} finally {
+		} catch (OutOfMemoryError e) {
+            if (retry) {
+                System.gc();
+                return getBitmap(key, false);
+            } else {
+                throw e;
+            }
+        } finally {
 			if ( snapshot != null ) {
 				snapshot.close();
 			}
