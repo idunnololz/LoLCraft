@@ -55,6 +55,10 @@ public class LibraryUtils {
 		public void onCompleteLoadPortrait(List<ItemInfo> champs);
 	}
 
+    public static boolean isItemLibraryLoaded() {
+        return LibraryManager.getInstance().getItemLibrary().getAllItemInfo() != null;
+    }
+
 	public static void initItemLibrary(Context con) throws IOException, JSONException {
 		ItemLibrary lib = LibraryManager.getInstance().getItemLibrary();
 		if (lib.getAllItemInfo() == null) {

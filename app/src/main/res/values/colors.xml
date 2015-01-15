@@ -8,6 +8,7 @@
     <item name="background_color" type="color">#fff5f5f5</item>
     <item name="white97" type="color">#F7FFFFFF</item>
     <item name="white80" type="color">#CCFFFFFF</item>
+    <item name="white50" type="color">#80FFFFFF</item>
     <item name="black50" type="color">#80000000</item>
     <item name="lightgrey50" type="color">#80D3D3D3</item>
     

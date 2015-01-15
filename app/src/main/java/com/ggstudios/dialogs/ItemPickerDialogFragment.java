@@ -49,6 +49,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import timber.log.Timber;
@@ -66,6 +67,8 @@ public class ItemPickerDialogFragment extends DialogFragment {
 	
 	private List<String> filterTags = new ArrayList<String>();
 	private Map<String, CheckBox> tagToCheckBox = new HashMap<String, CheckBox>();
+
+    private ProgressBar pbar;
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -87,6 +90,7 @@ public class ItemPickerDialogFragment extends DialogFragment {
 		
 		View rootView = inflater.inflate(R.layout.dialog_fragment_item_picker, container, false);
 
+        pbar = (ProgressBar) rootView.findViewById(R.id.pbar);
 		content = (GridView) rootView.findViewById(R.id.itemGrid);
 		
 		items = LibraryManager.getInstance()
@@ -116,6 +120,7 @@ public class ItemPickerDialogFragment extends DialogFragment {
 		if (items == null) {
 			initializeItemInfo();
 		} else {
+            pbar.setVisibility(View.GONE);
 			filterAndShowItems();
 		}
 		
@@ -148,7 +153,7 @@ public class ItemPickerDialogFragment extends DialogFragment {
 		});
 		
 		final Map<CheckBox, String> checkBoxToTag = new HashMap<CheckBox, String>();
-		
+
 		final Button btnClearFilter = (Button) rootView.findViewById(R.id.btnClearFilter);
 		final CheckBox btnConsumables = (CheckBox) rootView.findViewById(R.id.btnConsumables);
         final CheckBox cbHp = (CheckBox) rootView.findViewById(R.id.cbHp);
@@ -315,46 +320,53 @@ public class ItemPickerDialogFragment extends DialogFragment {
 
 			@Override
 			protected Void doInBackground(Void... params) {
-				try {
-					LibraryUtils.getAllItemInfo(getActivity(),
-                            new OnItemLoadListener() {
+                Activity act = getActivity();
+                if (act != null) {
+                    try {
+                        LibraryUtils.getAllItemInfo(act,
+                                new OnItemLoadListener() {
 
-                                @Override
-                                public void onStartLoadPortrait(final List<ItemInfo> items) {
-                                    final ItemLibrary itemLib = LibraryManager.getInstance().getItemLibrary();
-                                    itemLib.initialize(items);
+                                    @Override
+                                    public void onStartLoadPortrait(final List<ItemInfo> items) {
+                                        final ItemLibrary itemLib = LibraryManager.getInstance().getItemLibrary();
+                                        itemLib.initialize(items);
 
-                                    content.post(new Runnable() {
+                                        content.post(new Runnable() {
 
-                                        @Override
-                                        public void run() {
-                                            filterAndShowItems();
-                                        }
+                                            @Override
+                                            public void run() {
+                                                filterAndShowItems();
+                                            }
 
-                                    });
-                                }
+                                        });
+                                    }
 
-                                @Override
-                                public void onPortraitLoad(int position,
-                                                           ItemInfo info) {
-                                    publishProgress(info);
-                                }
+                                    @Override
+                                    public void onPortraitLoad(int position,
+                                                               ItemInfo info) {
+                                        publishProgress(info);
+                                    }
 
-                                @Override
-                                public void onCompleteLoadPortrait(List<ItemInfo> items) {
-                                }
+                                    @Override
+                                    public void onCompleteLoadPortrait(List<ItemInfo> items) {
+                                    }
 
-                            });
-				} catch (IOException e) {
-                    Timber.e("", e);
-				} catch (JSONException e) {
-                    Timber.e("", e);
-				}
+                                });
+                    } catch (IOException e) {
+                        Timber.e("", e);
+                    } catch (JSONException e) {
+                        Timber.e("", e);
+                    }
+                }
 				return null;
 			}
 
 			protected void onProgressUpdate(ItemInfo... progress) {
-				ItemInfo info = progress[0];
+				if (pbar.getVisibility() != View.GONE) {
+                    pbar.setVisibility(View.GONE);
+                }
+
+                ItemInfo info = progress[0];
 				
 				int start = content.getFirstVisiblePosition();
 				for(int i = start, j = content.getLastVisiblePosition(); i <= j; i++) {

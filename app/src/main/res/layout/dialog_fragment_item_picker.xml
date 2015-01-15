@@ -199,16 +199,27 @@
             </LinearLayout>
         </ScrollView>
 
-        <GridView
-            android:id="@+id/itemGrid"
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:background="@color/white97"
-            android:columnWidth="50dp"
-            android:numColumns="auto_fit"
-            android:paddingLeft="5dp" >
-        </GridView>
+            android:layout_weight="2">
+
+            <GridView
+                android:id="@+id/itemGrid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white97"
+                android:columnWidth="50dp"
+                android:numColumns="auto_fit"
+                android:paddingLeft="5dp"/>
+
+
+            <ProgressBar
+                android:id="@+id/pbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"/>
+        </FrameLayout>
     </LinearLayout>
 
 </LinearLayout>
