@@ -108,7 +108,7 @@ public class Main {
 	
 	public static void fixItemJson() throws IOException, JSONException {
 		// Load the JSON object containing champ data first...
-        File file = new File("res/item/item.json");
+        File file = new File("res/item.json");
 
         FileInputStream is = new FileInputStream(file);
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -192,19 +192,20 @@ public class Main {
 
 	public static void main(String[] args) {
 		try {
-            //DataFetcher.listAllVersions();
+            DataFetcher.listAllVersions();
 
             // Updates champion data... outputs to out/ and res/
             //DataFetcher.fetchAllChampionThumb();
-            DataFetcher.fetchAllChampionJson();
-
+            //DataFetcher.fetchAllChampionJson();
             //DataFetcher.fetchAllSpellThumb();
             //DataFetcher.fetchAllPassiveThumb();
-
-            ChampionInfoFixer.fixChampionInfo();
+            //DataFetcher.fetchAllRuneInfo();
+            DataFetcher.fetchAllRuneThumb();
 
             //DataFetcher.fetchAllItemInfo();
             //DataFetcher.fetchAllItemThumb();
+
+            ChampionInfoFixer.fixChampionInfo();
 			fixItemJson();
 		} catch (Exception e) {
 			e.printStackTrace();

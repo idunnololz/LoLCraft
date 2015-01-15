@@ -14,9 +14,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.ggstudios.tools.datafixer.Main.*;
 
@@ -56,10 +60,10 @@ public class DataFetcher {
     }
 
     public static void fetchAllChampionJson() throws IOException, JSONException {
-        fetchAllChampionJson(null);
+        fetchAllChampionJson(null, false);
     }
 
-    public static void fetchAllChampionJson(String version) throws IOException, JSONException {
+    public static void fetchAllChampionJson(String version, boolean verbose) throws IOException, JSONException {
         if (version == null) {
             version = getLatestVersion();
         }
@@ -92,13 +96,18 @@ public class DataFetcher {
 
             File file = new File(dir, key + ".json");
 
+            JSONObject champDat = client.getChampionJson(value.getInt("id"), version);
             JSONObject o = new JSONObject();
-            o.put("data", client.getChampionJson(value.getInt("id"), version));
+            o.put("data", champDat);
             o.put("version", version);
 
             saveJsonObj(file.getCanonicalPath(), o);
 
-            p("|");
+            if (verbose) {
+                pln(String.format("%s - %d", champDat.getString("name"), champDat.getInt("id")));
+            } else {
+                p("|");
+            }
         }
         pln("");
         pln("All thumbs retrieved!");
@@ -151,7 +160,7 @@ public class DataFetcher {
             return;
         }
 
-        File dir = new File("res/item");
+        File dir = new File("res");
         dir.mkdir();
 
         JSONObject itemJson = client.getAllItemJson();
@@ -160,6 +169,38 @@ public class DataFetcher {
         pln("Retrieving new item data...");
 
         File file = new File(dir, "item.json");
+
+        JSONObject o = new JSONObject();
+        o.put("data", data);
+        o.put("version", version);
+
+        saveJsonObj(file.getCanonicalPath(), o);
+
+        pln("New data retrieved!");
+    }
+
+    public static void fetchAllRuneInfo() throws IOException, JSONException {
+        String version = getLatestVersion();
+
+        String curVer = "0.0.0";
+        try {
+            curVer  = ChampionInfoFixer.loadJsonObj("rune.json").getString("version");
+        } catch (Exception e) {}
+
+        if (curVer.equals(version)) {
+            pln("Rune data correct version. No need to re-fetch.");
+            return;
+        }
+
+        File dir = new File("res");
+        dir.mkdir();
+
+        JSONObject itemJson = client.getAllRuneJson();
+        JSONObject data = itemJson.getJSONObject("data");
+
+        pln("Retrieving new rune data...");
+
+        File file = new File(dir, "rune.json");
 
         JSONObject o = new JSONObject();
         o.put("data", data);
@@ -235,6 +276,8 @@ public class DataFetcher {
                 {LolApiClient.KEY_CHAMPION_DATA, LolApiClient.VALUE_PASSIVE}
         });
 
+        List<String> failedKeys = new ArrayList<>();
+
         JSONObject data = championJson.getJSONObject("data");
 
         String latestVersion = getLatestVersion();
@@ -251,22 +294,30 @@ public class DataFetcher {
             File imgFile = new File(dir, imageName);
 
             OutputStream os = new FileOutputStream(imgFile);
-            InputStream is = client.getPassiveImage(latestVersion, imageName);
 
-            byte[] b = new byte[2048];
-            int length;
+            try {
+                InputStream is = client.getPassiveImage(latestVersion, imageName);
 
-            while ((length = is.read(b)) != -1) {
-                os.write(b, 0, length);
+                byte[] b = new byte[2048];
+                int length;
+
+                while ((length = is.read(b)) != -1) {
+                    os.write(b, 0, length);
+                }
+
+                is.close();
+                os.close();
+
+                p("|");
+            } catch (IOException e) {
+                failedKeys.add(key);
             }
-
-            is.close();
-            os.close();
-
-            p("|");
         }
 
         pln("");
+        for (String s : failedKeys) {
+            System.err.println("Failed to get passive image with key: " + s);
+        }
         pln("All passive thumbs fetched!");
     }
 
@@ -283,6 +334,8 @@ public class DataFetcher {
 
         JSONObject data = itemJson.getJSONObject("data");
 
+        List<String> failedKeys = new ArrayList<>();
+
         String latestVersion = getLatestVersion();
         Iterator<?> iter = data.keys();
         while (iter.hasNext()) {
@@ -291,22 +344,90 @@ public class DataFetcher {
             File imgFile = new File(dir, key + ".png");
 
             OutputStream os = new FileOutputStream(imgFile);
-            InputStream is = client.getItemImage(latestVersion, key);
+            try {
+                InputStream is = client.getItemImage(latestVersion, key);
 
-            byte[] b = new byte[2048];
-            int length;
+                byte[] b = new byte[2048];
+                int length;
 
-            while ((length = is.read(b)) != -1) {
-                os.write(b, 0, length);
+                while ((length = is.read(b)) != -1) {
+                    os.write(b, 0, length);
+                }
+
+                is.close();
+                os.close();
+
+                p("|");
+            } catch (IOException e) {
+                failedKeys.add(key);
             }
-
-            is.close();
-            os.close();
-
-            p("|");
         }
 
         pln("");
+        for (String s : failedKeys) {
+            System.err.println("Failed to fetch item with key: " + s);
+        }
         pln("All item thumbs fetched!");
+    }
+
+    public static void fetchAllRuneThumb() throws IOException, JSONException, URISyntaxException {
+        p("Fetching all rune thumbnails ");
+
+        File dir = new File("res/rune");
+        if (dir.exists() && dir.isDirectory()) {
+            FileUtils.deleteDirectory(dir);
+        }
+        dir.mkdir();
+
+        JSONObject itemJson = client.getAllRuneJson();
+
+        JSONObject data = itemJson.getJSONObject("data");
+
+        List<String> failedKeys = new ArrayList<>();
+
+        String latestVersion = getLatestVersion();
+        Iterator<?> iter = data.keys();
+
+        Set<String> dled = new HashSet<String>();
+
+        while (iter.hasNext()) {
+            String key = (String) iter.next();
+
+            JSONObject runeInfo = data.getJSONObject(key);
+            String runeName = runeInfo.getJSONObject("image").getString("full");
+
+            if (dled.contains(runeName)) {
+                continue;
+            } else {
+                dled.add(runeName);
+            }
+
+            File imgFile = new File(dir, runeName);
+
+            OutputStream os = new FileOutputStream(imgFile);
+            try {
+                InputStream is = client.getRuneImage(latestVersion, runeName);
+
+                byte[] b = new byte[2048];
+                int length;
+
+                while ((length = is.read(b)) != -1) {
+                    os.write(b, 0, length);
+                }
+
+                is.close();
+                os.close();
+
+                p("|");
+            } catch (IOException e) {
+                failedKeys.add(runeName);
+            }
+        }
+
+        pln("");
+        for (String s : failedKeys) {
+            System.err.println("Failed to fetch rune with key: " + s);
+        }
+        pln("All rune thumbs fetched!");
     }
 }

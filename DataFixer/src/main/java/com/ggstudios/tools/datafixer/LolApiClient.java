@@ -27,11 +27,13 @@ public class LolApiClient {
     private static final String REQUEST_CHAMPION_SPECIFIC = "champion/%d";
     private static final String REQUEST_VERSIONS = "versions";
     private static final String REQUEST_ITEM_INFO = "item";
+    private static final String REQUEST_RUNE_INFO = "rune";
 
     public static final String KEY_API_KEY = "api_key";
     public static final String KEY_CHAMPION_DATA = "champData";
     public static final String KEY_VERSION = "version";
     public static final String KEY_ITEM_LIST_DATA = "itemListData";
+    public static final String KEY_RUNE_LIST_DATA = "runeListData";
 
     public static final String VALUE_SPELL = "spells";
     public static final String VALUE_PASSIVE = "passive";
@@ -123,6 +125,15 @@ public class LolApiClient {
         return new JSONObject(makeRequest(REQUEST_ITEM_INFO, makeExtras(arr)));
     }
 
+    public JSONObject getAllRuneJson() throws IOException, JSONException {
+        String[][] arr = new String[][] {
+                {KEY_API_KEY, apiKey},
+                {KEY_RUNE_LIST_DATA, "all"},
+        };
+
+        return new JSONObject(makeRequest(REQUEST_RUNE_INFO, makeExtras(arr)));
+    }
+
     public JSONArray getVersions() throws IOException, JSONException {
         String[][] arr = new String[][] {
                 {KEY_API_KEY, apiKey},
@@ -188,6 +199,12 @@ public class LolApiClient {
 
     public InputStream getItemImage(String version, String itemId) throws IOException {
         URL url = new URL(String.format("https://ddragon.leagueoflegends.com/cdn/%s/img/item/%s.png", version, itemId));
+        InputStream is = url.openStream();
+        return is;
+    }
+
+    public InputStream getRuneImage(String version, String runeKey) throws IOException {
+        URL url = new URL(String.format("https://ddragon.leagueoflegends.com/cdn/%s/img/rune/%s", version, runeKey));
         InputStream is = url.openStream();
         return is;
     }
