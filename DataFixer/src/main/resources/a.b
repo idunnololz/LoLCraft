@@ -496,7 +496,7 @@
             3,  METHOD_AOE_BURST|AP,1, 60, 105, 150, 195, 240, 0.75, "spelldamage",
                 METHOD_CC,          0, CC_DISPLACE, 550, 550, 550, 550, 550,
                 METHOD_MOBILITY,    0, MOBI_DASH, 1100, 1100, 1100, 1100, 1100,
-            2,  METHOD_TANK,        1, 100, 150, 200, 250, 300, 0.15, "bonushealth", "FlatHPPoolMod",
+            2,  METHOD_TANK,        1, 65, 70, 75, 80, 85, 0.07, 0.095, 0.12, 0.145, 0.17, "health", "FlatHPPoolMod",
                 METHOD_DOT_BURST|AP,1, 40, 55, 70, 85, 100, 0.4, "spelldamage",
             2,  METHOD_AOE_BURST|AP,1, 60, 100, 140, 180, 220, 0.5, "spelldamage",
                 METHOD_CC,          0, CC_AOE_SLOW, 0.3, 2, 0.35, 2, 0.4, 2, 0.45, 2, 0.5, 2,
@@ -683,7 +683,7 @@
             1,  METHOD_DPS,         1, 1, 50, 70, 90, 0.2, "spelldamage", "magic_aoe_dps",
 
 "Syndra",   0,
-            1,  METHOD_AOE_BURST|AP,1, 70, 110, 150, 190, 264.5, 0.6, 0.6, 0.6, 0.6, 0.69, "spelldamage",
+            1,  METHOD_AOE_BURST|AP,1, 50, 95, 140, 185, 230, 0.6, 0.6, 0.6, 0.6, 0.6, "spelldamage",
             2,  METHOD_AOE_BURST|AP,1,  80, 120, 160, 200, 240, 0.7, "spelldamage",
                 METHOD_CC,          0, CC_SLOW, 0.25, 1.5, 0.3, 1.5, 0.35, 1.5, 0.4, 1.5, 0.45, 2,
             2,  METHOD_AOE_BURST|AP,1, 70, 115, 160, 205, 250, 0.4, "spelldamage",
