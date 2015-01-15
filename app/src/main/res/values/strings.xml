@@ -240,6 +240,8 @@
     <string name="pref_show_changelog">Show \"What\'s new\" dialog</string>
     <string name="pref_sum_show_changelog">Show \"What\'s new\" dialog at the first launch of the application after every update</string>
     <string name="settings">Settings</string>
+    <string name="useful_links">Useful links</string>
+    <string name="useful_links_help">These links contain useful information about the champion and regarding crafting a build for the champion. Although in the future, some of the information found on these sites will be incorporated into LoLCraft, for the time being, it is simply easier to link to these sites for now.</string>
 
 
 </resources>

@@ -52,6 +52,7 @@ import com.ggstudios.lolcraft.Build.BuildItem;
 import com.ggstudios.lolcraft.Build.BuildObserver;
 import com.ggstudios.lolcraft.Build.BuildRune;
 import com.ggstudios.lolcraft.ChampionInfo.OnFullyLoadedListener;
+import com.ggstudios.utils.LinkUtils;
 import com.ggstudios.utils.Utils;
 import com.ggstudios.views.RearrangeableLinearLayout;
 import com.ggstudios.views.RearrangeableLinearLayout.OnEdgeDragListener;
@@ -81,6 +82,7 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
 	private static final String CLEAR_ITEM_DIALOG_TAG = "clear_item_dialog_tag";
 	private static final String CLEAR_RUNE_DIALOG_TAG = "clear_rune_dialog_tag";
     private static final String OVERWRITE_BUILD_DIALOG_TAG = "overwrite_build_dialog_tag";
+    private static final String USEFUL_LINKS_INFO_DIALOG_TAG = "useful_links_info_dialog_tag";
 
 	private TextView lblPartype;
 	private TextView lblPartypeRegen;
@@ -108,6 +110,11 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
     private Button btnSave;
     private Button btnSaveAs;
     private Button btnLoad;
+
+    private ImageButton btnLinkCs;
+    private ImageButton btnLinkMobafire;
+    private ImageButton btnLinkProbuilds;
+    private Button btnUsefulLinksHelp;
 
     private ProgressBar pbarItemBuild;
     private ProgressBar pbarRuneBuild;
@@ -268,6 +275,11 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
         btnSave = (Button) rootView.findViewById(R.id.btnSave);
         btnLoad = (Button) rootView.findViewById(R.id.btnLoad);
         btnSaveAs = (Button) rootView.findViewById(R.id.btnSaveAs);
+        btnUsefulLinksHelp = (Button) rootView.findViewById(R.id.btnUsefulLinksHelp);
+
+        btnLinkCs = (ImageButton) rootView.findViewById(R.id.btnLinkCs);
+        btnLinkMobafire = (ImageButton) rootView.findViewById(R.id.btnLinkMobafire);
+        btnLinkProbuilds = (ImageButton) rootView.findViewById(R.id.btnLinkProbuilds);
 
         pbarItemBuild = (ProgressBar) rootView.findViewById(R.id.rune_build_pbar);
         pbarRuneBuild = (ProgressBar) rootView.findViewById(R.id.item_build_pbar);
@@ -621,6 +633,36 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
             public void onClick(View view) {
                 SaveAsDialogFragment.newInstance(CraftBasicFragment.this)
                         .show(getFragmentManager(), "dialog");
+            }
+        });
+
+        btnUsefulLinksHelp.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialogFragment.Builder b = new Builder();
+                b.setMessage(R.string.useful_links_help);
+                b.create(CraftBasicFragment.this).show(getFragmentManager(), USEFUL_LINKS_INFO_DIALOG_TAG);
+            }
+        });
+
+        btnLinkCs.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinkUtils.launchCs(getActivity(), champInfo);
+            }
+        });
+
+        btnLinkMobafire.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinkUtils.launchMobafire(getActivity(), champInfo);
+            }
+        });
+
+        btnLinkProbuilds.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinkUtils.launchProbuilds(getActivity(), champInfo);
             }
         });
 

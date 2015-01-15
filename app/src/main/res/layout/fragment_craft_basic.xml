@@ -541,6 +541,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/controls"
             android:layout_below="@+id/runes_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -567,6 +568,82 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/controls"
+            android:layout_marginBottom="30dp"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/useful_links"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <View
+                    style="@style/VerticalDivider"
+                    android:layout_height="14sp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="5dp" />
+
+                <Button
+                    android:id="@+id/btnUsefulLinksHelp"
+                    style="@style/LabelButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:gravity="bottom"
+                    android:minHeight="48dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/question_mark"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+
+                <ImageButton
+                    android:id="@+id/btnLinkCs"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="10dp"
+                    android:src="@drawable/link_ic_cs"
+                    android:background="?attr/selectableItemBackground"/>
+
+                <ImageButton
+                    android:id="@+id/btnLinkMobafire"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="10dp"
+                    android:src="@drawable/link_ic_mobafire"
+                    android:background="?attr/selectableItemBackground"/>
+
+                <ImageButton
+                    android:id="@+id/btnLinkProbuilds"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="10dp"
+                    android:src="@drawable/link_ic_probuilds"
+                    android:background="?attr/selectableItemBackground"/>
+            </LinearLayout>
 
         </LinearLayout>
     </RelativeLayout>

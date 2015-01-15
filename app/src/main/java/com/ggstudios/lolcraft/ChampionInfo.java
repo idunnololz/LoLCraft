@@ -65,6 +65,18 @@ public class ChampionInfo {
 	double mrG;
 
 	boolean fullyLoaded = false;
+
+    public int getId() {
+        return id;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public String getName() {
+        return name;
+    }
 	
 	/**
 	 * Gets an array of all skills including the passive. The passive is the first element.
