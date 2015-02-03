@@ -33,6 +33,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -45,6 +46,7 @@ public class RunePickerDialogFragment extends ItemPickerDialogFragment {
 	private GridView content;
 	private List<RuneInfo> runes;
 	private EditText searchField;
+    private ProgressBar pbar;
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,11 +56,13 @@ public class RunePickerDialogFragment extends ItemPickerDialogFragment {
 		
 		View filterPane = rootView.findViewById(R.id.filterPane);
 		filterPane.setVisibility(View.GONE);
+
+        pbar = (ProgressBar) rootView.findViewById(R.id.pbar);
 		
 		searchField = (EditText) rootView.findViewById(R.id.searchField);
 		searchField.addTextChangedListener(new TextWatcher(){
 	        public void afterTextChanged(Editable s) {
-	        	String str = s.toString();
+            String str = s.toString();
 	        	ListAdapter adapter = content.getAdapter();
 	        	if (adapter != null) {
 	        		((RuneInfoAdapter) adapter).filter(str);
@@ -78,6 +82,7 @@ public class RunePickerDialogFragment extends ItemPickerDialogFragment {
 		if (runes == null) {
 			initializeItemInfo();
 		} else {
+            pbar.setVisibility(View.GONE);
 			filterAndShowRunes();
 		}
 
@@ -158,6 +163,11 @@ public class RunePickerDialogFragment extends ItemPickerDialogFragment {
 		TextView desc;
 		
 		RuneInfo rune;
+
+        ViewHolder() {}
+        ViewHolder ViewHolder(){
+            return this;
+        }
 	}
 
 	public class RuneInfoAdapter extends BaseAdapter {
