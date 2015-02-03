@@ -11,6 +11,7 @@ public class Method {
             TR = 0x04000000,
 			BASE_METHOD_MASK = 0x00FFFFFF,
 
+            METHOD_NONE = 0,
 			METHOD_DPS = 1,
 			METHOD_SUSTAIN = 2,
 			METHOD_BURST = 3,

@@ -250,7 +250,7 @@ public class CraftSummaryFragment extends Fragment {
 
             analysis.as = rawStats[Build.STAT_AS];
             analysis.damagePerAa = rawStats[Build.STAT_TOTAL_AD] + rawStats[Build.STAT_AA_TRUE_DAMAGE] + rawStats[Build.STAT_AA_MAGIC_DAMAGE];
-            analysis.dps = analysis.as * analysis.damagePerAa;
+            analysis.dps = analysis.as * analysis.damagePerAa + rawStats[Build.STAT_AOE_DPS_MAGIC];
             analysis.range = rawStats[Build.STAT_TOTAL_RANGE];
 
             analysis.bonuses.clear();
@@ -673,6 +673,10 @@ public class CraftSummaryFragment extends Fragment {
             try {
                 List<Integer> methods = getAllMethods(info);
 
+                if (info.id == 60) { // elise...
+                    analysis.add(new NoAnalysis());
+                    return analysis;
+                }
 
                 analysis.add(analyzeTank(info, build, GamePhase.END_GAME));
                 analysis.add(analyzeDps(info, build, GamePhase.END_GAME));
@@ -1036,6 +1040,12 @@ public class CraftSummaryFragment extends Fragment {
                     }
                     break;
                 }
+                case Method.METHOD_NONE: {
+                    if (v == null) {
+                        v = inflater.inflate(R.layout.item_analysis_none, parent, false);
+                    }
+                    break;
+                }
             }
 
             return v;
@@ -1367,6 +1377,15 @@ public class CraftSummaryFragment extends Fragment {
         protected void populateBonuses() {
             super.bonuses = this.bonuses;
         }
+    }
+
+    private static class NoAnalysis extends MethodAnalysis {
+        public NoAnalysis() {
+            methodType = Method.METHOD_NONE;
+        }
+
+        @Override
+        protected void populateBonuses() {}
     }
 
 

@@ -103,60 +103,56 @@ public class Build {
     public static final int STAT_AOE_DPS_MAGIC = 37;
     public static final int STAT_PERCENT_HP_MISSING = 38;
     public static final int STAT_UNDYING = 39;
+    public static final int STAT_UNTARGETABLE = 40;
 
-    public static final int STAT_TOTAL_AR = 40;
-    public static final int STAT_TOTAL_AD = 41;
-    public static final int STAT_TOTAL_HP = 42;
-    public static final int STAT_CD_MOD = 43;
-    public static final int STAT_TOTAL_AP = 44;
-    public static final int STAT_TOTAL_MS = 45;
-    public static final int STAT_TOTAL_MR = 46;
-    public static final int STAT_AS = 47;
-    public static final int STAT_LEVEL = 48;
-    public static final int STAT_TOTAL_RANGE = 49;
-    public static final int STAT_TOTAL_MP = 50;
+    public static final int STAT_TOTAL_AR = 50;
+    public static final int STAT_TOTAL_AD = 51;
+    public static final int STAT_TOTAL_HP = 52;
+    public static final int STAT_CD_MOD = 53;
+    public static final int STAT_TOTAL_AP = 54;
+    public static final int STAT_TOTAL_MS = 55;
+    public static final int STAT_TOTAL_MR = 56;
+    public static final int STAT_AS = 57;
+    public static final int STAT_LEVEL = 58;
+    public static final int STAT_TOTAL_RANGE = 59;
+    public static final int STAT_TOTAL_MP = 60;
 
-    public static final int STAT_BONUS_AD = 60;
-    public static final int STAT_BONUS_HP = 61;
-    public static final int STAT_BONUS_MS = 62;
-    public static final int STAT_BONUS_AP = 44;	// note that cause base AP is always 0, bonusAp always = totalAp
-    public static final int STAT_BONUS_AR = 63;
-    public static final int STAT_BONUS_MR = 64;
-    public static final int STAT_LEVEL_MINUS_ONE = 65;
-    public static final int STAT_CRIT_DMG = 66;
+    public static final int STAT_BONUS_AD = 70;
+    public static final int STAT_BONUS_HP = 71;
+    public static final int STAT_BONUS_MS = 72;
+    public static final int STAT_BONUS_AP = 54;	// note that cause base AP is always 0, bonusAp always = totalAp
+    public static final int STAT_BONUS_AR = 73;
+    public static final int STAT_BONUS_MR = 74;
+    public static final int STAT_LEVEL_MINUS_ONE = 75;
+    public static final int STAT_CRIT_DMG = 76;
 
-    public static final int STAT_AA_DPS = 70;
+    public static final int STAT_AA_DPS = 80;
 
-    public static final int STAT_NAUTILUS_Q_CD = 80;
-    public static final int STAT_RENGAR_Q_BASE_DAMAGE = 81;
-    public static final int STAT_VI_W     = 82;
-    public static final int STAT_STACKS = 83;   // generic stat... could be used for Ashe/Nasus, etc
-    public static final int STAT_SOULS = 84;
-    public static final int STAT_JAX_R_ARMOR_SCALING = 85;
-    public static final int STAT_JAX_R_MR_SCALING = 86;
-    public static final int STAT_DARIUS_R_MAX_DAMAGE = 87;
-    public static final int STAT_JAYCE_W_SCALING = 88;
-    public static final int STAT_DYNAMIC_AP = 89;
-    public static final int STAT_BRAUM_W_ARMOR = 90;
-    public static final int STAT_BRAUM_W_MR = 91;
+    public static final int STAT_NAUTILUS_Q_CD = 90;
+    public static final int STAT_RENGAR_Q_BASE_DAMAGE = 91;
+    public static final int STAT_VI_W     = 92;
+    public static final int STAT_STACKS = 93;   // generic stat... could be used for Ashe/Nasus, etc
+    public static final int STAT_SOULS = 94;
+    public static final int STAT_JAX_R_ARMOR_SCALING = 95;
+    public static final int STAT_JAX_R_MR_SCALING = 96;
+    public static final int STAT_DARIUS_R_MAX_DAMAGE = 97;
+    public static final int STAT_JAYCE_W_SCALING = 98;
+    public static final int STAT_DYNAMIC_AP = 99;
+    public static final int STAT_BRAUM_W_ARMOR = 100;
+    public static final int STAT_BRAUM_W_MR = 101;
 
-    public static final int STAT_ENEMY_MISSING_HP = 100;
-    public static final int STAT_ENEMY_CURRENT_HP = 101;
-    public static final int STAT_ENEMY_MAX_HP = 102;
-    public static final int STAT_TARGET_AP = 103;
+    public static final int STAT_ENEMY_MISSING_HP = 110;
+    public static final int STAT_ENEMY_CURRENT_HP = 111;
+    public static final int STAT_ENEMY_MAX_HP = 112;
+    public static final int STAT_TARGET_AP = 113;
 
-    public static final int STAT_ONE      = 120;
+    public static final int STAT_ONE      = 130;
 
     public static final int STAT_TYPE_DEFAULT = 0;
     public static final int STAT_TYPE_PERCENT = 1;
 
-    private static final int MAX_STATS = 121;
+    private static final int MAX_STATS = 131;
     private static final int MAX_ACTIVE_ITEMS = 6;
-
-    public static final String JSON_KEY_RUNES = "runes";
-    public static final String JSON_KEY_ITEMS = "items";
-    public static final String JSON_KEY_BUILD_NAME = "build_name";
-    public static final String JSON_KEY_COLOR = "color";
 
     private static final Map<String, Integer> statKeyToIndex = new HashMap<String, Integer>();
     private static final SparseIntArray statIdToStringId = new SparseIntArray();
@@ -234,7 +230,7 @@ public class Build {
         statKeyToIndex.put("PercentSpellBlockMod", 		STAT_NULL);
         statKeyToIndex.put("PercentSpellVampMod", 		STAT_SV);
         statKeyToIndex.put("CCRed",                     STAT_CC_RED);
-        statKeyToIndex.put("FlatAaTrueDamageMod",         STAT_AA_TRUE_DAMAGE);
+        statKeyToIndex.put("FlatAaTrueDamageMod",       STAT_AA_TRUE_DAMAGE);
         statKeyToIndex.put("FlatAaMagicDamageMod",      STAT_AA_MAGIC_DAMAGE);
         statKeyToIndex.put("magic_aoe_dps",             STAT_AOE_DPS_MAGIC);
         statKeyToIndex.put("perpercenthpmissing",       STAT_PERCENT_HP_MISSING);
@@ -268,6 +264,7 @@ public class Build {
         statKeyToIndex.put("CcImmune",                          STAT_CC_IMMUNE);
         statKeyToIndex.put("InvulnerabilityButOne",             STAT_INVULNERABILITY_ALL_BUT_ONE);
         statKeyToIndex.put("Undying",                           STAT_UNDYING);
+        statKeyToIndex.put("Untargetable",                      STAT_UNTARGETABLE);
 
         // keys used for skills...
         statKeyToIndex.put("spelldamage", 			STAT_TOTAL_AP);
@@ -337,6 +334,7 @@ public class Build {
         a.put(STAT_AA_TRUE_DAMAGE, R.string.stat_desc_aa_true_damage);
         a.put(STAT_CC_RED, R.string.stat_desc_cc_red);
         a.put(STAT_AOE_DPS_MAGIC, R.string.stat_desc_aoe_dps_magic);
+        a.put(STAT_UNTARGETABLE, R.string.stat_desc_untargetable);
         //		public static final int STAT_CRIT = 11;
         //		public static final int STAT_AP = 12;
         //		public static final int STAT_LS = 13;
