@@ -23,7 +23,7 @@ import javax.xml.crypto.Data;
 
 
 public class Main {
-	public static void pln(String p) {
+    public static void pln(String p) {
 		System.out.println(p);
 	}
 
@@ -105,7 +105,7 @@ public class Main {
 		br.write(obj.toString());
 		br.close();
 	}
-	
+
 	public static void fixItemJson() throws IOException, JSONException {
 		// Load the JSON object containing champ data first...
         File file = new File("res/item.json");
@@ -192,21 +192,21 @@ public class Main {
 
 	public static void main(String[] args) {
 		try {
-            DataFetcher.listAllVersions();
+            //DataFetcher.listAllVersions();
 
             // Updates champion data... outputs to out/ and res/
             //DataFetcher.fetchAllChampionThumb();
-            //DataFetcher.fetchAllChampionJson();
+            DataFetcher.fetchAllChampionJson();
             //DataFetcher.fetchAllSpellThumb();
             //DataFetcher.fetchAllPassiveThumb();
             //DataFetcher.fetchAllRuneInfo();
-            DataFetcher.fetchAllRuneThumb();
+            //DataFetcher.fetchAllRuneThumb();
 
             //DataFetcher.fetchAllItemInfo();
             //DataFetcher.fetchAllItemThumb();
 
             ChampionInfoFixer.fixChampionInfo();
-			fixItemJson();
+			//fixItemJson();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
