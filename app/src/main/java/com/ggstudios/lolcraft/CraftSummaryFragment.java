@@ -1088,6 +1088,11 @@ public class CraftSummaryFragment extends Fragment {
                     builder.append(humanFormat.format(b.value * 100));
                     builder.append('%');
                     break;
+                case Build.STAT_TYPE_SECONDS:
+                    builder.append(humanFormat.format(b.value));
+                    builder.append(" ");
+                    builder.append(context.getString(R.string.seconds));
+                    break;
             }
             builder.append(' ');
             builder.append(context.getString(Build.getStatName(b.statTypeId)));

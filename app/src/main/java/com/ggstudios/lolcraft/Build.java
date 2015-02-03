@@ -150,6 +150,7 @@ public class Build {
 
     public static final int STAT_TYPE_DEFAULT = 0;
     public static final int STAT_TYPE_PERCENT = 1;
+    public static final int STAT_TYPE_SECONDS = 2;
 
     private static final int MAX_STATS = 131;
     private static final int MAX_ACTIVE_ITEMS = 6;
@@ -335,6 +336,7 @@ public class Build {
         a.put(STAT_CC_RED, R.string.stat_desc_cc_red);
         a.put(STAT_AOE_DPS_MAGIC, R.string.stat_desc_aoe_dps_magic);
         a.put(STAT_UNTARGETABLE, R.string.stat_desc_untargetable);
+        a.put(STAT_UNDYING, R.string.stat_desc_undying);
         //		public static final int STAT_CRIT = 11;
         //		public static final int STAT_AP = 12;
         //		public static final int STAT_LS = 13;
@@ -1461,6 +1463,8 @@ public class Build {
             case STAT_CC_RED:
             case STAT_ASP:
                 return STAT_TYPE_PERCENT;
+            case STAT_UNDYING:
+                return STAT_TYPE_SECONDS;
             default:
                 return STAT_TYPE_DEFAULT;
         }
