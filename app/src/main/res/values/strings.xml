@@ -222,16 +222,14 @@
     <string name="skill_stat_total_hp">HP</string>
     <string name="changelog">What\'s new</string>
     <string name="changelog_text"><![CDATA[
-<b>0.2.9</b>
+Apologies for the slow update. I\'m currently busy with school work so updates may occur less frequently. Nonetheless, here\'s version 0.2.10.
+<br><br>
+<b>0.2.10</b>
 <br>
 <small>
-[+] "What's new" dialog that will appear per update (can be disabled in the Settings screen)
+[+] Added detailed analysis information for Vladimir, Volibear, Warwick, Wukong, Xerath, XinZhao
 <br>
-[+] Settings screen
-<br>
-[+] Useful links
-<br>
-[+] Updated data to match LoL version 5.1
+[!] Updated data to match LoL version 5.2
 <br>
 [!] Fixed more bugs
 </small>
