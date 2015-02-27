@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -190,13 +191,30 @@ public class Main {
 		saveJsonObj("item.json", o);
 	}
 
+    public static void fetchAll() throws IOException, JSONException, URISyntaxException {
+        DataFetcher.fetchAllChampionThumb();
+        DataFetcher.fetchAllChampionJson();
+        DataFetcher.fetchAllSpellThumb();
+        DataFetcher.fetchAllPassiveThumb();
+        DataFetcher.fetchAllRuneInfo();
+        DataFetcher.fetchAllRuneThumb();
+
+        DataFetcher.fetchAllItemInfo();
+        DataFetcher.fetchAllItemThumb();
+
+        ChampionInfoFixer.fixChampionInfo();
+        fixItemJson();
+    }
+
 	public static void main(String[] args) {
 		try {
+            fetchAll();
+
             //DataFetcher.listAllVersions();
 
             // Updates champion data... outputs to out/ and res/
             //DataFetcher.fetchAllChampionThumb();
-            DataFetcher.fetchAllChampionJson();
+            //DataFetcher.fetchAllChampionJson();
             //DataFetcher.fetchAllSpellThumb();
             //DataFetcher.fetchAllPassiveThumb();
             //DataFetcher.fetchAllRuneInfo();
@@ -205,7 +223,7 @@ public class Main {
             //DataFetcher.fetchAllItemInfo();
             //DataFetcher.fetchAllItemThumb();
 
-            ChampionInfoFixer.fixChampionInfo();
+            //ChampionInfoFixer.fixChampionInfo();
 			//fixItemJson();
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -127,6 +127,10 @@ public class ChampionInfo {
 			}
 		}
 	}
+
+    public boolean isFullyLoaded() {
+        return fullyLoaded;
+    }
 	
 	public void getSkills(final OnSkillsLoadedListener listener) {
 		if (skills == null) {

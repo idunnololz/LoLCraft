@@ -222,16 +222,10 @@
     <string name="skill_stat_total_hp">HP</string>
     <string name="changelog">What\'s new</string>
     <string name="changelog_text"><![CDATA[
-Apologies for the slow update. I\'m currently busy with school work so updates may occur less frequently. Nonetheless, here\'s version 0.2.10.
-<br><br>
-<b>0.2.10</b>
+<b>0.2.11</b>
 <br>
 <small>
-[+] Added detailed analysis information for Vladimir, Volibear, Warwick, Wukong, Xerath, XinZhao
-<br>
-[!] Updated data to match LoL version 5.2
-<br>
-[!] Fixed more bugs
+[!] Updated data to match LoL version 5.4
 </small>
 ]]></string>
     <string name="key_show_changelog">show_changelog</string>
@@ -245,6 +239,8 @@ Apologies for the slow update. I\'m currently busy with school work so updates m
     <string name="no_analysis_explaination">Sorry, but there is currently no analysis information available for this champion. Please wait for analysis information to be added in a future release.</string>
     <string name="stat_desc_undying">champion cannot die</string>
     <string name="seconds">seconds</string>
+    <string name="dev_menu">Dev menu</string>
+    <string name="do_stat_analysis">Do stat analysis</string>
 
 
 </resources>
