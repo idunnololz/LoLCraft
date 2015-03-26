@@ -241,6 +241,8 @@
     <string name="seconds">seconds</string>
     <string name="dev_menu">Dev menu</string>
     <string name="do_stat_analysis">Do stat analysis</string>
+    <string name="skill_stat_bonus_ar">bonus armor</string>
+    <string name="skill_stat_bonus_mr">bonus magic resistance</string>
 
 
 </resources>

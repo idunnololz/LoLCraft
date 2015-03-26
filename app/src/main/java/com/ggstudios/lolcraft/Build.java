@@ -390,6 +390,8 @@ public class Build {
         b.put(STAT_JAX_R_ARMOR_SCALING, R.string.skill_stat_bonus_ad);
         b.put(STAT_JAX_R_MR_SCALING,    R.string.skill_stat_ap);
         b.put(STAT_TOTAL_HP,            R.string.skill_stat_total_hp);
+        b.put(STAT_BONUS_AR,            R.string.skill_stat_bonus_ar);
+        b.put(STAT_BONUS_MR,            R.string.skill_stat_bonus_mr);
 //        public static final int STAT_TOTAL_AR = 40;
 //        public static final int STAT_TOTAL_AD = 41;
 //        public static final int STAT_TOTAL_HP = 42;
