@@ -568,6 +568,7 @@ public class Build {
     }
 
     public void addItem(ItemInfo item, int count, boolean isAll) {
+        if (item == null) return;
         BuildItem buildItem = null;
         BuildItem last = getLastItem();
         if (last != null && item == last.info) {
