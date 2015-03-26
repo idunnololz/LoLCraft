@@ -424,7 +424,7 @@ public class MainFragment extends Fragment implements SearchView.OnQueryTextList
                     holder.runnable = new Runnable() {
                         @Override
                         public void run() {
-                            SplashFetcher.FetchToken token = SplashFetcher.getInstance().fetchChampionSplash(
+                            holder.lastToken = SplashFetcher.getInstance().fetchChampionSplash(
                                     android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB ?
                                             THREAD_POOL_EXECUTOR : null,
                                     holder.lastInfo.key, holder.splash.getWidth(), 0, new SplashFetcher.OnDrawableRetrievedListener() {
@@ -438,8 +438,6 @@ public class MainFragment extends Fragment implements SearchView.OnQueryTextList
                                         }
 
                                     });
-
-                            holder.lastToken = token;
                         }
                     };
 
@@ -592,7 +590,7 @@ public class MainFragment extends Fragment implements SearchView.OnQueryTextList
     };
 
     private static final BlockingQueue<Runnable> sPoolWorkQueue =
-            new LinkedBlockingQueue<Runnable>(128);
+            new LinkedBlockingQueue<Runnable>(256);
 
     /**
      * An {@link java.util.concurrent.Executor} that can be used to execute tasks in parallel.
