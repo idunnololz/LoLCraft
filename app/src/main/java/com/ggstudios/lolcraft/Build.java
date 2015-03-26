@@ -578,7 +578,7 @@ public class Build {
             }
         }
 
-        if (isAll == false) {
+        if (!isAll) {
             itemBuildDirty = true;
         }
 
