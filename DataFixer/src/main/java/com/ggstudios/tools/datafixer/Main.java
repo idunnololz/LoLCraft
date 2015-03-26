@@ -208,13 +208,13 @@ public class Main {
 
 	public static void main(String[] args) {
 		try {
-            fetchAll();
+            //fetchAll();
 
             //DataFetcher.listAllVersions();
 
             // Updates champion data... outputs to out/ and res/
             //DataFetcher.fetchAllChampionThumb();
-            //DataFetcher.fetchAllChampionJson();
+            DataFetcher.fetchAllChampionJson();
             //DataFetcher.fetchAllSpellThumb();
             //DataFetcher.fetchAllPassiveThumb();
             //DataFetcher.fetchAllRuneInfo();
@@ -223,7 +223,7 @@ public class Main {
             //DataFetcher.fetchAllItemInfo();
             //DataFetcher.fetchAllItemThumb();
 
-            //ChampionInfoFixer.fixChampionInfo();
+            ChampionInfoFixer.fixChampionInfo();
 			//fixItemJson();
 		} catch (Exception e) {
 			e.printStackTrace();

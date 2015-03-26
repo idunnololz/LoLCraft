@@ -28,6 +28,7 @@ public class LinkUtils {
         keyToMobafireId.put(34, 25);    // Anivia
         keyToMobafireId.put(22, 13);    // Ashe
         keyToMobafireId.put(268, 121);  // Azir
+        keyToMobafireId.put(432, 124);  // bard
         keyToMobafireId.put(53, 34);    // Blitzcrank
         keyToMobafireId.put(63, 74);    // Brand
         keyToMobafireId.put(201, 119);  // Braum
