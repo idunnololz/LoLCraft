@@ -26,7 +26,7 @@ import com.ggstudios.dialogs.AlertDialogFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SplashActivity extends FragmentActivity implements AlertDialogFragment.AlertDialogFragmentListener {
+public class SplashActivity extends FragmentActivity {
 
 	private static final int SLOW_ANIMATION_DURATION = 1500;
 	private static final int ANIMATION_DURATION = 300;
@@ -80,10 +80,18 @@ public class SplashActivity extends FragmentActivity implements AlertDialogFragm
 
 			@Override
 			public void onAnimationEnd(Animation animation) {
-				AlertDialogFragment.Builder builder = new AlertDialogFragment.Builder();
-				builder.setTitle(R.string.welcome)
-				.setMessage(R.string.release_notes)
-				.create().show(getSupportFragmentManager(), "dialog");
+                showProgressBar();
+                progressBar.postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Editor editor = prefs.edit();
+                        editor.putBoolean(LauncherActivity.KEY_OPEN_ONCE, true);
+                        editor.commit();
+                        showEnterButton();
+                    }
+
+                }, 2000);
 			}
 
 			@Override
@@ -101,6 +109,11 @@ public class SplashActivity extends FragmentActivity implements AlertDialogFragm
 		});
 		cover.startAnimation(ani);
 	}
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //No call for super(). Bug on API Level > 11.
+    }
 	
 	private void showProgressBar() {
 		AnimationDrawable d = getAnimationFromBitmap(R.drawable.indeterminate_progressbar_bg);
@@ -171,27 +184,6 @@ public class SplashActivity extends FragmentActivity implements AlertDialogFragm
 		btnEnter.setVisibility(View.VISIBLE);
 		btnEnter.startAnimation(ani);
 	}
-
-	@Override
-	public void onPositiveClick(AlertDialogFragment dialog, String tag) {
-		dialog.dismiss();
-		
-		showProgressBar();
-		progressBar.postDelayed(new Runnable() {
-
-			@Override
-			public void run() {
-				Editor editor = prefs.edit();
-				editor.putBoolean(LauncherActivity.KEY_OPEN_ONCE, true);
-				editor.commit();
-				showEnterButton();
-			}
-			
-		}, 2000);
-	}
-
-	@Override
-	public void onNegativeClick(AlertDialogFragment dialog, String tag) {}
 	
 	private void gotoMain() {
 		Intent i = new Intent(this, MainActivity.class);
