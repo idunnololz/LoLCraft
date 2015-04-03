@@ -32,11 +32,15 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.ggstudios.animation.ResizeAnimation;
+import com.ggstudios.dialogs.AlertDialogFragment;
+import com.ggstudios.dialogs.BuildManagerDialogFragment;
 import com.ggstudios.dialogs.ItemPickerDialogFragment.ItemPickerDialogListener;
 import com.ggstudios.dialogs.RunePickerDialogFragment.RunePickerDialogListener;
+import com.ggstudios.dialogs.SaveAsDialogFragment;
 import com.ggstudios.dialogs.StatSummaryDialogFragment;
 import com.ggstudios.lolcraft.ChampionInfo.OnFullyLoadedListener;
 import com.ggstudios.lolcraft.SplashFetcher.OnDrawableRetrievedListener;
@@ -54,12 +58,15 @@ import java.util.List;
 import timber.log.Timber;
 
 public class CraftActivity extends ActionBarActivity implements ItemPickerDialogListener,
-        RunePickerDialogListener, CraftBasicFragment.BuildManagerProvider {
+        RunePickerDialogListener, CraftBasicFragment.BuildManagerProvider,
+        SaveAsDialogFragment.SaveAsDialogListener, AlertDialogFragment.AlertDialogFragmentListener {
 	private static final String TAG = "CraftActivity";
 
 	public static final String EXTRA_CHAMPION_ID = "champId";
 
     private static final String TAG_CHAMPION_ID = "champId";
+
+    private static final String OVERWRITE_BUILD_DIALOG_TAG = "overwrite_build_dialog_tag";
 	
 	private static final int PARALLAX_WIDTH_DP = 10;
 	private static final int RESIZE_DURATION = 200;
@@ -450,6 +457,22 @@ public class CraftActivity extends ActionBarActivity implements ItemPickerDialog
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+            case R.id.action_save:
+                if (build.getBuildName() == null) {
+                    SaveAsDialogFragment.newInstance()
+                            .show(getSupportFragmentManager(), "dialog");
+                } else {
+                    trySaveBuild(build.getBuildName(), true);
+                }
+                return true;
+            case R.id.action_load:
+                BuildManagerDialogFragment frag = BuildManagerDialogFragment.newInstance();
+                frag.show(getSupportFragmentManager(), "dialog");
+                return true;
+            case R.id.action_save_as:
+                SaveAsDialogFragment.newInstance()
+                        .show(getSupportFragmentManager(), "dialog");
+                return true;
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
@@ -469,10 +492,57 @@ public class CraftActivity extends ActionBarActivity implements ItemPickerDialog
 		return super.onOptionsItemSelected(item);
 	}
 
+    private boolean trySaveBuild(String buildName, boolean force) {
+        int result = getBuildManager().saveBuild(build, buildName, force);
+        switch (result) {
+            case BuildManager.RETURN_CODE_SUCCESS:
+                return true;
+            case BuildManager.RETURN_CODE_BUILD_NAME_EXIST:
+                AlertDialogFragment dialog = new AlertDialogFragment.Builder()
+                        .setMessage(getString(R.string.confirm_build_overwrite, buildName))
+                        .setPositiveButton(android.R.string.ok)
+                        .setNegativeButton(android.R.string.cancel)
+                        .create();
+
+                dialog.getArguments().putString("buildName", buildName);
+
+                dialog.show(getSupportFragmentManager(), OVERWRITE_BUILD_DIALOG_TAG);
+                return false;
+            case BuildManager.RETURN_CODE_BUILD_INVALID_NAME:
+                Toast.makeText(this, R.string.invalid_build_name, Toast.LENGTH_LONG).show();
+                return false;
+            default:
+                return false;
+        }
+    }
+
+    @Override
+    public void onSaveAsDialogOkClick(DialogFragment frag, String text) {
+        if (trySaveBuild(text, false)) {
+            frag.dismiss();
+        }
+    }
+
+    @Override
+    public void onSaveAsDialogCancelClick(DialogFragment frag) {
+        frag.dismiss();
+    }
+
     @Override
     public BuildManager getBuildManager() {
         return buildManager;
     }
+
+    @Override
+    public void onPositiveClick(AlertDialogFragment dialog, String tag) {
+        if (tag.equals(OVERWRITE_BUILD_DIALOG_TAG)) {
+            String buildName = dialog.getArguments().getString("buildName");
+            trySaveBuild(buildName, true);
+        }
+    }
+
+    @Override
+    public void onNegativeClick(AlertDialogFragment dialog, String tag) {}
 
     public static class TabAdapter extends FragmentPagerAdapter implements TabIndicator.TabAdapter {
 		private List<TabItem> items;

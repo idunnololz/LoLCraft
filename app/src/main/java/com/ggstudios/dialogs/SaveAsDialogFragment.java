@@ -1,5 +1,6 @@
 package com.ggstudios.dialogs;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -18,6 +19,11 @@ public class SaveAsDialogFragment extends DialogFragment {
     public static SaveAsDialogFragment newInstance(Fragment fragment) {
         SaveAsDialogFragment instance = new SaveAsDialogFragment();
         instance.setTargetFragment(fragment, 0);
+        return instance;
+    }
+
+    public static SaveAsDialogFragment newInstance() {
+        SaveAsDialogFragment instance = new SaveAsDialogFragment();
         return instance;
     }
 

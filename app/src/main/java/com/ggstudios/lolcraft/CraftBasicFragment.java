@@ -64,7 +64,7 @@ import java.text.DecimalFormat;
 import timber.log.Timber;
 
 public class CraftBasicFragment extends Fragment implements BuildObserver,
-        AlertDialogFragment.AlertDialogFragmentListener, SaveAsDialogFragment.SaveAsDialogListener {
+        AlertDialogFragment.AlertDialogFragmentListener {
 	private static final String TAG = "CraftBasicFragment";
 
 	public static final String EXTRA_CHAMPION_ID = "champId";
@@ -81,7 +81,6 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
 
 	private static final String CLEAR_ITEM_DIALOG_TAG = "clear_item_dialog_tag";
 	private static final String CLEAR_RUNE_DIALOG_TAG = "clear_rune_dialog_tag";
-    private static final String OVERWRITE_BUILD_DIALOG_TAG = "overwrite_build_dialog_tag";
     private static final String USEFUL_LINKS_INFO_DIALOG_TAG = "useful_links_info_dialog_tag";
 
 	private TextView lblPartype;
@@ -107,9 +106,6 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
 	private ImageButton btnTrash;
 	private LinearLayout runeContainer;
 	private HorizontalScrollView runeScrollView;
-    private Button btnSave;
-    private Button btnSaveAs;
-    private Button btnLoad;
 
     private ImageButton btnLinkCs;
     private ImageButton btnLinkMobafire;
@@ -272,9 +268,6 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
 		btnTrash = (ImageButton) rootView.findViewById(R.id.btnTrash);
 		runeContainer = (LinearLayout) rootView.findViewById(R.id.runes);
 		runeScrollView = (HorizontalScrollView) rootView.findViewById(R.id.runeScrollView);
-        btnSave = (Button) rootView.findViewById(R.id.btnSave);
-        btnLoad = (Button) rootView.findViewById(R.id.btnLoad);
-        btnSaveAs = (Button) rootView.findViewById(R.id.btnSaveAs);
         btnUsefulLinksHelp = (Button) rootView.findViewById(R.id.btnUsefulLinksHelp);
 
         btnLinkCs = (ImageButton) rootView.findViewById(R.id.btnLinkCs);
@@ -608,34 +601,6 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
 
 		});
 
-        btnSave.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (build.getBuildName() == null) {
-                    SaveAsDialogFragment.newInstance(CraftBasicFragment.this)
-                            .show(getFragmentManager(), "dialog");
-                } else {
-                    trySaveBuild(build.getBuildName(), true);
-                }
-            }
-        });
-
-        btnLoad.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                BuildManagerDialogFragment frag = BuildManagerDialogFragment.newInstance();
-                frag.show(getFragmentManager(), "dialog");
-            }
-        });
-
-        btnSaveAs.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SaveAsDialogFragment.newInstance(CraftBasicFragment.this)
-                        .show(getFragmentManager(), "dialog");
-            }
-        });
-
         btnUsefulLinksHelp.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -668,42 +633,6 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
 
 		return rootView;
 	}
-
-    @Override
-    public void onSaveAsDialogOkClick(DialogFragment frag, String text) {
-        if (trySaveBuild(text, false)) {
-            frag.dismiss();
-        }
-    }
-
-    @Override
-    public void onSaveAsDialogCancelClick(DialogFragment frag) {
-        frag.dismiss();
-    }
-
-    private boolean trySaveBuild(String buildName, boolean force) {
-        int result = getBuildManager().saveBuild(build, buildName, force);
-        switch (result) {
-            case BuildManager.RETURN_CODE_SUCCESS:
-                return true;
-            case BuildManager.RETURN_CODE_BUILD_NAME_EXIST:
-                AlertDialogFragment dialog = new Builder()
-                        .setMessage(getString(R.string.confirm_build_overwrite, buildName))
-                        .setPositiveButton(android.R.string.ok)
-                        .setNegativeButton(android.R.string.cancel)
-                        .create(this);
-
-                dialog.getArguments().putString("buildName", buildName);
-
-                dialog.show(getFragmentManager(), OVERWRITE_BUILD_DIALOG_TAG);
-                return false;
-            case BuildManager.RETURN_CODE_BUILD_INVALID_NAME:
-                Toast.makeText(getActivity(), R.string.invalid_build_name, Toast.LENGTH_LONG).show();
-                return false;
-            default:
-                return false;
-        }
-    }
 
 	@Override 
 	public void onDestroyView() {
@@ -1043,18 +972,11 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
 			build.clearItems();
 		} else if (tag.equals(CLEAR_RUNE_DIALOG_TAG)) {
 			build.clearRunes();
-		} else if (tag.equals(OVERWRITE_BUILD_DIALOG_TAG)) {
-            String buildName = dialog.getArguments().getString("buildName");
-            trySaveBuild(buildName, true);
-        }
+		}
 	}
 
 	@Override
 	public void onNegativeClick(AlertDialogFragment dialog, String tag) {}
-
-    private BuildManager getBuildManager() {
-        return ((BuildManagerProvider) getActivity()).getBuildManager();
-    }
 
     public static interface BuildManagerProvider {
         public BuildManager getBuildManager();

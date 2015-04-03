@@ -4,11 +4,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+        android:id="@+id/action_save"
+        android:icon="@drawable/ic_action_save"
+        app:showAsAction="ifRoom"
+        android:title="@string/action_save"/>
+    <item
+        android:id="@+id/action_load"
+        android:icon="@drawable/ic_load"
+        app:showAsAction="ifRoom"
+        android:title="@string/action_load"/>
+    <item
+        android:id="@+id/action_save_as"
+        android:orderInCategory="90"
+        app:showAsAction="never"
+        android:title="@string/action_save_as"/>
+    <item
         android:id="@+id/action_feedback"
         android:orderInCategory="100"
         app:showAsAction="never"
         android:title="@string/action_feedback"/>
-    
     <item
         android:id="@+id/action_stat_summary"
         android:orderInCategory="100"
