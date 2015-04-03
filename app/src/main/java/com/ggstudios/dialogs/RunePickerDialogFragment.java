@@ -135,11 +135,12 @@ public class RunePickerDialogFragment extends ItemPickerDialogFragment {
 			@Override
 			protected Void doInBackground(Void... params) {
 				try {
-					runes = LibraryUtils.getAllRuneInfo(getActivity());
+                    Activity act = getActivity();
+                    if (act == null) return null;
+                    
+					runes = LibraryUtils.getAllRuneInfo(act);
 					LibraryManager.getInstance().getRuneLibrary().initialize(runes);
-				} catch (IOException e) {
-                    Timber.e("", e);
-				} catch (JSONException e) {
+				} catch (IOException | JSONException e) {
                     Timber.e("", e);
 				}
 				return null;
