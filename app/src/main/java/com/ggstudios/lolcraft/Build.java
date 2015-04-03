@@ -337,6 +337,7 @@ public class Build {
         a.put(STAT_AOE_DPS_MAGIC, R.string.stat_desc_aoe_dps_magic);
         a.put(STAT_UNTARGETABLE, R.string.stat_desc_untargetable);
         a.put(STAT_UNDYING, R.string.stat_desc_undying);
+        a.put(STAT_CC_IMMUNE, R.string.stat_desc_cc_immune);
         //		public static final int STAT_CRIT = 11;
         //		public static final int STAT_AP = 12;
         //		public static final int STAT_LS = 13;

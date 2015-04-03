@@ -245,6 +245,7 @@
     <string name="do_stat_analysis">Do stat analysis</string>
     <string name="skill_stat_bonus_ar">bonus armor</string>
     <string name="skill_stat_bonus_mr">bonus magic resistance</string>
+    <string name="stat_desc_cc_immune">champion is immune to crowd control effects</string>
 
 
 </resources>
