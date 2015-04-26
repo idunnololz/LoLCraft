@@ -75,8 +75,7 @@ public class DataFetcher {
             return;
         }
 
-        pln("Champion data version incorrect. Re-fetching data...");
-        pln(String.format("Switching data version [v%s -> v%s]", curVer, version));
+        p(String.format("Fetching champion data [v%s -> v%s] ", curVer, version));
 
         File dir = new File("res/champions");
         dir.mkdir();
@@ -86,8 +85,6 @@ public class DataFetcher {
         saveJsonObj(championJsonFile.getCanonicalPath(), championJson);
 
         JSONObject data = championJson.getJSONObject("data");
-
-        p("Downloading new data ");
 
         Iterator<?> iter = data.keys();
         while (iter.hasNext()) {
@@ -109,11 +106,10 @@ public class DataFetcher {
                 p("|");
             }
         }
-        pln("");
-        pln("All thumbs retrieved!");
+        pln(" Done");
     }
 
-    public static void fetchAllChampionThumb() throws IOException, JSONException {
+    public static void fetchAllChampionThumb(String version) throws IOException, JSONException {
         p("Fetching all champions thumbnails ");
 
         File dir = new File("res/champions_thumb");
@@ -123,12 +119,17 @@ public class DataFetcher {
 
         JSONObject data = championJson.getJSONObject("data");
 
-        String latestVersion = getLatestVersion();
+        if (version == null) {
+            version = getLatestVersion();
+        }
+
+        p(String.format("(v%s) ", version));
+
         Iterator<?> iter = data.keys();
         while (iter.hasNext()) {
             String key = (String) iter.next();
             OutputStream os = new FileOutputStream("res/champions_thumb/" + key + ".png");
-            InputStream is = client.getChampionThumb(latestVersion, key);
+            InputStream is = client.getChampionThumb(version, key);
 
             byte[] b = new byte[2048];
             int length;
@@ -142,13 +143,13 @@ public class DataFetcher {
 
             p("|");
         }
-
-        pln("");
-        pln("All champion data fetched!");
+        pln(" Done");
     }
 
-    public static void fetchAllItemInfo() throws IOException, JSONException {
-        String version = getLatestVersion();
+    public static void fetchAllItemInfo(String version) throws IOException, JSONException {
+        if (version == null) {
+            version = getLatestVersion();
+        }
 
         String curVer = "0.0.0";
         try {
@@ -166,7 +167,7 @@ public class DataFetcher {
         JSONObject itemJson = client.getAllItemJson();
         JSONObject data = itemJson.getJSONObject("data");
 
-        pln("Retrieving new item data...");
+        p(String.format("Retrieving new item data (v%s) |", version));
 
         File file = new File(dir, "item.json");
 
@@ -176,11 +177,13 @@ public class DataFetcher {
 
         saveJsonObj(file.getCanonicalPath(), o);
 
-        pln("New data retrieved!");
+        pln(" Done");
     }
 
-    public static void fetchAllRuneInfo() throws IOException, JSONException {
-        String version = getLatestVersion();
+    public static void fetchAllRuneInfo(String version) throws IOException, JSONException {
+        if (version == null) {
+            version = getLatestVersion();
+        }
 
         String curVer = "0.0.0";
         try {
@@ -198,7 +201,7 @@ public class DataFetcher {
         JSONObject itemJson = client.getAllRuneJson();
         JSONObject data = itemJson.getJSONObject("data");
 
-        pln("Retrieving new rune data...");
+        p(String.format("Retrieving run data (v%s) |", version));
 
         File file = new File(dir, "rune.json");
 
@@ -208,10 +211,10 @@ public class DataFetcher {
 
         saveJsonObj(file.getCanonicalPath(), o);
 
-        pln("New data retrieved!");
+        pln("Done");
     }
 
-    public static void fetchAllSpellThumb() throws IOException, JSONException {
+    public static void fetchAllSpellThumb(String version) throws IOException, JSONException {
         p("Fetching all spell thumbnails ");
 
         File dir = new File("res/spells");
@@ -226,7 +229,10 @@ public class DataFetcher {
 
         JSONObject data = championJson.getJSONObject("data");
 
-        String latestVersion = getLatestVersion();
+        if (version == null) {
+            version = getLatestVersion();
+        }
+        p(String.format("(v%s) ", version));
         Iterator<?> iter = data.keys();
         while (iter.hasNext()) {
             String key = (String) iter.next();
@@ -242,7 +248,7 @@ public class DataFetcher {
                 File imgFile = new File(dir, imageName);
 
                 OutputStream os = new FileOutputStream(imgFile);
-                InputStream is = client.getSpellImage(latestVersion, imageName);
+                InputStream is = client.getSpellImage(version, imageName);
 
                 byte[] b = new byte[2048];
                 int length;
@@ -258,12 +264,10 @@ public class DataFetcher {
 
             p("|");
         }
-
-        pln("");
-        pln("All spell thumbs fetched!");
+        pln(" Done");
     }
 
-    public static void fetchAllPassiveThumb() throws IOException, JSONException, URISyntaxException {
+    public static void fetchAllPassiveThumb(String version) throws IOException, JSONException, URISyntaxException {
         p("Fetching all passive thumbnails ");
 
         File dir = new File("res/passive");
@@ -280,7 +284,10 @@ public class DataFetcher {
 
         JSONObject data = championJson.getJSONObject("data");
 
-        String latestVersion = getLatestVersion();
+        if (version == null) {
+            version = getLatestVersion();
+        }
+        p(String.format("(v%s) ", version));
         Iterator<?> iter = data.keys();
         while (iter.hasNext()) {
             String key = (String) iter.next();
@@ -296,7 +303,7 @@ public class DataFetcher {
             OutputStream os = new FileOutputStream(imgFile);
 
             try {
-                InputStream is = client.getPassiveImage(latestVersion, imageName);
+                InputStream is = client.getPassiveImage(version, imageName);
 
                 byte[] b = new byte[2048];
                 int length;
@@ -314,14 +321,14 @@ public class DataFetcher {
             }
         }
 
-        pln("");
         for (String s : failedKeys) {
+            pln("");
             System.err.println("Failed to get passive image with key: " + s);
         }
-        pln("All passive thumbs fetched!");
+        pln(" Done");
     }
 
-    public static void fetchAllItemThumb() throws IOException, JSONException, URISyntaxException {
+    public static void fetchAllItemThumb(String version) throws IOException, JSONException, URISyntaxException {
         p("Fetching all item thumbnails ");
 
         File dir = new File("res/item_thumb");
@@ -336,8 +343,12 @@ public class DataFetcher {
 
         List<String> failedKeys = new ArrayList<>();
 
-        String latestVersion = getLatestVersion();
+        if (version == null) {
+            version = getLatestVersion();
+        }
+        p(String.format("(v%s) ", version));
         Iterator<?> iter = data.keys();
+        int i = 0;
         while (iter.hasNext()) {
             String key = (String) iter.next();
 
@@ -345,7 +356,7 @@ public class DataFetcher {
 
             OutputStream os = new FileOutputStream(imgFile);
             try {
-                InputStream is = client.getItemImage(latestVersion, key);
+                InputStream is = client.getItemImage(version, key);
 
                 byte[] b = new byte[2048];
                 int length;
@@ -357,20 +368,23 @@ public class DataFetcher {
                 is.close();
                 os.close();
 
-                p("|");
+                if (i % 2 == 0) {
+                    p("|");
+                }
             } catch (IOException e) {
                 failedKeys.add(key);
             }
+            i++;
         }
 
-        pln("");
         for (String s : failedKeys) {
+            pln("");
             System.err.println("Failed to fetch item with key: " + s);
         }
-        pln("All item thumbs fetched!");
+        pln(" Done");
     }
 
-    public static void fetchAllRuneThumb() throws IOException, JSONException, URISyntaxException {
+    public static void fetchAllRuneThumb(String version) throws IOException, JSONException, URISyntaxException {
         p("Fetching all rune thumbnails ");
 
         File dir = new File("res/rune");
@@ -385,7 +399,10 @@ public class DataFetcher {
 
         List<String> failedKeys = new ArrayList<>();
 
-        String latestVersion = getLatestVersion();
+        if (version == null) {
+            version = getLatestVersion();
+        }
+        p(String.format("(v%s) ", version));
         Iterator<?> iter = data.keys();
 
         Set<String> dled = new HashSet<String>();
@@ -406,7 +423,7 @@ public class DataFetcher {
 
             OutputStream os = new FileOutputStream(imgFile);
             try {
-                InputStream is = client.getRuneImage(latestVersion, runeName);
+                InputStream is = client.getRuneImage(version, runeName);
 
                 byte[] b = new byte[2048];
                 int length;
@@ -424,10 +441,10 @@ public class DataFetcher {
             }
         }
 
-        pln("");
         for (String s : failedKeys) {
+            pln("");
             System.err.println("Failed to fetch rune with key: " + s);
         }
-        pln("All rune thumbs fetched!");
+        pln(" Done");
     }
 }

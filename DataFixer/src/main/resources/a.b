@@ -80,7 +80,7 @@
                 METHOD_CC,          0, CC_STUN, 1, 1, 1, 1, 1,
                 METHOD_CC,          0, CC_PULL, 925, 925, 925, 925, 925,
             2,  METHOD_DPS,         0, 1, 0.3, 0.38, 0.46, 0.54, 0.62, "PercentAttackSpeedMod",
-                METHOD_MOBILITY,    0, MOBI_MSP, 0.16, 0.2, 0.24, 0.28, 0.32,
+                METHOD_MOBILITY,    0, MOBI_MSP, 0.7, 0.75, 0.8, 0.85, 0.9,
             2,  METHOD_BURST|AD,    1, 0, 0, 0, 0, 0, 1, "attackdamage",
                 METHOD_CC,          0, CC_KNOCKUP, 1, 1, 1, 1, 1,
             2,  METHOD_AOE_BURST|AP,1, 250, 375, 500, 1, "spelldamage",
@@ -166,7 +166,7 @@
             1,  METHOD_AOE_BURST|AD,1, 350, 550, 750, 2.2, "attackdamage",
 
 "Evelynn",  0,
-            1,  METHOD_AOE_BURST|AP,2, 30, 45, 60, 75, 90, 0.35, 0.4, 0.45, 0.5, 0.55, "spelldamage", 0.5, 0.55, 0.6, 0.65, 0.7, "attackdamage",
+            1,  METHOD_AOE_BURST|AP,2, 40, 55, 70, 85, 100, 0.35, 0.4, 0.45, 0.5, 0.55, "spelldamage", 0.5, 0.55, 0.6, 0.65, 0.7, "attackdamage",
             1,  METHOD_MOBILITY,    0, MOBI_MSP, 0.3, 0.4, 0.5, 0.6, 0.7,
             2,  METHOD_BURST|AD,    2, 70, 110, 150, 190, 230, 1, "spelldamage", 1, "attackdamage",
                 METHOD_DPS,         0, 1, 0.6, 0.75, 0.9, 1.05, 1.2, "PercentAttackSpeedMod",
@@ -200,7 +200,8 @@
 
 "Fizz",     0,
             1,  METHOD_BURST|AP,    1, 10, 25, 40, 55, 70, 0.3, "spelldamage",
-            1,  METHOD_BURST|AP,    2, 20, 30, 40, 50, 60, 0.45, "spelldamage", 0.04, 0.05, 0.06, 0.07, 0.08, "enemymissinghealth",
+            2,  METHOD_BURST|AP,    2, 20, 30, 40, 50, 60, 0.45, "spelldamage", 0.04, 0.05, 0.06, 0.07, 0.08, "enemymissinghealth",
+                METHOD_BURST|AP,    1, 10, 20, 30, 40, 50, 0.25, "spelldamage",
             2,  METHOD_AOE_BURST|AP,1, 70, 120, 170, 220, 270, 0.75, "spelldamage",
                 METHOD_CC,          0, CC_AOE_SLOW, 0.4, 2, 0.45, 2, 0.5, 2, 0.55, 2, 0.6, 2,
             4,  METHOD_AOE_BURST|AP,1, 200, 325, 450, 1, "spelldamage",

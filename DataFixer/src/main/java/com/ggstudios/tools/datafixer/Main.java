@@ -191,16 +191,16 @@ public class Main {
 		saveJsonObj("item.json", o);
 	}
 
-    public static void fetchAll() throws IOException, JSONException, URISyntaxException {
-        DataFetcher.fetchAllChampionThumb();
-        DataFetcher.fetchAllChampionJson();
-        DataFetcher.fetchAllSpellThumb();
-        DataFetcher.fetchAllPassiveThumb();
-        DataFetcher.fetchAllRuneInfo();
-        DataFetcher.fetchAllRuneThumb();
+    public static void fetchAll(String version) throws IOException, JSONException, URISyntaxException {
+        DataFetcher.fetchAllChampionThumb(version);
+        DataFetcher.fetchAllChampionJson(version, false);
+        DataFetcher.fetchAllSpellThumb(version);
+        DataFetcher.fetchAllPassiveThumb(version);
+        DataFetcher.fetchAllRuneInfo(version);
+        DataFetcher.fetchAllRuneThumb(version);
 
-        DataFetcher.fetchAllItemInfo();
-        DataFetcher.fetchAllItemThumb();
+        DataFetcher.fetchAllItemInfo(version);
+        DataFetcher.fetchAllItemThumb(version);
 
         ChampionInfoFixer.fixChampionInfo();
         fixItemJson();
@@ -208,13 +208,14 @@ public class Main {
 
 	public static void main(String[] args) {
 		try {
-            //fetchAll();
-
             //DataFetcher.listAllVersions();
+
+            fetchAll("5.7.2");
+
 
             // Updates champion data... outputs to out/ and res/
             //DataFetcher.fetchAllChampionThumb();
-            DataFetcher.fetchAllChampionJson();
+            //DataFetcher.fetchAllChampionJson();
             //DataFetcher.fetchAllSpellThumb();
             //DataFetcher.fetchAllPassiveThumb();
             //DataFetcher.fetchAllRuneInfo();
@@ -223,7 +224,7 @@ public class Main {
             //DataFetcher.fetchAllItemInfo();
             //DataFetcher.fetchAllItemThumb();
 
-            ChampionInfoFixer.fixChampionInfo();
+            //ChampionInfoFixer.fixChampionInfo();
 			//fixItemJson();
 		} catch (Exception e) {
 			e.printStackTrace();
