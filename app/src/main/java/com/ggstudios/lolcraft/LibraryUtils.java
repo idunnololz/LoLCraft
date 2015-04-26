@@ -4,9 +4,10 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.drawable.Drawable;
 
-import com.ggstudios.lolcraft.ChampionInfo.Passive;
-import com.ggstudios.lolcraft.ChampionInfo.Scaling;
-import com.ggstudios.lolcraft.ChampionInfo.Skill;
+import com.ggstudios.lolclass.MultiSkill;
+import com.ggstudios.lolclass.Passive;
+import com.ggstudios.lolclass.Scaling;
+import com.ggstudios.lolclass.Skill;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -105,83 +106,54 @@ public class LibraryUtils {
 
 			JSONArray skillsJson = champData.getJSONArray("spells");
 
-			//Timber.d("Data: " + champData.toString());
-			//Timber.d("Data: " + skills.toString());
-
-			Skill[] skills = new Skill[skillsJson.length() + 1];
+            List<Skill> skills = new ArrayList<>();
 
 			String[] keys = {"q", "w", "e", "r", "", "", "", "", "", "", "", "", "", "", "",};
 
-			skills[0] = new ChampionInfo.Passive();
-			for (int i = 1; i < skills.length; i++) {
-				skills[i] = new Skill();
-				skills[i].defaultKey = keys[i - 1];
+			skills.add(new Passive());
+			for (int i = 0; i < skillsJson.length(); i++) {
+				Skill s = new Skill();
+                s.setDefaultKey(keys[i]);
+				skills.add(s);
 			}
 
-			Passive passive = (Passive) skills[0];
+			Passive passive = (Passive) skills.get(0);
 
 			JSONObject p = champData.getJSONObject("passive");
-			passive.desc = p.getString("description");
-			passive.name = p.getString("name");
-			passive.iconAssetName = p.getJSONObject("image").getString("full");
-			passive.rawAnalysis = p.optJSONArray("analysis");
+            passive.loadInfo(p);
 
 			for (int i = 0; i < skillsJson.length(); i++) {
 				builder.setLength(0);
 				o = skillsJson.getJSONObject(i);
-				Skill s = skills[i + 1];
+				Skill s = skills.get(i + 1);
+                s.loadInfo(o);
+			}
 
-				s.name = o.getString("name");
-				s.desc = o.getString("tooltip");
-				s.iconAssetName = o.getJSONObject("image").getString("full");
-				s.rawEffect = o.getJSONArray("effect");
-				s.rawEffectBurn = o.getJSONArray("effectBurn");
-				s.rawAnalysis = o.optJSONArray("analysis");
-				s.ranks = o.getInt("maxrank");
+            // check for multi-skills
+            // aka skills that have two functions
 
-				if (o.has("rangeBurn")) {
-					String range = o.getString("rangeBurn");
-					if (!range.equals("self")) {
-						builder.append("Range: ");
-						builder.append(range);
-						builder.append(' ');
-					}
-				}
+            for (int i = 0; i < skills.size(); i++) {
+                Skill s = skills.get(i);
+                if (s.getName().contains("/")) {
+                    // this is a give away that this is a multi skill
+                    // find the pair...
+                    Skill pair = null;
+                    for (Skill a : skills) {
+                        if (!a.getName().contains("/") && s.getName().contains(a.getName())) {
+                            pair = a;
+                            break;
+                        }
+                    }
 
-				if (o.has("costBurn")) {
-					String cost = o.getString("costBurn");
-					if (!cost.equals("0")) {
-						builder.append("Cost: ");
-						builder.append(cost);
-						builder.append(' ');
-					}
-				}
-
-				if (o.has("cooldownBurn")) {
-					String cd = o.getString("cooldownBurn");
-					if (!cd.equals("0")) {
-						builder.append("Cooldown: ");
-						builder.append(cd);
-						builder.append(' ');
-					}
-				}
-
-				s.details = builder.toString();
-
-				JSONArray vars = o.optJSONArray("vars");
-
-                if (vars != null) {
-                    for (int j = 0; j < vars.length(); j++) {
-                        JSONObject var = vars.getJSONObject(j);
-                        Scaling sc = new Scaling();
-                        sc.var = var.getString("key");
-                        sc.coeff = var.get("coeff");
-                        sc.link = var.getString("link");
-
-                        s.varToScaling.put(sc.var, sc);
+                    if (pair != null) {
+                        MultiSkill m = new MultiSkill();
+                        m.addSkill(s);
+                        m.addSkill(pair);
+                        skills.set(i, m);
+                        skills.remove(pair);
                     }
                 }
-			}
+            }
 
 			info.lore = champData.getString("lore");
 			JSONArray roles = champData.getJSONArray("tags");
@@ -225,7 +197,7 @@ public class LibraryUtils {
 				info.partype = result;
 			}
 
-			info.setSkills(skills);
+			info.setSkills(skills.toArray(new Skill[skills.size()]));
 			info.fullyLoaded();
 
 		} catch (IOException e) {

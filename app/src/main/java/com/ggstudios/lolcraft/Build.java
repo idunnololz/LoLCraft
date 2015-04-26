@@ -5,7 +5,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.SparseIntArray;
 
-import com.ggstudios.lolcraft.ChampionInfo.Skill;
+import com.ggstudios.lolclass.Skill;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -891,7 +891,7 @@ public class Build {
         sk.scaling = scaling;
         activeSkills.add(sk);
 
-        Timber.d("Skill " + skill.name + " bonus: " + base + "; ");
+        Timber.d("Skill " + skill.getName() + " bonus: " + base + "; ");
 
         return sk;
     }

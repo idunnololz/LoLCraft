@@ -23,9 +23,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.ggstudios.lolclass.Passive;
+import com.ggstudios.lolclass.Skill;
 import com.ggstudios.lolcraft.Build.BuildSkill;
-import com.ggstudios.lolcraft.ChampionInfo.Passive;
-import com.ggstudios.lolcraft.ChampionInfo.Skill;
 import com.ggstudios.views.AmazingPieChart;
 import com.ggstudios.views.AmazingPieChart.PieItem;
 import com.ggstudios.views.AnimatedExpandableListView;
@@ -140,7 +140,7 @@ public class CraftSummaryFragment extends Fragment {
             Skill[] skills = info.getRawSkills();
 
             for (Skill s : skills) {
-                JSONArray arr = s.rawAnalysis;
+                JSONArray arr = s.getRawAnalysis();
                 if (arr == null) continue;
 
                 for (int i = 0; i < arr.length(); i++) {
@@ -177,7 +177,7 @@ public class CraftSummaryFragment extends Fragment {
                     int baseMethod = method & Method.BASE_METHOD_MASK;
                     int scalings = a.getInt(idx++);
                     int dpsStats = a.getInt(idx++);
-                    int skillRanks = s.ranks;
+                    int skillRanks = s.getRanks();
 
                     int levelSegs = 0;
                     boolean levelDivided = false;
@@ -189,8 +189,6 @@ public class CraftSummaryFragment extends Fragment {
                             skillRanks = levelSegs;
                             levelDivided = true;
                         }
-                    } else {
-                        skillRanks = s.ranks;
                     }
 
                     double[] a1 = new double[scalings];
@@ -259,7 +257,7 @@ public class CraftSummaryFragment extends Fragment {
                 if (sk.totalBonus == 0) continue;
 
                 StatBonus bonus = new StatBonus();
-                bonus.name = sk.skill.name;
+                bonus.name = sk.skill.getName();
                 bonus.value = sk.totalBonus;
                 bonus.statTypeId = sk.bonusTypeId;
 
@@ -326,7 +324,7 @@ public class CraftSummaryFragment extends Fragment {
                     int method = a.getInt(idx++);
                     int baseMethod = method & Method.BASE_METHOD_MASK;
                     int scalings = a.getInt(idx++);
-                    int skillRanks = s.ranks;
+                    int skillRanks = s.getRanks();
 
                     int levelSegs = 0;
                     boolean levelDivided = false;
@@ -339,8 +337,6 @@ public class CraftSummaryFragment extends Fragment {
                             skillRank = gamePhase.level;
                             levelDivided = true;
                         }
-                    } else {
-                        skillRanks = s.ranks;
                     }
 
                     double dmg = 0;
@@ -390,23 +386,23 @@ public class CraftSummaryFragment extends Fragment {
                     }
 
                     BurstAnalysisItem item = null;
-                    if (burstItemNameDic.containsKey(s.name)) {
-                        item = burstItemNameDic.get(s.name);
+                    if (burstItemNameDic.containsKey(s.getName())) {
+                        item = burstItemNameDic.get(s.getName());
                         item.value += dmg;
                     } else {
                         item = new BurstAnalysisItem();
                         item.value = dmg;
                         item.statTypeId = method;
-                        item.name = s.name;
+                        item.name = s.getName();
                         analysis.bonuses.add(item);
 
-                        burstItemNameDic.put(s.name, item);
+                        burstItemNameDic.put(s.getName(), item);
                     }
 
                     StatBonus bonus = new StatBonus();
                     bonus.value = dmg;
                     bonus.statTypeId = method;
-                    bonus.name = s.name;
+                    bonus.name = s.getName();
                     item.breakDown.add(bonus);
 
                     totalBurst += dmg;
@@ -440,7 +436,7 @@ public class CraftSummaryFragment extends Fragment {
                     int method = a.getInt(idx++);
                     int baseMethod = method & Method.BASE_METHOD_MASK;
                     int scalings = a.getInt(idx++);
-                    int skillRanks = s.ranks;
+                    int skillRanks = s.getRanks();
                     int ccType = a.getInt(idx++);
 
                     double value = 0;
@@ -469,7 +465,7 @@ public class CraftSummaryFragment extends Fragment {
                     bonus.value = value;
                     bonus.secondValue = value2;
                     bonus.statTypeId = ccType;
-                    bonus.name = s.name;
+                    bonus.name = s.getName();
                     bonus.skill = s;
                     analysis.bonuses.add(bonus);
                 }
@@ -500,7 +496,7 @@ public class CraftSummaryFragment extends Fragment {
                     int method = a.getInt(idx++);
                     int baseMethod = method & Method.BASE_METHOD_MASK;
                     int scalings = a.getInt(idx++);
-                    int skillRanks = s.ranks;
+                    int skillRanks = s.getRanks();
                     int mobiType = a.getInt(idx++);
 
                     int levelSegs = 0;
@@ -515,7 +511,7 @@ public class CraftSummaryFragment extends Fragment {
                             skillRank = gamePhase.level;
                         }
                     } else {
-                        skillRanks = s.ranks;
+                        skillRanks = s.getRanks();
                     }
 
                     double value = 0;
@@ -545,7 +541,7 @@ public class CraftSummaryFragment extends Fragment {
                     MobiSkill skill = new MobiSkill();
                     skill.value = value;
                     skill.statTypeId = mobiType;
-                    skill.name = s.name;
+                    skill.name = s.getName();
                     skill.skill = s;
                     analysis.bonuses.add(skill);
                 }
@@ -577,7 +573,7 @@ public class CraftSummaryFragment extends Fragment {
                     int method = a.getInt(idx++);
                     int baseMethod = method & Method.BASE_METHOD_MASK;
                     int scalingCount = a.getInt(idx++);
-                    int skillRanks = s.ranks;
+                    int skillRanks = s.getRanks();
 
                     int levelSegs = 0;
                     boolean levelDivided = false;
@@ -589,8 +585,6 @@ public class CraftSummaryFragment extends Fragment {
                             skillRanks = levelSegs;
                             levelDivided = true;
                         }
-                    } else {
-                        skillRanks = s.ranks;
                     }
 
                     Scaling[] scalings = new Scaling[scalingCount];
@@ -651,7 +645,7 @@ public class CraftSummaryFragment extends Fragment {
                 if (sk.totalBonus == 0) continue;
 
                 StatBonus bonus = new StatBonus();
-                bonus.name = sk.skill.name;
+                bonus.name = sk.skill.getName();
                 bonus.value = sk.totalBonus;
                 bonus.statTypeId = sk.bonusTypeId;
 
@@ -989,7 +983,7 @@ public class CraftSummaryFragment extends Fragment {
                         TextView txtCcDuration = (TextView) view.findViewById(R.id.txtCcDuration);
 
                         icon.setImageDrawable(sk.skill.getIcon(context));
-                        txtSpellName.setText(sk.skill.name);
+                        txtSpellName.setText(sk.skill.getName());
                         if ((sk.statTypeId & Method.BASE_METHOD_MASK) == Method.CC_SLOW) {
                             txtCcType.setText(context.getString(Method.getStringIdForCcType(sk.statTypeId), (int)(sk.getStrength() * 100)));
                         } else {
@@ -1030,7 +1024,7 @@ public class CraftSummaryFragment extends Fragment {
                         TextView txtCcDuration = (TextView) view.findViewById(R.id.txtCcDuration);
 
                         icon.setImageDrawable(sk.skill.getIcon(context));
-                        txtSpellName.setText(sk.skill.name);
+                        txtSpellName.setText(sk.skill.getName());
                         txtCcType.setText(Method.getStringIdForMobilityType(sk.statTypeId));
                         txtCcDuration.setText(humanFormat.format(sk.value));
                         h.mobiList.addView(view);

@@ -14,12 +14,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ggstudios.lolclass.MultiSkill;
+import com.ggstudios.lolclass.Passive;
+import com.ggstudios.lolclass.Skill;
 import com.ggstudios.lolcraft.Build.BuildItem;
 import com.ggstudios.lolcraft.Build.BuildObserver;
 import com.ggstudios.lolcraft.Build.BuildRune;
 import com.ggstudios.lolcraft.ChampionInfo.OnSkillsLoadedListener;
-import com.ggstudios.lolcraft.ChampionInfo.Passive;
-import com.ggstudios.lolcraft.ChampionInfo.Skill;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -114,19 +115,25 @@ public class CraftSkillsFragment extends Fragment {
 		TextView txtDesc;
 		TextView txtKey;
 		ImageView icon;
-	}
+
+        TextView txtName2;
+        TextView txtDetails2;
+        TextView txtDesc2;
+        ImageView icon2;
+    }
 
 	private static class SkillAdapter extends BaseAdapter {
         private static final int VIEW_TYPE_PASSIVE = 0;
         private static final int VIEW_TYPE_SKILL = 1;
+        private static final int VIEW_TYPE_MULTI_SKILL = 2;
 
-		private ChampionInfo.Skill[] skills;
+		private Skill[] skills;
         private boolean[] showScaling;
 		private LayoutInflater inflater;
 		private Context context;
 		private Build build;
 
-		public SkillAdapter(Context context, ChampionInfo.Skill[] skills, Build build) {
+		public SkillAdapter(Context context, Skill[] skills, Build build) {
 			this.skills = skills;
             showScaling = new boolean[skills.length];
             for (int i = 0; i < showScaling.length; i++) {
@@ -138,7 +145,7 @@ public class CraftSkillsFragment extends Fragment {
 		}
 
         public void toggleView(int position) {
-            if (getItemViewType(position) != VIEW_TYPE_SKILL) {
+            if (getItemViewType(position) == VIEW_TYPE_PASSIVE) {
                 return;
             }
 
@@ -152,7 +159,7 @@ public class CraftSkillsFragment extends Fragment {
 		}
 
 		@Override
-		public ChampionInfo.Skill getItem(int position) {
+		public Skill getItem(int position) {
 			return skills[position];
 		}
 
@@ -165,21 +172,24 @@ public class CraftSkillsFragment extends Fragment {
 		public int getItemViewType(int position) {
 			if (skills[position] instanceof Passive) {
 				return VIEW_TYPE_PASSIVE;
-			} else {
+			} else if (skills[position] instanceof MultiSkill) {
+                return VIEW_TYPE_MULTI_SKILL;
+            } else {
 				return VIEW_TYPE_SKILL;
 			}
 		}
 		
 		@Override
 		public int getViewTypeCount() {
-			return 2;
+			return 3;
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ViewHolder holder;
+            int type = getItemViewType(position);
 
-			if (getItemViewType(position) == VIEW_TYPE_SKILL) {
+            if (type == VIEW_TYPE_SKILL) {
 				if (convertView == null) {
 					holder = new ViewHolder();
 					convertView = inflater.inflate(R.layout.item_skill_info, parent, false);
@@ -193,26 +203,62 @@ public class CraftSkillsFragment extends Fragment {
 					holder = (ViewHolder) convertView.getTag();
 				}
 
-				ChampionInfo.Skill skill = getItem(position);
+				Skill skill = getItem(position);
 
-				if (skill.icon == null) {
-					try {
-						skill.icon = Drawable.createFromStream(context.getAssets().open("spells/" + skill.iconAssetName), null);
-					} catch (IOException e) {
-						Timber.e("", e);
-					}
-				}
-
-				holder.icon.setImageDrawable(skill.icon);
-				holder.txtName.setText(skill.name);
+				holder.icon.setImageDrawable(skill.getIcon(context));
+				holder.txtName.setText(skill.getName());
                 if (showScaling[position]) {
                     holder.txtDesc.setText(Html.fromHtml(skill.getDescriptionWithScaling(context, scalingFormat)));
                 } else {
                     holder.txtDesc.setText(Html.fromHtml(skill.calculateScaling(context, build, statFormat)));
                 }
-				holder.txtDetails.setText(skill.details);
-				holder.txtKey.setText(skill.defaultKey);
-			} else {
+				holder.txtDetails.setText(skill.getDetails());
+				holder.txtKey.setText(skill.getDefaultKey());
+			} else if (type == VIEW_TYPE_MULTI_SKILL) {
+                if (convertView == null) {
+                    holder = new ViewHolder();
+                    convertView = inflater.inflate(R.layout.item_multi_skill_info, parent, false);
+                    holder.icon = (ImageView) convertView.findViewById(R.id.icon);
+                    holder.txtName = (TextView) convertView.findViewById(R.id.txtSkillName);
+                    holder.txtDetails = (TextView) convertView.findViewById(R.id.txtSkillDetails);
+                    holder.txtDesc = (TextView) convertView.findViewById(R.id.txtSkillDesc);
+                    holder.txtKey = (TextView) convertView.findViewById(R.id.txtKey);
+
+                    holder.icon2 = (ImageView) convertView.findViewById(R.id.icon2);
+                    holder.txtName2 = (TextView) convertView.findViewById(R.id.txtSkillName2);
+                    holder.txtDetails2 = (TextView) convertView.findViewById(R.id.txtSkillDetails2);
+                    holder.txtDesc2 = (TextView) convertView.findViewById(R.id.txtSkillDesc2);
+                    convertView.setTag(holder);
+                } else {
+                    holder = (ViewHolder) convertView.getTag();
+                }
+
+                MultiSkill ms = (MultiSkill) getItem(position);
+
+                Skill skill = ms.getSkill(0);
+                holder.txtKey.setText(skill.getDefaultKey());
+
+                holder.icon.setImageDrawable(skill.getIcon(context));
+                holder.txtName.setText(skill.getName());
+                if (showScaling[position]) {
+                    holder.txtDesc.setText(Html.fromHtml(skill.getDescriptionWithScaling(context, scalingFormat)));
+                } else {
+                    holder.txtDesc.setText(Html.fromHtml(skill.calculateScaling(context, build, statFormat)));
+                }
+                holder.txtDetails.setText(skill.getDetails());
+
+                skill = ms.getSkill(1);
+
+                holder.icon2.setImageDrawable(skill.getIcon(context));
+                holder.txtName2.setText(skill.getName());
+                if (showScaling[position]) {
+                    holder.txtDesc2.setText(Html.fromHtml(skill.getDescriptionWithScaling(context, scalingFormat)));
+                } else {
+                    holder.txtDesc2.setText(Html.fromHtml(skill.calculateScaling(context, build, statFormat)));
+                }
+                holder.txtDetails2.setText(skill.getDetails());
+
+            } else {
 				if (convertView == null) {
 					holder = new ViewHolder();
 					convertView = inflater.inflate(R.layout.item_skill_info, parent, false);
@@ -226,18 +272,10 @@ public class CraftSkillsFragment extends Fragment {
 					holder = (ViewHolder) convertView.getTag();
 				}
 
-				ChampionInfo.Skill skill = getItem(position);
+				Skill skill = getItem(position);
 
-				if (skill.icon == null) {
-					try {
-						skill.icon = Drawable.createFromStream(context.getAssets().open("passive/" + skill.iconAssetName), null);
-					} catch (IOException e) {
-						Timber.e("", e);
-					}
-				}
-
-				holder.icon.setImageDrawable(skill.icon);
-				holder.txtName.setText(skill.name);
+				holder.icon.setImageDrawable(skill.getIcon(context));
+				holder.txtName.setText(skill.getName());
 				holder.txtDesc.setText(Html.fromHtml(skill.calculateScaling(context, build, statFormat)));
 				holder.txtKey.setText("");
 				holder.txtDetails.setText("");
