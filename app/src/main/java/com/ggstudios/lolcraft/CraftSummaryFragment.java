@@ -1228,6 +1228,7 @@ public class CraftSummaryFragment extends Fragment {
             MID_GAME.level = 18;
             MID_GAME.gold = 1600;
 
+            END_GAME.skillRank[0] = 18;
             MID_GAME.skillRank[1] = Integer.MAX_VALUE;
             MID_GAME.skillRank[2] = Integer.MAX_VALUE;
             MID_GAME.skillRank[3] = Integer.MAX_VALUE;
@@ -1237,6 +1238,7 @@ public class CraftSummaryFragment extends Fragment {
             END_GAME.level = 18;
             END_GAME.gold = Integer.MAX_VALUE;
 
+            END_GAME.skillRank[0] = 18;
             END_GAME.skillRank[1] = Integer.MAX_VALUE;
             END_GAME.skillRank[2] = Integer.MAX_VALUE;
             END_GAME.skillRank[3] = Integer.MAX_VALUE;

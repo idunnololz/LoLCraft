@@ -120,6 +120,64 @@ public class StatSummaryDialogFragment extends DialogFragment {
 			"na",
 			"na",
 			"na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
 		};
 
 		LayoutInflater inflater;
@@ -160,9 +218,14 @@ public class StatSummaryDialogFragment extends DialogFragment {
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-			
-			holder.txtKey.setText(STAT_NAME[position]);
-			holder.txtValue.setText(stats[position] + "");
+
+            try {
+                holder.txtKey.setText(Build.getStatName(position));
+            } catch (RuntimeException e) {
+                holder.txtKey.setText(String.valueOf(position));
+            }
+
+            holder.txtValue.setText(stats[position] + "");
 			
 			return convertView;
 		}

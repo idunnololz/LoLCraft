@@ -222,10 +222,10 @@
     <string name="skill_stat_total_hp">HP</string>
     <string name="changelog">What\'s new</string>
     <string name="changelog_text"><![CDATA[
-<b>0.2.12</b>
+<b>0.2.13</b>
 <br>
 <small>
-[!] Updated data to match LoL version 5.6
+[!] Updated data to match LoL version 5.7
 <br>
 [!] Fixed more bugs/crashes
 </small>
@@ -246,6 +246,8 @@
     <string name="skill_stat_bonus_ar">bonus armor</string>
     <string name="skill_stat_bonus_mr">bonus magic resistance</string>
     <string name="stat_desc_cc_immune">champion is immune to crowd control effects</string>
+    <string name="stat_desc_crit">critical strike chance</string>
+    <string name="stat_desc_percent_attack_as_magical">percent attack damage as magic damage</string>
 
 
 </resources>

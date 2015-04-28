@@ -210,7 +210,7 @@ public class Main {
 		try {
             //DataFetcher.listAllVersions();
 
-            fetchAll("5.7.2");
+            //fetchAll("5.7.2");
 
 
             // Updates champion data... outputs to out/ and res/
@@ -224,7 +224,7 @@ public class Main {
             //DataFetcher.fetchAllItemInfo();
             //DataFetcher.fetchAllItemThumb();
 
-            //ChampionInfoFixer.fixChampionInfo();
+            ChampionInfoFixer.fixChampionInfo();
 			//fixItemJson();
 		} catch (Exception e) {
 			e.printStackTrace();

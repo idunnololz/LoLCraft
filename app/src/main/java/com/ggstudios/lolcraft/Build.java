@@ -104,6 +104,7 @@ public class Build {
     public static final int STAT_PERCENT_HP_MISSING = 38;
     public static final int STAT_UNDYING = 39;
     public static final int STAT_UNTARGETABLE = 40;
+    public static final int STAT_PERCENT_ATTACK_AS_MAGICAL = 41;
 
     public static final int STAT_TOTAL_AR = 50;
     public static final int STAT_TOTAL_AD = 51;
@@ -227,7 +228,7 @@ public class Build {
         statKeyToIndex.put("PercentMPRegenMod", 	STAT_NULL);
         statKeyToIndex.put("PercentMagicDamageMod", STAT_APP);
         statKeyToIndex.put("PercentMovementSpeedMod",	STAT_MSP);
-        statKeyToIndex.put("PercentPhysicalDamageMod", 	STAT_NULL);
+        statKeyToIndex.put("PercentPhysicalDamageMod", STAT_PERCENT_ATTACK_AS_MAGICAL);
         statKeyToIndex.put("PercentSpellBlockMod", 		STAT_NULL);
         statKeyToIndex.put("PercentSpellVampMod", 		STAT_SV);
         statKeyToIndex.put("CCRed",                     STAT_CC_RED);
@@ -338,6 +339,8 @@ public class Build {
         a.put(STAT_UNTARGETABLE, R.string.stat_desc_untargetable);
         a.put(STAT_UNDYING, R.string.stat_desc_undying);
         a.put(STAT_CC_IMMUNE, R.string.stat_desc_cc_immune);
+        a.put(STAT_CRIT, R.string.stat_desc_crit);
+        a.put(STAT_PERCENT_ATTACK_AS_MAGICAL, R.string.stat_desc_percent_attack_as_magical);
         //		public static final int STAT_CRIT = 11;
         //		public static final int STAT_AP = 12;
         //		public static final int STAT_LS = 13;
