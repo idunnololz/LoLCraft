@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.v4.util.LruCache;
 
 import com.ggstudios.utils.DiskLruImageCache;
 import com.ggstudios.utils.Utils;
@@ -17,7 +18,13 @@ import java.io.InterruptedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import timber.log.Timber;
 
@@ -26,13 +33,14 @@ public class SplashFetcher {
 
 	private static final String CACHE_NAME = "SplashCache";
 
-    private static final int IMAGE_CACHE_SIZE = Utils.MB_BYTES * 20;
+    private static final int DISK_CACHE_SIZE = Utils.MB_BYTES * 64;
 
 	private static SplashFetcher instance;
 
+	private LruCache<String, Bitmap> memoryCache = null;
 	private DiskLruImageCache diskCache = null;
 
-	private Object cacheLock = new Object();
+	private final Object cacheLock = new Object();
 	private Context context;
 
 	private SplashFetcher(final Context context) {
@@ -41,8 +49,28 @@ public class SplashFetcher {
 
 	private void initialize() {
 		diskCache = new DiskLruImageCache(context, CACHE_NAME,
-                IMAGE_CACHE_SIZE, CompressFormat.JPEG, 70);
+                DISK_CACHE_SIZE, CompressFormat.JPEG, 70);
+
+
+        // Get max available VM memory, exceeding this amount will throw an
+        // OutOfMemory exception. Stored in kilobytes as LruCache takes an
+        // int in its constructor.
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+
+        // Use 1/8th of the available memory for this memory cache.
+        final int cacheSize = maxMemory / 4;
+        Timber.d("Memory cache size:" + cacheSize);
+
+        memoryCache = new LruCache<String, Bitmap>(cacheSize) {
+            protected int sizeOf(String key, Bitmap value) {
+                return (int) (getSizeInBytes(value) / 1024);
+            }
+        };
 	}
+
+    private static long getSizeInBytes(Bitmap bitmap) {
+        return bitmap.getRowBytes() * bitmap.getHeight();
+    }
 
 	public static void initInstance(Context context) {
 		instance = new SplashFetcher(context);
@@ -100,13 +128,18 @@ public class SplashFetcher {
 	}
 
     public void deleteCache(final String key) {
+        if (memoryCache != null) {
+            memoryCache.remove(key);
+        }
+
         if (diskCache != null) {
             if (diskCache.isInErrorState()) return;
-            final String sanatizedKey = key.toLowerCase(Locale.US);
+            final String sanitizedKey = key.toLowerCase(Locale.US);
 
-            if (diskCache.containsKey(sanatizedKey)) {
-                diskCache.remove(sanatizedKey);
+            if (diskCache.containsKey(sanitizedKey)) {
+                diskCache.remove(sanitizedKey);
             }
+            return;
         }
 
         AsyncTask<Object, Void, Void> task = new AsyncTask<Object, Void, Void>(){
@@ -123,10 +156,10 @@ public class SplashFetcher {
 
                 if (diskCache.isInErrorState()) return null;
 
-                final String sanatizedKey = key.toLowerCase(Locale.US);
+                final String sanitizedKey = key.toLowerCase(Locale.US);
 
-                if (diskCache.containsKey(sanatizedKey)) {
-                    diskCache.remove(sanatizedKey);
+                if (diskCache.containsKey(sanitizedKey)) {
+                    diskCache.remove(sanitizedKey);
                 }
 
                 return null;
@@ -138,17 +171,16 @@ public class SplashFetcher {
     }
 
     public FetchToken fetchChampionSplash(final String key, int reqWidth, int reqHeight, final OnDrawableRetrievedListener listener) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-            return fetchChampionSplash(AsyncTask.THREAD_POOL_EXECUTOR, key, reqWidth, reqHeight, listener);
-        } else {
-            return fetchChampionSplash(null, key, reqWidth, reqHeight, listener);
+        if (memoryCache != null) {
+            Bitmap cached = memoryCache.get(key);
+            if (cached != null) {
+                listener.onDrawableRetrieved(new BitmapDrawable(context.getResources(), cached));
+                return NO_OP_FETCH_TOKEN;
+            }
         }
-    }
+        AsyncTask<Object, Void, Object> task = new AsyncTask<Object, Void, Object>(){
 
-    public FetchToken fetchChampionSplash(Executor executor, final String key, int reqWidth, int reqHeight, final OnDrawableRetrievedListener listener) {
-		AsyncTask<Object, Void, Object> task = new AsyncTask<Object, Void, Object>(){
-
-            String sanatizedKey;
+            String sanitizedKey;
 
 			@Override
 			protected Object doInBackground(Object... params) {
@@ -166,11 +198,10 @@ public class SplashFetcher {
 
 				if (diskCache.isInErrorState()) return 0;
 
-                sanatizedKey = key.toLowerCase(Locale.US);
+                sanitizedKey = key.toLowerCase(Locale.US);
 
-				if (diskCache.containsKey(sanatizedKey)) {
-					return new BitmapDrawable(context.getResources(), 
-							diskCache.getBitmap(sanatizedKey));
+				if (diskCache.containsKey(sanitizedKey)) {
+					return diskCache.getBitmap(sanitizedKey);
 				}
 
                 if (isCancelled()) {
@@ -180,7 +211,6 @@ public class SplashFetcher {
 				int reqWidth = (Integer) params[1];
 				int reqHeight = (Integer) params[2];
 
-				InputStream stream = null;
 				try {
 
 					URL url = new URL("http://ddragon.leagueoflegends.com/cdn/img/champion/splash/" 
@@ -191,8 +221,8 @@ public class SplashFetcher {
                         return -1;
                     }
                     if (bmp != null) {
-                        diskCache.put(sanatizedKey, bmp);
-                        return new BitmapDrawable(context.getResources(), bmp);
+                        diskCache.put(sanitizedKey, bmp);
+                        return bmp;
                     }
 				} catch (MalformedURLException e) {
 					Timber.e("", e);
@@ -210,15 +240,7 @@ public class SplashFetcher {
                     // free some memory...
                 } catch (Exception e) {
                     Timber.e("", e);
-                } finally {
-					if (stream != null) {
-						try {
-							stream.close();
-						} catch (IOException e) {
-							Timber.e("", e);
-						}
-					}
-				}
+                }
 				return 0;
 			}
 
@@ -227,25 +249,27 @@ public class SplashFetcher {
                     int code = (Integer) d;
                     if (code < 0) {
                         // remove the bitmap if we were interrupted to prevent corruption...
-                        deleteCache(sanatizedKey);
+                        deleteCache(sanitizedKey);
                     }
                 }
             }
 
 			protected void onPostExecute(Object d) {
-                if (d instanceof Drawable) {
-                    listener.onDrawableRetrieved((Drawable) d);
+                if (d instanceof Bitmap) {
+                    Bitmap bmp = (Bitmap) d;
+                    memoryCache.put(key, bmp);
+                    listener.onDrawableRetrieved(new BitmapDrawable(context.getResources(), bmp));
                 }
 			}
 
 		};
 
-		Utils.executeAsyncTaskOnExecutor(executor, task, key, reqWidth, reqHeight);
+		Utils.executeAsyncTaskOnExecutor(THREAD_POOL_EXECUTOR, task, key, reqWidth, reqHeight);
         return new FetchToken(task);
 	}
 
-	public static interface OnDrawableRetrievedListener {
-		public void onDrawableRetrieved(Drawable d);
+	public interface OnDrawableRetrievedListener {
+		void onDrawableRetrieved(Drawable d);
 	}
 
     public static class FetchToken {
@@ -259,4 +283,32 @@ public class SplashFetcher {
             task.cancel(true);
         }
     }
+
+    private static final FetchToken NO_OP_FETCH_TOKEN = new FetchToken(null) {
+        @Override
+        public void cancel() {/* Do nothing */}
+    };
+
+    private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
+    private static final int CORE_POOL_SIZE = CPU_COUNT == 1 ? 1 : CPU_COUNT - 1;
+    private static final int MAXIMUM_POOL_SIZE = CORE_POOL_SIZE + 1;
+    private static final int KEEP_ALIVE = 1;
+
+    private static final ThreadFactory sThreadFactory = new ThreadFactory() {
+        private final AtomicInteger mCount = new AtomicInteger(1);
+
+        public Thread newThread(Runnable r) {
+            return new Thread(r, "AsyncTask #" + mCount.getAndIncrement());
+        }
+    };
+
+    private static final BlockingQueue<Runnable> sPoolWorkQueue =
+            new LinkedBlockingQueue<Runnable>();
+
+    /**
+     * An {@link java.util.concurrent.Executor} that can be used to execute tasks in parallel.
+     */
+    public static final Executor THREAD_POOL_EXECUTOR
+            = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
+            TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
 }

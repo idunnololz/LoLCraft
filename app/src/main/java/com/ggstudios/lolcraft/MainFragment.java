@@ -32,6 +32,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ggstudios.lolcraft.LibraryUtils.OnChampionLoadListener;
+import com.ggstudios.utils.AnimationListenerAdapter;
 import com.ggstudios.utils.Utils;
 
 import org.json.JSONException;
@@ -100,7 +101,11 @@ public class MainFragment extends Fragment implements SearchView.OnQueryTextList
 
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                // TODO Auto-generated method stub
+				ListAdapter adapter = content.getAdapter();
+				if (adapter != null) {
+					ChampionInfoAdapter championInfoAdapter = (ChampionInfoAdapter) adapter;
+                    championInfoAdapter.disableBindViewAnimations();
+				}
                 return true;
             }
 
@@ -305,6 +310,8 @@ public class MainFragment extends Fragment implements SearchView.OnQueryTextList
         protected List<ChampionInfo> champInfo;
         protected LayoutInflater inflater;
 
+        private boolean hasBindViewAnimations = true;
+
 		private Drawable placeHolder;
 
 		public ChampionInfoAdapter(Context c, List<ChampionInfo> champions) {
@@ -376,7 +383,19 @@ public class MainFragment extends Fragment implements SearchView.OnQueryTextList
 
 			return convertView;
 		}
-	}
+
+        public void disableBindViewAnimations() {
+            hasBindViewAnimations = false;
+        }
+
+        public void enableBindViewAnimations() {
+            hasBindViewAnimations = true;
+        }
+
+        public boolean hasBindViewAnimations() {
+            return hasBindViewAnimations;
+        }
+    }
 
     public class ChampionInfoListAdapter extends ChampionInfoAdapter {
         private static final int ANIMATION_DURATION = 300;
@@ -425,16 +444,16 @@ public class MainFragment extends Fragment implements SearchView.OnQueryTextList
                         @Override
                         public void run() {
                             holder.lastToken = SplashFetcher.getInstance().fetchChampionSplash(
-                                    android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB ?
-                                            THREAD_POOL_EXECUTOR : null,
                                     holder.lastInfo.key, holder.splash.getWidth(), 0, new SplashFetcher.OnDrawableRetrievedListener() {
 
                                         @Override
                                         public void onDrawableRetrieved(Drawable d) {
-
                                             holder.lastToken = null;
                                             holder.splash.setImageDrawable(d);
-                                            fadeViewIn(holder.splash);
+                                            if (hasBindViewAnimations() ||
+                                                    holder.splash.getVisibility() != View.VISIBLE) {
+                                                fadeViewIn(holder.splash);
+                                            }
                                         }
 
                                     });
@@ -472,7 +491,9 @@ public class MainFragment extends Fragment implements SearchView.OnQueryTextList
                 }
             } else {
                 holder.splash.clearAnimation();
-                holder.splash.setVisibility(View.INVISIBLE);
+                if (hasBindViewAnimations()) {
+                    holder.splash.setVisibility(View.INVISIBLE);
+                }
 
                 if (holder.lastToken != null) {
                     holder.lastToken.cancel();
@@ -527,22 +548,16 @@ public class MainFragment extends Fragment implements SearchView.OnQueryTextList
 		fadeIn.setDuration(250);
 		fadeIn.setFillAfter(true);
 		
-		fadeIn.setAnimationListener(new AnimationListener() {
+		fadeIn.setAnimationListener(new AnimationListenerAdapter() {
 
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				transitioning = false;
 			}
 
-			@Override
-			public void onAnimationRepeat(Animation animation) {}
-
-			@Override
-			public void onAnimationStart(Animation animation) {}
-
 		});
 
-		fadeOut.setAnimationListener(new AnimationListener() {
+		fadeOut.setAnimationListener(new AnimationListenerAdapter() {
 
 			@Override
 			public void onAnimationEnd(Animation animation) {
@@ -556,15 +571,7 @@ public class MainFragment extends Fragment implements SearchView.OnQueryTextList
 					grid.setVisibility(View.VISIBLE);
 					grid.startAnimation(fadeIn);
 				}
-
-
 			}
-
-			@Override
-			public void onAnimationRepeat(Animation animation) {}
-
-			@Override
-			public void onAnimationStart(Animation animation) {}
 
 		});
 
@@ -575,27 +582,4 @@ public class MainFragment extends Fragment implements SearchView.OnQueryTextList
 		}
 
 	}
-
-    private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
-    private static final int CORE_POOL_SIZE = CPU_COUNT == 1 ? 1 : CPU_COUNT - 1;
-    private static final int MAXIMUM_POOL_SIZE = CORE_POOL_SIZE;
-    private static final int KEEP_ALIVE = 1;
-
-    private static final ThreadFactory sThreadFactory = new ThreadFactory() {
-        private final AtomicInteger mCount = new AtomicInteger(1);
-
-        public Thread newThread(Runnable r) {
-            return new Thread(r, "AsyncTask #" + mCount.getAndIncrement());
-        }
-    };
-
-    private static final BlockingQueue<Runnable> sPoolWorkQueue =
-            new LinkedBlockingQueue<Runnable>(256);
-
-    /**
-     * An {@link java.util.concurrent.Executor} that can be used to execute tasks in parallel.
-     */
-    public static final Executor THREAD_POOL_EXECUTOR
-            = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
-            TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
 }

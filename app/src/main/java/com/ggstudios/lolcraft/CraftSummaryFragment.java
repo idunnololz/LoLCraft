@@ -1219,7 +1219,6 @@ public class CraftSummaryFragment extends Fragment {
 
         int[] skillRank = new int[5];
 
-
         public static final GamePhase MID_GAME = new GamePhase();
         public static final GamePhase END_GAME = new GamePhase();
 

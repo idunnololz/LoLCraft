@@ -568,10 +568,10 @@ public class Build {
     }
 
     public void addItem(ItemInfo item) {
-        addItem(item, 1, true);
+        addItem(item, 1, true, true);
     }
 
-    public void addItem(ItemInfo item, int count, boolean isAll) {
+    public void addItem(ItemInfo item, int count, boolean isAll, boolean notifyObservers) {
         if (item == null) return;
         BuildItem buildItem = null;
         BuildItem last = getLastItem();
@@ -602,24 +602,30 @@ public class Build {
         }
 
         if (isAll) {
-            recalculateStats();
+            if (notifyObservers) {
+                recalculateStats();
+            }
             if (itemBuildDirty) {
                 itemBuildDirty = false;
                 buildItem = null;
             }
-            notifyItemAdded(buildItem, itemNull);
+            if (notifyObservers) {
+                notifyItemAdded(buildItem, itemNull);
+            }
         }
     }
 
-    public void clearItems() {
+    public void clearItems(boolean notifyObservers) {
         itemBuild.clear();
 
         normalizeValues();
         recalculateItemCosts();
         recalculateAllGroups();
 
-        recalculateStats();
-        notifyBuildChanged();
+        if (notifyObservers) {
+            recalculateStats();
+            notifyBuildChanged();
+        }
     }
 
     public void removeItemAt(int position) {
@@ -819,10 +825,10 @@ public class Build {
     }
 
     public BuildRune addRune(RuneInfo rune) {
-        return addRune(rune, 1, true);
+        return addRune(rune, 1, true, true);
     }
 
-    public BuildRune addRune(RuneInfo rune, int count, boolean isAll) {
+    public BuildRune addRune(RuneInfo rune, int count, boolean isAll, boolean notifyObservers) {
         // Check if this rune is already in the build...
 
         BuildRune r = null;
@@ -837,24 +843,34 @@ public class Build {
             r = new BuildRune(rune, rune.id);
             r.listener = onRuneCountChangedListener;
             runeBuild.add(r);
-            notifyRuneAdded(r);
+
+            if (notifyObservers) {
+                notifyRuneAdded(r);
+            }
         }
 
-        r.addRune(count);
+        r.addRune(count, notifyObservers);
 
-        recalculateStats();
+        if (isAll && notifyObservers) {
+            recalculateStats();
+        }
 
         return r;
     }
 
-    public void clearRunes() {
+    public void clearRunes(boolean notifyObservers) {
         for (BuildRune r : runeBuild) {
             r.listener = null;
-            notifyRuneRemoved(r);
+            if (notifyObservers) {
+                notifyRuneRemoved(r);
+            }
         }
 
         runeBuild.clear();
-        recalculateStats();
+
+        if (notifyObservers) {
+            recalculateStats();
+        }
     }
 
     public boolean canAdd(RuneInfo rune) {
@@ -1297,33 +1313,34 @@ public class Build {
                 try {
                     LibraryUtils.initItemLibrary(context);
                     LibraryUtils.initRuneLibrary(context);
-                } catch (JSONException e) {
-                    Timber.e("", e);
-                } catch (IOException e) {
+                } catch (JSONException | IOException e) {
                     Timber.e("", e);
                 }
-                return null;
-            }
 
-            @Override
-            protected void onPostExecute(Void result) {
-                notifyBuildLoadingComplete();
-                clearItems();
-                clearRunes();
+                clearItems(false);
+                clearRunes(false);
 
                 int count = o.runes.size();
                 for (int i = 0; i < count; i += 2) {
-                    addRune(runeLibrary.getRuneInfo(o.runes.get(i)), o.runes.get(i + 1), i + 2 >= count);
+                    addRune(runeLibrary.getRuneInfo(o.runes.get(i)), o.runes.get(i + 1), i + 2 >= count, false);
                 }
 
                 count = o.items.size();
                 for (int i = 0; i < count; i += 2) {
                     int itemId = o.items.get(i);
                     int c = o.items.get(i + 1);
-                    addItem(itemLibrary.getItemInfo(itemId), c, i == count - 2);
+                    addItem(itemLibrary.getItemInfo(itemId), c, i == count - 2, false);
                 }
 
                 buildName = o.buildName;
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                recalculateStats();
+                notifyBuildLoadingComplete();
             }
 
         }.execute();
@@ -1383,17 +1400,19 @@ public class Build {
         }
 
         public void addRune() {
-            addRune(1);
+            addRune(1, true);
         }
 
-        public void addRune(int n) {
+        public void addRune(int n, boolean notifyObservers) {
             count += n;
 
             int c = count;
 
-            listener.onRuneCountChanged(this, count - n, count);
-            if (c == count && onRuneCountChangedListener != null) {
-                onRuneCountChangedListener.onRuneCountChanged(this, count - n, count);
+            if (notifyObservers) {
+                listener.onRuneCountChanged(this, count - n, count);
+                if (c == count && onRuneCountChangedListener != null) {
+                    onRuneCountChangedListener.onRuneCountChanged(this, count - n, count);
+                }
             }
         }
 

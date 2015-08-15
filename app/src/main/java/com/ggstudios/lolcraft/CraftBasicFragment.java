@@ -703,6 +703,9 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
     public void onBuildLoadingComplete() {
         pbarRuneBuild.setVisibility(View.GONE);
         pbarItemBuild.setVisibility(View.GONE);
+
+        updateBuild();
+        updateRunes();
     }
 
 	@Override
@@ -969,9 +972,9 @@ public class CraftBasicFragment extends Fragment implements BuildObserver,
 	@Override
 	public void onPositiveClick(AlertDialogFragment dialog, String tag) {
 		if (tag.equals(CLEAR_ITEM_DIALOG_TAG)) {
-			build.clearItems();
+			build.clearItems(true);
 		} else if (tag.equals(CLEAR_RUNE_DIALOG_TAG)) {
-			build.clearRunes();
+			build.clearRunes(true);
 		}
 	}
 

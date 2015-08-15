@@ -44,6 +44,8 @@ import com.ggstudios.dialogs.SaveAsDialogFragment;
 import com.ggstudios.dialogs.StatSummaryDialogFragment;
 import com.ggstudios.lolcraft.ChampionInfo.OnFullyLoadedListener;
 import com.ggstudios.lolcraft.SplashFetcher.OnDrawableRetrievedListener;
+import com.ggstudios.utils.AnimationListenerAdapter;
+import com.ggstudios.utils.BuildUtils;
 import com.ggstudios.utils.Utils;
 import com.ggstudios.views.LockableScrollView;
 import com.ggstudios.views.TabIndicator;
@@ -51,7 +53,6 @@ import com.ggstudios.views.TabIndicator.TabItem;
 
 import org.json.JSONException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +61,6 @@ import timber.log.Timber;
 public class CraftActivity extends ActionBarActivity implements ItemPickerDialogListener,
         RunePickerDialogListener, CraftBasicFragment.BuildManagerProvider,
         SaveAsDialogFragment.SaveAsDialogListener, AlertDialogFragment.AlertDialogFragmentListener {
-	private static final String TAG = "CraftActivity";
 
 	public static final String EXTRA_CHAMPION_ID = "champId";
 
@@ -400,21 +400,21 @@ public class CraftActivity extends ActionBarActivity implements ItemPickerDialog
 		Animation ani = new AlphaAnimation(1f, 0f);
 		ani.setDuration(FADE_IN_DURATION);
 		ani.setFillAfter(true);
-		ani.setAnimationListener(new AnimationListener(){
+		ani.setAnimationListener(new AnimationListenerAdapter() {
 
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				champInfoContent.setVisibility(View.GONE);
-				
+
 				Animation ani = new ResizeAnimation(champInfoPanel, champInfoPanel.getWidth(), 0,
 						champInfoPanel.getHeight(), 0);
 				ani.setDuration(RESIZE_DURATION);
-	
+
 				champInfoPanel.startAnimation(ani);
-			
+
 				ani = new AlphaAnimation(1f, 0f);
 				ani.setDuration(RESIZE_DURATION);
-				ani.setAnimationListener(new AnimationListener() {
+				ani.setAnimationListener(new AnimationListenerAdapter() {
 
 					@Override
 					public void onAnimationEnd(Animation animation) {
@@ -422,22 +422,10 @@ public class CraftActivity extends ActionBarActivity implements ItemPickerDialog
 						closingPanel = false;
 					}
 
-					@Override
-					public void onAnimationRepeat(Animation animation) {}
-
-					@Override
-					public void onAnimationStart(Animation animation) {}
-					
 				});
 				overlay.startAnimation(ani);
 			}
 
-			@Override
-			public void onAnimationRepeat(Animation animation) {}
-
-			@Override
-			public void onAnimationStart(Animation animation) {}
-			
 		});
 		champInfoContent.startAnimation(ani);
 	}
@@ -449,6 +437,7 @@ public class CraftActivity extends ActionBarActivity implements ItemPickerDialog
 
         if (!BuildConfig.DEBUG) {
             menu.findItem(R.id.action_stat_summary).setVisible(false);
+			menu.findItem(R.id.action_get_build).setVisible(false);
         }
 
         return true;
@@ -488,11 +477,42 @@ public class CraftActivity extends ActionBarActivity implements ItemPickerDialog
                 SplashFetcher.getInstance().deleteCache(info.key);
                 loadSplash();
                 return true;
+			case R.id.action_get_build:
+				fetchBuildForCurrentChampion();
+				return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-    private boolean trySaveBuild(String buildName, boolean force) {
+	private void fetchBuildForCurrentChampion() {
+		new AsyncTask<Void, Void, Build>() {
+
+			@Override
+			protected Build doInBackground(Void... params) {
+				Build b;
+				try {
+					b = BuildUtils.getBuildForChampion(info);
+				} catch (Exception e) {
+					Timber.e(e, "Error");
+					return null;
+				}
+				return b;
+			}
+
+			@Override
+			protected void onPostExecute(Build b) {
+				if (b == null) {
+					AlertDialogFragment f = new AlertDialogFragment.Builder()
+							.setMessage(R.string.message_error_retrieving_build).create();
+					f.show(getSupportFragmentManager(), "dialog");
+				} else {
+					build.fromSaveObject(CraftActivity.this, b.toSaveObject());
+				}
+			}
+		}.execute();
+	}
+
+	private boolean trySaveBuild(String buildName, boolean force) {
         int result = getBuildManager().saveBuild(build, buildName, force);
         switch (result) {
             case BuildManager.RETURN_CODE_SUCCESS:

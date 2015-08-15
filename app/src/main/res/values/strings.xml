@@ -248,6 +248,8 @@
     <string name="stat_desc_cc_immune">champion is immune to crowd control effects</string>
     <string name="stat_desc_crit">critical strike chance</string>
     <string name="stat_desc_percent_attack_as_magical">percent attack damage as magic damage</string>
+    <string name="message_error_retrieving_build">Error retrieving build</string>
+    <string name="action_get_build">Get build</string>
 
 
 </resources>
