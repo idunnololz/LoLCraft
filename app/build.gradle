@@ -22,8 +22,8 @@ android {
         applicationId "com.ggstudios.lolcraft"
         minSdkVersion 8
         targetSdkVersion 21
-        versionCode 18
-        versionName "0.2.14"
+        versionCode 19
+        versionName "0.2.15"
     }
     buildTypes {
         release {
