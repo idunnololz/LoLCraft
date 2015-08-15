@@ -222,12 +222,15 @@
     <string name="skill_stat_total_hp">HP</string>
     <string name="changelog">What\'s new</string>
     <string name="changelog_text"><![CDATA[
-<b>0.2.13</b>
+<b>0.2.14</b>
 <br>
 <small>
-[!] Updated data to match LoL version 5.7
+[+] Added the "Get build" feature
+<br>
+[!] Updated data to match LoL version 5.15
 <br>
 [!] Fixed more bugs/crashes
+<br>
 </small>
 ]]></string>
     <string name="key_show_changelog">show_changelog</string>
