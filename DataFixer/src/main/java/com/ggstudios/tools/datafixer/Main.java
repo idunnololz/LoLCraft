@@ -210,7 +210,7 @@ public class Main {
 		try {
             //DataFetcher.listAllVersions();
 
-            //fetchAll("5.7.2");
+            //fetchAll("5.15.1");
 
 
             // Updates champion data... outputs to out/ and res/
