@@ -3,6 +3,7 @@ package com.ggstudios.utils;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -11,125 +12,162 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.jakewharton.disklrucache.DiskLruCache;
 
+import timber.log.Timber;
+
 public class DiskLruImageCache {
-	private static final int IO_BUFFER_SIZE = 1024 * 1024 * 2; // 2 MB
+	private static final int IO_BUFFER_SIZE = Utils.MB_BYTES * 2;
+
+	private DiskLruCache mDiskCache;
+	private CompressFormat mCompressFormat = CompressFormat.JPEG;
+	private int mCompressQuality = 70;
 	private static final int APP_VERSION = 1;
 	private static final int VALUE_COUNT = 1;
 
-	private final DiskLruCache mDiskCache;
-	private CompressFormat mCompressFormat = CompressFormat.JPEG;
-	private int mCompressQuality = 70;
+	private boolean errorState = false;
 
-	public DiskLruImageCache(Context context, String cacheName, int diskCacheSize,
-                             CompressFormat compressFormat, int quality) {
+	public DiskLruImageCache( Context context,String uniqueName, int diskCacheSize,
+			CompressFormat compressFormat, int quality ) {
 		try {
-			final File diskCacheDir = new File(context.getExternalFilesDir(null), cacheName);
-			mDiskCache = DiskLruCache.open(diskCacheDir, APP_VERSION, VALUE_COUNT, diskCacheSize);
+			final File diskCacheDir = getDiskCacheDir(context, uniqueName );
+			mDiskCache = DiskLruCache.open( diskCacheDir, APP_VERSION, VALUE_COUNT, diskCacheSize );
 			mCompressFormat = compressFormat;
 			mCompressQuality = quality;
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			errorState = true;
 		}
 	}
+	
+	public boolean isInErrorState() {
+		return errorState;
+	}
 
-	private boolean writeBitmapToFile(Bitmap bitmap, DiskLruCache.Editor editor) throws IOException {
+	private boolean writeBitmapToFile( Bitmap bitmap, DiskLruCache.Editor editor )
+			throws IOException, FileNotFoundException {
 		OutputStream out = null;
 		try {
-			out = new BufferedOutputStream(editor.newOutputStream(0), IO_BUFFER_SIZE);
-			return bitmap.compress(mCompressFormat, mCompressQuality, out);
+			out = new BufferedOutputStream( editor.newOutputStream( 0 ), IO_BUFFER_SIZE );
+			return bitmap.compress( mCompressFormat, mCompressQuality, out );
 		} finally {
-			if (out != null) {
+			if ( out != null ) {
 				out.close();
 			}
 		}
 	}
 
-	public void put(String key, @NonNull Bitmap data) {
+	private File getDiskCacheDir(Context context, String uniqueName) {
+		return new File(context.getExternalFilesDir(null), "SplashCache");
+	}
+
+	public void put( String key, Bitmap data ) {
+
 		DiskLruCache.Editor editor = null;
 		try {
-			editor = mDiskCache.edit(key);
-			if (editor == null) {
+			editor = mDiskCache.edit( key );
+			if ( editor == null ) {
 				return;
 			}
 
-			if (writeBitmapToFile(data, editor)) {
+			if( writeBitmapToFile( data, editor ) ) {               
 				mDiskCache.flush();
 				editor.commit();
+                Timber.d("image put on disk cache " + key );
 			} else {
 				editor.abort();
-			}
+                Timber.d("ERROR on: image put on disk cache " + key );
+			}   
 		} catch (IOException e) {
+            Timber.d("ERROR on: image put on disk cache " + key );
 			try {
-				if (editor != null) {
+				if ( editor != null ) {
 					editor.abort();
 				}
-			} catch (IOException ioe) {/* Ignore */}
+			} catch (IOException ignored) {
+			}           
 		}
+
 	}
 
-	@Nullable
-	public Bitmap getBitmap(String key) {
+    public Bitmap getBitmap( String key ) {
+        return getBitmap(key, true);
+    }
+
+	public Bitmap getBitmap(String key, boolean retry) {
+
 		Bitmap bitmap = null;
 		DiskLruCache.Snapshot snapshot = null;
 		try {
-			snapshot = mDiskCache.get(key);
-			if (snapshot == null) {
+			snapshot = mDiskCache.get( key );
+			if ( snapshot == null ) {
 				return null;
 			}
-			final InputStream in = snapshot.getInputStream(0);
-			if (in != null) {
-				final BufferedInputStream buffIn = new BufferedInputStream(in, IO_BUFFER_SIZE);
-				bitmap = BitmapFactory.decodeStream(buffIn);
+			final InputStream in = snapshot.getInputStream( 0 );
+			if ( in != null ) {
+				final BufferedInputStream buffIn = 
+						new BufferedInputStream( in, IO_BUFFER_SIZE );
+				bitmap = BitmapFactory.decodeStream( buffIn );              
 			}
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} finally {
-			if (snapshot != null) {
+		} catch ( IOException e ) {
+			e.printStackTrace();
+		} catch (OutOfMemoryError e) {
+            if (retry) {
+                System.gc();
+                return getBitmap(key, false);
+            } else {
+                throw e;
+            }
+        } finally {
+			if ( snapshot != null ) {
 				snapshot.close();
 			}
 		}
+
+		Timber.d(bitmap == null ? "" : "image read from disk " + key);
+
 		return bitmap;
 	}
 
-	public void remove(String key) {
-		try {
-			mDiskCache.remove(key);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    public void remove(String key) {
+        try {
+            mDiskCache.remove(key);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	public boolean containsKey(String key) {
+	public boolean containsKey( String key ) {
+
 		boolean contained = false;
 		DiskLruCache.Snapshot snapshot = null;
 		try {
-			snapshot = mDiskCache.get(key);
+			snapshot = mDiskCache.get( key );
 			contained = snapshot != null;
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
 		} finally {
-			if (snapshot != null) {
+			if ( snapshot != null ) {
 				snapshot.close();
 			}
 		}
 
 		return contained;
+
 	}
 
 	public void clearCache() {
+        Timber.d("disk cache CLEARED");
 		try {
 			mDiskCache.delete();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+		} catch ( IOException e ) {
+			e.printStackTrace();
 		}
 	}
 
 	public File getCacheFolder() {
 		return mDiskCache.getDirectory();
 	}
+
 }
